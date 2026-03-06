@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { AiOutlineInfoCircle, AiOutlineSend } from "react-icons/ai";
 
 import {
@@ -17,28 +17,16 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import {
-  getRequest,
-  patchRequest,
-  postRequest,
-  putRequest,
-} from "@/api/fetchWrapper";
+import api from "@/lib/api";
 import toast from "react-hot-toast";
 import SaveLoader from "@/components/SaveLoader";
-import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "@/redux/users/userSlice";
-import {
-  ordersFailure,
-  ordersStart,
-  ordersSuccess,
-} from "@/redux/orders/ordersSlice";
 import FormatCurrencyRate from "@/components/Currency/FormatCurrencyRate";
 
 const AccoutsModal = dynamic(
   () => import("../../components/Modals/AccountsModal"),
   {
     ssr: false,
-  }
+  },
 );
 
 const maildata = [
@@ -62,10 +50,9 @@ const maildata = [
   },
 ];
 
-function User() {
-  const dispatch = useDispatch();
-  const { orders } = useSelector((state) => state.orders);
-  const { currentUser } = useSelector((state) => state.user);
+function UserContent() {
+  const [orders, setOrders] = useState([]);
+  const currentUser = null; // Removed Redux state access
   const searchParams = useSearchParams(); // Use useSearchParams to get query params
   const dashboard = searchParams.get("dashboard");
   const router = useRouter();
@@ -98,11 +85,11 @@ function User() {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!currentUser) {
       router.push("/");
     }
-  }, [currentUser]);
+  }, [currentUser]); */
 
   useEffect(() => {
     // Format the initial date to YYYY-MM-DD if it's provided
@@ -121,8 +108,8 @@ function User() {
 
   const loadUser = async () => {
     try {
-      const res = await getRequest(`/auth/profile`);
-      const data = await res.json();
+      const res = await api.get(`/auth/profile`);
+      const data = res.data;
       setFirstname(data.firstname);
       setLastname(data.lastname);
       setEmail(data.email);
@@ -136,29 +123,20 @@ function User() {
   };
   const loadUserOrders = async () => {
     try {
-      dispatch(ordersStart());
-      const res = await getRequest(`/orders/user-orders`);
-      const data = await res.json();
-      dispatch(ordersSuccess(data.orders));
+      const res = await api.get(`/orders/user-orders`);
+      setOrders(res.data.orders);
     } catch (err) {
       console.log(err);
-      dispatch(ordersFailure());
     }
   };
   const handleUpdatePassword = async () => {
     try {
       setUpdatingPassword(true);
-      const res = await postRequest(`/user/passwordreset`, {
+      const res = await api.post(`/user/passwordreset`, {
         current_password: currentPassword,
         new_password: newPassword,
         confirm_password: confirmPassword,
       });
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error(data.message);
-        setUpdatingPassword(false);
-        return;
-      }
       setModalPasswordIsOpen(false);
       setUpdatingPassword(false);
       setCurrentPassword("");
@@ -171,22 +149,15 @@ function User() {
   const handleAccountsDeactivate = async () => {
     try {
       setDeactivating(true);
-      const res = await putRequest(`/user/deactivateaccounts`, {
+      const res = await api.put(`/user/deactivateaccounts`, {
         deactivateReason:
           selectedOption === "Others" ? otherReason : selectedOption,
       });
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error(data.message);
-        setDeactivating(false);
-        return;
-      }
       setModalPasswordIsOpen(false);
       setDeactivating(false);
       setOtherReason("");
       setSelectedOption("");
-      await postRequest(`/auth/signout`);
-      dispatch(signOut());
+      await api.post(`/auth/signout`);
       router.push("/");
       toast.success("Success");
     } catch (err) {
@@ -197,19 +168,13 @@ function User() {
   const handleSubmitProblem = async () => {
     try {
       setProLoading(true);
-      const res = await patchRequest(
+      const res = await api.patch(
         `/orders/order-problem?slug=${currentOrder?.slug}&orderId=${currentOrder.orderId}`,
         {
           orderProblemMessage,
-        }
+        },
       );
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error(data.message);
-        setProLoading(false);
-        return;
-      }
-      toast.success(data.message);
+      toast.success(res.data.message);
       setOrderProblemMessage("");
       setModalReportOpen(false);
       setProLoading(false);
@@ -221,7 +186,7 @@ function User() {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const res = await putRequest(`/user/update`, {
+      const res = await api.put(`/user/update`, {
         firstname,
         lastname,
         email,
@@ -229,15 +194,9 @@ function User() {
         birthday,
         country,
       });
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error(data.message);
-        setLoading(false);
-        return;
-      }
       setModalPasswordIsOpen(false);
       setLoading(false);
-      toast.success(data.message);
+      toast.success(res.data.message);
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -317,7 +276,8 @@ function User() {
 
   const handleNextPage = () => {
     const totalPages = Math.ceil(
-      orders?.reduce((acc, order) => acc + order.cartItems.length, 0) / pageSize
+      orders?.reduce((acc, order) => acc + order.cartItems.length, 0) /
+        pageSize,
     );
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
@@ -328,7 +288,8 @@ function User() {
 
   const handleLastPage = () => {
     const totalPages = Math.ceil(
-      orders?.reduce((acc, order) => acc + order.cartItems.length, 0) / pageSize
+      orders?.reduce((acc, order) => acc + order.cartItems.length, 0) /
+        pageSize,
     );
     setCurrentPage(totalPages);
   };
@@ -441,17 +402,17 @@ function User() {
                   {orders?.map((order, i) => {
                     const paginatedCartItems = order.cartItems.slice(
                       startIndex,
-                      endIndex
+                      endIndex,
                     );
                     let qty = order.cartItems.reduce(
                       (acc, order) => acc + (order?.quantity || 0),
-                      0
+                      0,
                     );
                     let totalSum = order.cartItems.reduce(
                       (acc, order) =>
                         acc +
                         (order?.product?.totalPrice * order.quantity || 0),
-                      0
+                      0,
                     );
 
                     return (
@@ -547,8 +508,8 @@ function User() {
                     {Math.ceil(
                       orders?.reduce(
                         (acc, order) => acc + order.cartItems.length,
-                        0
-                      ) / pageSize
+                        0,
+                      ) / pageSize,
                     )}
                   </span>
                   <button
@@ -559,8 +520,8 @@ function User() {
                       Math.ceil(
                         orders?.reduce(
                           (acc, order) => acc + order.cartItems.length,
-                          0
-                        ) / pageSize
+                          0,
+                        ) / pageSize,
                       )
                     }
                   >
@@ -574,8 +535,8 @@ function User() {
                       Math.ceil(
                         orders?.reduce(
                           (acc, order) => acc + order.cartItems.length,
-                          0
-                        ) / pageSize
+                          0,
+                        ) / pageSize,
                       )
                     }
                   >
@@ -880,18 +841,18 @@ function User() {
                         {orders?.map((order, i) => {
                           const paginatedCartItems = order.cartItems.slice(
                             startIndex,
-                            endIndex
+                            endIndex,
                           );
                           let qty = order.cartItems.reduce(
                             (acc, order) => acc + (order?.quantity || 0),
-                            0
+                            0,
                           );
                           let totalSum = order.cartItems.reduce(
                             (acc, order) =>
                               acc +
                               (order?.product?.totalPrice * order.quantity ||
                                 0),
-                            0
+                            0,
                           );
                           return (
                             <>
@@ -997,8 +958,8 @@ function User() {
                           Math.ceil(
                             orders?.reduce(
                               (acc, order) => acc + order.cartItems.length,
-                              0
-                            ) / pageSize
+                              0,
+                            ) / pageSize,
                           )
                         }
                       >
@@ -1012,8 +973,8 @@ function User() {
                           Math.ceil(
                             orders?.reduce(
                               (acc, order) => acc + order.cartItems.length,
-                              0
-                            ) / pageSize
+                              0,
+                            ) / pageSize,
                           )
                         }
                       >
@@ -1121,7 +1082,7 @@ function User() {
                             <h3 className="mb-3 font-normal text-sm text-[#86868B]">
                               Updated on{" "}
                               {new Date(
-                                currentOrder.updatedAt
+                                currentOrder.updatedAt,
                               ).toLocaleDateString()}
                             </h3>
                             {status === "Delivered" && isStatusCompleted && (
@@ -1340,6 +1301,14 @@ function User() {
         </div>
       </AccoutsModal>
     </section>
+  );
+}
+
+function User() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UserContent />
+    </Suspense>
   );
 }
 

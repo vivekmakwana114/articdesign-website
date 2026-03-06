@@ -1,61 +1,47 @@
 "use client";
+import { Suspense } from "react";
 import SkinSectionone from "@/components/skin/SkinSectionone";
 import SkinSectiontwo from "@/components/skin/SkinSectiontwo";
 import Sectionfive from "@/components/Home/Sectionfive";
 import { useParams, useSearchParams } from "next/navigation";
 import Sectiontwo from "@/components/Home/Sectiontwo";
 import Footer from "@/components/Footer";
-import { useDispatch, useSelector } from "react-redux";
-import { getRequest } from "@/api/fetchWrapper";
-import { useEffect } from "react";
-import {
-  productsFailure,
-  productsStart,
-  productsSuccess,
-} from "@/redux/products/productsSlice";
-import {
-  singleDeviceFailure,
-  singleDeviceStart,
-  singleDeviceSuccess,
-} from "@/redux/devices/devicesSlice";
 
-function SkinLaptop() {
-  const dispatch = useDispatch();
-  const {
-    products,
-    loading: productsLoading,
-    error: productsErorr,
-  } = useSelector((state) => state.products);
-  const {
-    device,
-    loading: devicesLoading,
-    error: devicesError,
-  } = useSelector((state) => state.devices);
+import api from "@/lib/api";
+import { useEffect, useState } from "react";
+
+function SkinLaptopContent() {
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [device, setDevice] = useState({});
+  const [devicesLoading, setDevicesLoading] = useState(false);
   const searchParams = useSearchParams(); // Use useSearchParams to get query params
   const skin = searchParams.get("skin");
   useEffect(() => {
     fetchProducts();
     fetchDevice();
-  }, [skin, dispatch]);
+  }, [skin]);
 
   const fetchProducts = async () => {
-    dispatch(productsStart());
+    setProductsLoading(true);
     try {
-      const response = await getRequest(`/products?skin=${skin}`);
-      const data = await response.json();
-      dispatch(productsSuccess(data.products));
+      const response = await api.get(`/products?skin=${skin}`);
+      setProducts(response.data.products);
     } catch (err) {
-      dispatch(productsFailure());
+      console.error(err);
+    } finally {
+      setProductsLoading(false);
     }
   };
   const fetchDevice = async () => {
-    dispatch(singleDeviceStart());
+    setDevicesLoading(true);
     try {
-      const response = await getRequest(`/devices/${skin}`);
-      const data = await response.json();
-      dispatch(singleDeviceSuccess(data.device));
+      const response = await api.get(`/devices/${skin}`);
+      setDevice(response.data.device || {});
     } catch (err) {
-      dispatch(singleDeviceFailure());
+      console.error(err);
+    } finally {
+      setDevicesLoading(false);
     }
   };
 
@@ -78,6 +64,14 @@ function SkinLaptop() {
       <Sectionfive />
       <Footer />
     </section>
+  );
+}
+
+function SkinLaptop() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SkinLaptopContent />
+    </Suspense>
   );
 }
 

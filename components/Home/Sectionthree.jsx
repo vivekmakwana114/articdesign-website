@@ -1,31 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  topproductsFailure,
-  topproductsStart,
-  topproductsSuccess,
-} from "@/redux/products/topproductsSlice";
-import { getRequest } from "@/api/fetchWrapper";
+import api from "@/lib/api";
 
 function Sectionthree() {
-  const dispatch = useDispatch();
-  const { topproducts, loading } = useSelector((state) => state.topproducts);
+  const [topproducts, setTopproducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState(8);
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
+    setIsMounted(true);
     fetchTopProducts();
   }, []);
 
   const fetchTopProducts = async () => {
-    dispatch(topproductsStart());
+    setLoading(true);
     try {
-      const response = await getRequest(`/orders/top/products?limit=${limit}`);
-      const data = await response.json();
-      dispatch(topproductsSuccess(data));
+      const response = await api.get(`/orders/top/products?limit=${limit}`);
+      setTopproducts(response.data);
     } catch (err) {
-      dispatch(topproductsFailure(err.message));
+      console.error("Failed to load top products:", err.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -48,10 +46,10 @@ function Sectionthree() {
             </p>
           </div>
         </div>
-        {loading ? (
+        {!isMounted || loading ? (
           <section className="p-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {Array.from({ length: topproducts?.length }).map((_, index) => (
+              {Array.from({ length: limit }).map((_, index) => (
                 <div
                   key={index}
                   className="animate-pulse transition-all duration-500 bg-gray-200 rounded-md p-4 md:h-[329px] h-full"
@@ -65,7 +63,8 @@ function Sectionthree() {
           </section>
         ) : (
           <div className="md:flex md:flex-wrap md:ml-16 grid grid-cols-2">
-            {Array.isArray(topproducts) &&
+            {isMounted &&
+              Array.isArray(topproducts) &&
               topproducts.map((frame, index) => (
                 <div
                   key={index}

@@ -8,10 +8,9 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import FormatCurrencyRate from "../Currency/FormatCurrencyRate";
-import { useCart } from "@/context/CartContext";
+// Removed Cart Context import
 import GenerateUniqueId from "../GenerateUniqueId";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 
 const getImageData = (product) => [
   {
@@ -64,8 +63,8 @@ const colordata = [
 
 const DetailsSection = ({ product, loading }) => {
   const orderId = GenerateUniqueId();
-  const { currentUser } = useSelector((state) => state.user);
-  const { addItemToCart } = useCart();
+  const currentUser = null; // Removed Redux state access
+  const addItemToCart = (item) => {}; // Mocking addItemToCart
   const router = useRouter();
   const imagedata = getImageData(product);
   const pathname = usePathname();
@@ -78,14 +77,14 @@ const DetailsSection = ({ product, loading }) => {
   useEffect(() => {
     const optionsData = getImageData(product);
     const defaultSelectedImages = optionsData.filter((item) =>
-      selectedOptions.includes(item.slug)
+      selectedOptions.includes(item.slug),
     );
     setSelectedImages(defaultSelectedImages);
 
     // Calculate the subtotal (price of selected options)
     const additionalPrice = defaultSelectedImages.reduce(
       (sum, item) => sum + item.price,
-      0
+      0,
     );
     setSubTotalPrice(additionalPrice);
 
@@ -104,7 +103,7 @@ const DetailsSection = ({ product, loading }) => {
 
   const handleAddToCart = () => {
     const selectedItems = getImageData(product).filter((item) =>
-      selectedOptions.includes(item.slug)
+      selectedOptions.includes(item.slug),
     );
     const cartItem = {
       productId: product?._id,
@@ -161,7 +160,7 @@ const DetailsSection = ({ product, loading }) => {
                         showArrows={true}
                         showThumbs={false}
                         showIndicators={false}
-                        showStatus={false} 
+                        showStatus={false}
                         selectedItem={selectedImages.length - 1}
                         renderArrowPrev={(clickHandler, hasPrev) => {
                           return (
@@ -384,9 +383,7 @@ const DetailsSection = ({ product, loading }) => {
                       </>
                     ) : (
                       <Link
-                        href={`/signin?returnUrl=${encodeURIComponent(
-                          pathname
-                        )}`}
+                        href={`/auth?returnUrl=${encodeURIComponent(pathname)}`}
                         className="bg-[#0071E3] mt-8  md:w-[369px] p-2 rounded-[43px] text-white text-center"
                       >
                         Sign in{" "}

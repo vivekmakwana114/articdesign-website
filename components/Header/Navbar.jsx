@@ -19,18 +19,15 @@ import { CgProfile } from "react-icons/cg";
 import { MdOutlineClose } from "react-icons/md";
 import NavLinks from "./NavLinks";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "@/redux/users/userSlice";
-import { getRequest, postRequest } from "@/api/fetchWrapper";
 import toast from "react-hot-toast";
-import { useCart } from "@/context/CartContext";
+// Removed Cart Context import
 import Loader from "../Loader";
+import api from "@/lib/api";
 import { menus } from "./Mymenus";
 
 const Navbar = () => {
-  const dispatch = useDispatch();
-  const { cartState } = useCart();
-  const { currentUser } = useSelector((state) => state.user);
+  const cartState = { cartItems: [] }; // Mocking cartState
+  const currentUser = null; // Removed Redux state access
   const [open, setOpen] = useState(false);
   const [showsearch, setShowsearch] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -67,8 +64,7 @@ const Navbar = () => {
   };
   const handleSignOut = async () => {
     try {
-      await postRequest(`/auth/signout`);
-      dispatch(signOut());
+      await api.post(`/auth/signout`);
       setShowProfileMenu(false);
       toast.success("success");
     } catch (error) {
@@ -78,9 +74,8 @@ const Navbar = () => {
   const handleSearchQuery = async () => {
     try {
       setSearchLoading(true);
-      const res = await getRequest(`/search?search=${searchText}`);
-      const data = await res.json();
-      setSearchData(data);
+      const res = await api.get(`/search?search=${searchText}`);
+      setSearchData(res.data);
       setSearchLoading(false);
     } catch (error) {
       console.log(error);
@@ -230,7 +225,7 @@ const Navbar = () => {
                   <ul className="absolute right-[-55px] mt-3 bg-[#ffffff] rounded-sm shadow-md z-10 flex">
                     <li>
                       <Link
-                        href="/signin"
+                        href="/auth"
                         className="block py-2 px-4 hover:bg-gray-600 md:text-sm text-base text-[#0071E3] hover:text-white"
                         onClick={closeMobileMenu}
                       >
@@ -239,7 +234,7 @@ const Navbar = () => {
                     </li>
                     <li>
                       <Link
-                        href="/signup"
+                        href="/auth?view=signup"
                         className="block py-2 px-4 hover:bg-gray-600 md:text-sm text-base text-[#0071E3] hover:text-white"
                         onClick={closeMobileMenu}
                       >
@@ -320,12 +315,12 @@ const Navbar = () => {
                 Welcome to ArticDesign
               </li>
               <li className=" space-x-2 m-3">
-                <Link href="/signup" onClick={closeMobileMenu}>
+                <Link href="/auth?view=signup" onClick={closeMobileMenu}>
                   <button className="bg-[#0071E3] rounded-[4px] w-[108px] p-3 text-white font-medium text-[13px] ">
                     Register
                   </button>
                 </Link>
-                <Link href="/signin" onClick={closeMobileMenu}>
+                <Link href="/auth" onClick={closeMobileMenu}>
                   <button className="bg-[#0071E3] rounded-[4px] opacity-50 w-[108px] p-3 text-white font-medium text-[13px] ">
                     Sign in
                   </button>

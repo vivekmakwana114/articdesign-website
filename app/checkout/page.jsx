@@ -7,29 +7,25 @@ import Footer from "@/components/Footer";
 import Sectionfive from "@/components/Home/Sectionfive";
 import Bought from "@/components/Customers/Bought";
 import Image from "next/image";
-import { useCart } from "@/context/CartContext";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
+// Removed Redux imports
 import FormatCurrencyRate from "@/components/Currency/FormatCurrencyRate";
-import {
-  shippingAddressFailure,
-  shippingAddressStart,
-  shippingAddressSuccess,
-} from "@/redux/orders/shippingAddressSlice";
-import { getRequest, patchRequest, postRequest } from "@/api/fetchWrapper";
+import api from "@/lib/api";
 import SaveLoader from "@/components/SaveLoader";
 
 const CheckOut = () => {
-  const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user);
-  const { topproducts } = useSelector((state) => state.topproducts);
+  const currentUser = null; // Removed Redux state access
+  // const topproducts = []; // Removed Redux state access
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checkingOut, setCheckingOut] = useState(false);
-  const { cartState, removeItemFromCart, updateItemInCart, clearCartItems } =
-    useCart();
+  // Cart state stubbed - will be re-integrated with new approach
+  const cartState = { cartItems: [], totalPrice: 0 };
+  const removeItemFromCart = () => {};
+  const updateItemInCart = () => {};
+  const clearCartItems = () => {};
   const pathname = usePathname();
   const [countries, setCountries] = useState([]);
   const [quantity, setQuantity] = useState({});
@@ -83,34 +79,31 @@ const CheckOut = () => {
 
   useEffect(() => {
     fetchShippingAddress();
-  }, [dispatch]);
+  }, []);
 
   const fetchShippingAddress = async () => {
-    dispatch(shippingAddressStart());
     try {
-      const response = await getRequest(`/orders/shipping/address`);
-      const shippingAddress = await response.json();
-      setShippingAddress(shippingAddress);
-      setFirstName(shippingAddress.firstName);
-      setLastName(shippingAddress.lastName);
-      setPhoneNumber(shippingAddress.phoneNumber);
-      setEmail(shippingAddress.email);
-      setStreetAddress(shippingAddress.streetAddress);
-      setTownCity(shippingAddress.townCity);
-      setOrderNotes(shippingAddress.orderNotes);
-      setCountry(shippingAddress.country);
-      setApartment(shippingAddress.apartment);
-      dispatch(shippingAddressSuccess(shippingAddress));
+      const response = await api.get(`/orders/shipping/address`);
+      const data = response.data;
+      setShippingAddress(data);
+      setFirstName(data.firstName || "");
+      setLastName(data.lastName || "");
+      setPhoneNumber(data.phoneNumber || "");
+      setEmail(data.email || "");
+      setStreetAddress(data.streetAddress || "");
+      setTownCity(data.townCity || "");
+      setOrderNotes(data.orderNotes || "");
+      setCountry(data.country || "");
+      setApartment(data.apartment || "");
     } catch (err) {
-      dispatch(shippingAddressFailure(err.message));
+      console.error(err);
     }
   };
 
   const handleUpdate = async () => {
-    dispatch(shippingAddressStart());
     setLoading(true);
     try {
-      const response = await patchRequest(`/orders/create/shipping-address`, {
+      const response = await api.patch(`/orders/create/shipping-address`, {
         address: {
           country,
           firstName,
@@ -123,14 +116,13 @@ const CheckOut = () => {
           apartment,
         },
       });
-      const shippingAddress = await response.json();
-      dispatch(shippingAddressSuccess(shippingAddress));
+      setShippingAddress(response.data);
       setModalIsOpen(false);
       toast.success("Success");
-      setLoading(false);
       fetchShippingAddress();
     } catch (err) {
-      dispatch(shippingAddressFailure());
+      console.error(err);
+    } finally {
       setLoading(false);
     }
   };
@@ -138,7 +130,7 @@ const CheckOut = () => {
   const handleCheckOut = async () => {
     setCheckingOut(true);
     try {
-      const response = await postRequest(`/orders`, {
+      const response = await api.post(`/orders`, {
         address: {
           country,
           firstName,
@@ -152,13 +144,6 @@ const CheckOut = () => {
         },
         cartItems: cartState?.cartItems,
       });
-      const data = await response.json();
-      if (!response.ok) {
-        toast.error(data.message);
-        setCheckingOut(false);
-
-        return;
-      }
       toast.success("Success");
       clearCartItems();
       setCheckingOut(false);
@@ -176,7 +161,7 @@ const CheckOut = () => {
   };
   const subTotalPrice = cartState?.cartItems.reduce(
     (total, sale) => total + sale.subTotalPrice,
-    0
+    0,
   );
   return (
     <>
@@ -407,7 +392,7 @@ const CheckOut = () => {
                   </p>
 
                   <Link
-                    href={`/signin?returnUrl=${encodeURIComponent(pathname)}`}
+                    href={`/auth?returnUrl=${encodeURIComponent(pathname)}`}
                     className="btn"
                   >
                     Sign in

@@ -13,7 +13,7 @@ function Sectionfive() {
             className=""
             width={50}
             height={38}
-            property
+            priority={true}
           />
         </div>
         <div>

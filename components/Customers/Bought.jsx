@@ -1,29 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  topproductsFailure,
-  topproductsStart,
-  topproductsSuccess,
-} from "@/redux/products/topproductsSlice";
-import { getRequest } from "@/api/fetchWrapper";
+import api from "@/lib/api";
 
 const Bought = () => {
-  const dispatch = useDispatch();
-  const { topproducts, loading } = useSelector((state) => state.topproducts);
+  const [topproducts, setTopproducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     fetchTopProducts();
   }, []);
 
   const fetchTopProducts = async () => {
-    dispatch(topproductsStart());
+    setLoading(true);
     try {
-      const response = await getRequest(`/orders/top/products?limit=${4}`);
-      const data = await response.json();
-      dispatch(topproductsSuccess(data));
+      const response = await api.get(`/orders/top/products?limit=${4}`);
+      setTopproducts(response.data);
     } catch (err) {
-      dispatch(topproductsFailure(err.message));
+      console.error("Failed to fetch top products:", err.message);
+    } finally {
+      setLoading(false);
     }
   };
 

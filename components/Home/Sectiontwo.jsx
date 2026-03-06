@@ -5,7 +5,7 @@ import { ipadwithskin } from "../../assets";
 import Button from "../Button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getRequest } from "@/api/fetchWrapper";
+import api from "@/lib/api";
 
 function Sectiontwo() {
   const [content, setContent] = useState(null);
@@ -19,11 +19,9 @@ function Sectiontwo() {
       setError(null);
       try {
         // Adjust this endpoint to your actual CMS/Backend route
-        const res = await getRequest(`/home/section-two`);
-        const data = await res.json();
-        if (!res.ok)
-          throw new Error(data?.message || "Failed to load section content");
-        if (isMounted) setContent(data?.section || data);
+        const res = await api.get(`/home/section-two`);
+        const data = res.data;
+        if (data) setContent(data?.section || data);
       } catch (e) {
         if (isMounted) setError(e?.message || "Failed to load content");
       } finally {
@@ -54,7 +52,7 @@ function Sectiontwo() {
           src={imageSrc}
           alt="image"
           className="md:h-[560px] md:w-[510px] h-[309px] w-[309px] bg-contain"
-          property
+          priority={true}
         />
         <div className="space-y-3 md:flex  md:flex-col md:justify-center">
           <h1 className="md:text-[36px] text-[21px] md:font-bold font-semibold text-[#000000]">

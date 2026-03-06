@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { taponeimage, taptwoimage, tapthreeimage } from "../../assets";
 
 import { useSearchParams, useRouter } from "next/navigation";
@@ -8,21 +8,12 @@ import Image from "next/image";
 import Footer from "@/components/Footer";
 import Sectiontwo from "@/components/Home/Sectiontwo";
 import TabLink from "@/components/TabLink";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  devicesFailure,
-  devicesStart,
-  devicesSuccess,
-} from "@/redux/devices/devicesSlice";
-import { getRequest } from "@/api/fetchWrapper";
 
-function Devices() {
-  const dispatch = useDispatch();
-  const {
-    devices,
-    loading: deviceLoading,
-    error: deviceError,
-  } = useSelector((state) => state.devices);
+import api from "@/lib/api";
+
+function DevicesContent() {
+  const [devices, setDevices] = useState([]);
+  const [deviceLoading, setDeviceLoading] = useState(false);
   const searchParams = useSearchParams(); // Use useSearchParams to get query params
   const category = searchParams.get("category") || "laptops"; // Get the 'category' param or default to 'laptops'
   const router = useRouter();
@@ -42,16 +33,17 @@ function Devices() {
   useEffect(() => {
     fetchDevices();
     window.scrollTo(0, 0);
-  }, [category, dispatch]);
+  }, [category]);
 
   const fetchDevices = async () => {
-    dispatch(devicesStart());
+    setDeviceLoading(true);
     try {
-      const response = await getRequest(`/devices?category=${category}`);
-      const data = await response.json();
-      dispatch(devicesSuccess(data.devices));
+      const response = await api.get(`/devices?category=${category}`);
+      setDevices(response.data.devices);
     } catch (err) {
-      dispatch(devicesFailure());
+      console.error(err);
+    } finally {
+      setDeviceLoading(false);
     }
   };
 
@@ -139,8 +131,8 @@ function Devices() {
                           alt={frame.deviceName}
                           width={100}
                           height={300}
-                        className="w-[70%] h-auto object-contain p-2"
-                      />
+                          className="w-[70%] h-auto object-contain p-2"
+                        />
                       </div>
                       <p className="mt-2 text-center text-[#000000] md:text-base text-sm  font-medium">
                         {frame.deviceName}
@@ -184,13 +176,13 @@ function Devices() {
                   <Link href={`/skinphone?skin=${frame.slug}`}>
                     <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm  h-[329px]">
                       <div className="h-[70%]  relative flex items-center justify-center">
-                      <Image
-                        src={frame.deviceImage}
-                        alt={frame.deviceName}
-                        width={100}
-                        height={300}
-                        className="w-auto h-[80%] object-contain p-2"
-                      />
+                        <Image
+                          src={frame.deviceImage}
+                          alt={frame.deviceName}
+                          width={100}
+                          height={300}
+                          className="w-auto h-[80%] object-contain p-2"
+                        />
                       </div>
                       <p className="mt-2 text-center text-[#000000] md:text-base text-sm  font-medium">
                         {frame.deviceName}
@@ -267,13 +259,19 @@ function Devices() {
         </div>
       </div>
       <br />
-      <div className="mb-24">
-      {renderTabContent()}
-      </div>
+      <div className="mb-24">{renderTabContent()}</div>
 
       <Sectiontwo />
       <Footer />
     </>
+  );
+}
+
+function Devices() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DevicesContent />
+    </Suspense>
   );
 }
 export default Devices;
