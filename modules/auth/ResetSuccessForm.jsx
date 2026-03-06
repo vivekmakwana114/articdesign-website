@@ -2,10 +2,8 @@
 
 const ResetSuccessForm = ({ onBack, onResend, loading }) => {
   return (
-    <div className="md:flex md:flex-col space-y-6 max-w-[500px]">
-      <h1 className="text-[#111827] md:text-[28px] text-base font-bold">
-        Check Your Email
-      </h1>
+    <div className="flex flex-col space-y-5 md:min-w-96">
+      <h1 className="text-[#111827] text-[28px] font-bold">Check Your Email</h1>
       <p className="text-[#111827] text-sm font-normal">
         We&apos;ve sent a Reset Password link to your email. Please check your
         inbox and follow the link to proceed.

@@ -40,7 +40,7 @@ const ForgotPasswordForm = ({ onSubmit, onBack, loading }) => {
               send you instructions to reset your password.
             </p>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col space-y-2">
               <label htmlFor="email" className="form__label">
                 Email
               </label>
@@ -57,7 +57,7 @@ const ForgotPasswordForm = ({ onSubmit, onBack, loading }) => {
               />
             </div>
 
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-4 pt-2">
               <button
                 type="submit"
                 className="cursor-pointer border bg-[#0071E3] rounded-[6px] p-3 text-white font-medium text-base text-center"

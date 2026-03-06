@@ -37,14 +37,15 @@ const validationSchema = Yup.object().shape({
   country: Yup.string().required("Country is required"),
 });
 
-// Step 1 sub-component (email + password) // Moved topsection and OAuth inside to match SignInForm layout wrapping
 const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [emailField, emailMeta] = useField("email");
   const [passwordField, passwordMeta] = useField("password");
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -54,7 +55,7 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
   };
 
   return (
-    <div className="space-y-5 md:min-w-96">
+    <div className="space-y-5 w-full max-w-[384px]">
       <div className="topsection">
         <h1 className="text-[#6B7280] text-sm font-bold">Step 1 of 2</h1>
         <h1 className="text-[#111827] text-[28px] font-bold">
@@ -75,7 +76,7 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
           <button
             type="button"
             onClick={onSwitchToSignIn}
-            className="text-[#0071E3] ml-1"
+            className="text-[#0071E3] pl-2"
           >
             Sign in
           </button>
@@ -87,15 +88,17 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
           <label htmlFor="email" className="form__label mb-0">
             Username or Email
           </label>
+
           <input
             id="email"
             name="email"
             type="text"
             className={`form__input pr-10 ${
-              passwordMeta.touched && passwordMeta.error ? "border-red-500" : ""
+              emailMeta.touched && emailMeta.error ? "border-red-500" : ""
             }`}
             onChange={handleChange}
           />
+
           <ErrorMessage
             component="p"
             name="email"
@@ -103,34 +106,37 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
           />
         </div>
 
-        <div className="flex flex-col space-y-1 relative">
+        <div className="flex flex-col space-y-1">
           <label htmlFor="password" className="form__label mb-0">
             Password
           </label>
-          <div className="relative">
+
+          <div className="relative w-full">
             <input
               id="password"
               name="password"
               type={showPassword ? "text" : "password"}
-              className={`form__input pr-10 ${
-                emailMeta.touched && emailMeta.error ? "border-red-500" : ""
+              className={`form__input w-full pr-12 ${
+                passwordMeta.touched && passwordMeta.error
+                  ? "border-red-500"
+                  : ""
               }`}
               onChange={handleChange}
             />
-            <span className="absolute inset-y-0 right-2 top-1 flex items-center">
+
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pt-3"
+            >
               {showPassword ? (
-                <HiOutlineEye
-                  className="cursor-pointer text-base"
-                  onClick={togglePasswordVisibility}
-                />
+                <HiOutlineEye className="text-xl" />
               ) : (
-                <HiOutlineEyeOff
-                  className="cursor-pointer text-base"
-                  onClick={togglePasswordVisibility}
-                />
+                <HiOutlineEyeOff className="text-xl" />
               )}
-            </span>
+            </button>
           </div>
+
           <ErrorMessage
             component="p"
             name="password"
@@ -139,21 +145,17 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
         </div>
       </div>
 
-      <div className="flex flex-col space-y-4 w-full">
-        <p className="text-[#000000] font-normal text-sm">
-          By continuing, I understand and agree to ArticDesign&apos;s{" "}
-          <a href="/privacypolicy">
-            <span className=" underline underline-offset-1">
-              Privacy Notice
-            </span>{" "}
-          </a>
-          and{" "}
-          <a href="/termsandconditions">
-            <span className=" underline underline-offset-1">Terms of Use</span>
-          </a>{" "}
-          for creating an ArticDesign account
-        </p>
-      </div>
+      <p className="text-[#000000] font-normal text-sm leading-5 w-full max-w-[384px] break-words whitespace-normal">
+        By continuing, I understand and agree to ArticDesign's{" "}
+        <a href="/privacypolicy">
+          <span className="underline underline-offset-1">Privacy Notice</span>
+        </a>{" "}
+        and{" "}
+        <a href="/termsandconditions">
+          <span className="underline underline-offset-1">Terms of Use</span>
+        </a>{" "}
+        for creating an ArticDesign Account.
+      </p>
     </div>
   );
 };
@@ -213,7 +215,7 @@ const Step2 = ({ formData, setFormData }) => {
   };
 
   return (
-    <div className="space-y-5 md:min-w-96">
+    <div className="space-y-5 w-full max-w-[384px]">
       <div className="topsection">
         <h1 className="text-[#6B7280] text-sm font-bold">Step 2 of 2</h1>
         <h1 className="text-[#111827] text-[28px] font-bold">

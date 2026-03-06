@@ -33,8 +33,8 @@ const ResetPasswordForm = ({ onSubmit, loading }) => {
         }}
       >
         {({ isSubmitting }) => (
-          <Form className="md:flex md:flex-col space-y-6 ">
-            <h1 className="text-[#111827] md:text-[28px] text-base font-bold">
+          <Form className="flex flex-col space-y-5 md:min-w-96">
+            <h1 className="text-[#111827] text-[28px] font-bold">
               Reset password to ArticDesign
             </h1>
             <p className="text-[#111827] text-sm font-normal md:my-5">
@@ -52,15 +52,15 @@ const ResetPasswordForm = ({ onSubmit, loading }) => {
                   type={showPassword ? "text" : "password"}
                   className="form__input pr-10"
                 />
-                <span className="absolute inset-y-0  bottom-3  md:top-4 top-2 flex items-center right-1 md:pr-2">
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center">
                   {showPassword ? (
                     <HiOutlineEyeOff
-                      className="text-gray-400 cursor-pointer text-2xl"
+                      className="text-gray-500 hover:text-gray-700 cursor-pointer text-[20px]"
                       onClick={togglePasswordVisibility}
                     />
                   ) : (
                     <HiOutlineEye
-                      className="text-gray-400 cursor-pointer text-2xl"
+                      className="text-gray-500 hover:text-gray-700 cursor-pointer text-[20px]"
                       onClick={togglePasswordVisibility}
                     />
                   )}
@@ -76,7 +76,7 @@ const ResetPasswordForm = ({ onSubmit, loading }) => {
             <div className="flex flex-col space-y-4">
               <button
                 type="submit"
-                className="cursor-pointer border bg-[#0071E3] rounded-[6px] p-3 text-white font-medium text-base text-center"
+                className="btn rounded-[8px] w-full my-[12px]"
                 disabled={loading}
               >
                 {loading ? "Submitting..." : "Submit"}
