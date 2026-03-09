@@ -22,6 +22,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "royaltiesapp-bucket.s3.us-east-2.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "invennico-dev.s3.eu-north-1.amazonaws.com",
+      },
     ],
   },
   reactStrictMode: true,

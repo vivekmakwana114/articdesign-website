@@ -19,6 +19,7 @@ import { CgProfile } from "react-icons/cg";
 import { MdOutlineClose } from "react-icons/md";
 import NavLinks from "./NavLinks";
 import Link from "next/link";
+import Image from "next/image";
 import toast from "react-hot-toast";
 import Loader from "../Loader";
 import api from "@/lib/api";
@@ -28,7 +29,7 @@ import { logout } from "@/state/auth/authSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const cartState = { cartItems: [] }; 
+  const cartState = { cartItems: [] };
   const currentUser = useSelector((state) => state.auth.user);
   const [open, setOpen] = useState(false);
   const [showsearch, setShowsearch] = useState(false);
@@ -170,10 +171,33 @@ const Navbar = () => {
             />
           )}
           <div className="relative" ref={dropdownRef}>
-            <CgProfile
-              className="hover:cursor-pointer"
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
-            />
+            {(() => {
+              const profileSrc =
+                currentUser?.profile &&
+                currentUser.profile !== "null" &&
+                currentUser.profile !== ""
+                  ? currentUser.profile.Location || currentUser.profile
+                  : null;
+              return profileSrc ? (
+                <div
+                  className="w-8 h-8 rounded-full overflow-hidden hover:cursor-pointer border border-gray-500"
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                >
+                  <Image
+                    src={profileSrc}
+                    alt="Profile"
+                    width={32}
+                    height={32}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              ) : (
+                <CgProfile
+                  className="hover:cursor-pointer"
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                />
+              );
+            })()}
             {showProfileMenu && (
               <>
                 <BiSolidUpArrow className="absolute left-0 top-5 text-white" />
