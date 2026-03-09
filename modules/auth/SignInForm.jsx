@@ -103,7 +103,7 @@ const Step2 = ({ formData, setFormData, handlePrev }) => {
         </p>
       </div>
 
-      <div className="flex flex-col space-y-4">
+      {/* <div className="flex flex-col space-y-4">
         <div className="flex flex-col space-y-1 relative">
           <label htmlFor="password" className="form__label mb-0">
             Password
@@ -120,15 +120,15 @@ const Step2 = ({ formData, setFormData, handlePrev }) => {
               }`}
               onChange={handleChange}
             />
-            <span className="absolute inset-y-0 right-2 top-1 flex items-center">
+            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center">
               {showPassword ? (
                 <HiOutlineEye
-                  className="cursor-pointer text-base"
+                  className="cursor-pointer text-[20px] text-gray-500 hover:text-gray-700"
                   onClick={togglePasswordVisibility}
                 />
               ) : (
                 <HiOutlineEyeOff
-                  className="cursor-pointer text-base"
+                  className="cursor-pointer text-[20px] text-gray-500 hover:text-gray-700"
                   onClick={togglePasswordVisibility}
                 />
               )}
@@ -140,6 +140,41 @@ const Step2 = ({ formData, setFormData, handlePrev }) => {
             className="text-red-500 text-sm"
           />
         </div>
+      </div> */}
+      <div className="flex flex-col space-y-1">
+        <label htmlFor="password" className="form__label mb-0">
+          Password
+        </label>
+
+        <div className="relative w-full">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            className={`form__input w-full pr-12 ${
+              passwordMeta.touched && passwordMeta.error ? "border-red-500" : ""
+            }`}
+            onChange={handleChange}
+          />
+
+          <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pt-3"
+          >
+            {showPassword ? (
+              <HiOutlineEye className="text-xl" />
+            ) : (
+              <HiOutlineEyeOff className="text-xl" />
+            )}
+          </button>
+        </div>
+
+        <ErrorMessage
+          component="p"
+          name="password"
+          className="text-red-500 text-sm"
+        />
       </div>
     </div>
   );

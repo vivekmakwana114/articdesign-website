@@ -5,7 +5,7 @@ import { HiArrowNarrowLeft } from "react-icons/hi";
 function ForgetSuccessMessage() {
   return (
     <section className="flex flex-col justify-center items-center md:m-28 my-20">
-      <form className="md:flex md:flex-col space-y-6">
+      <form className="flex flex-col space-y-5 md:min-w-96">
         <Link href="/login">
           <p className=" font-bold text-sm text-[#0071E3] flex justify-start items-center gap-3 my-5">
             <HiArrowNarrowLeft className="cursor-pointer text-3xl font-bold" />
@@ -19,7 +19,7 @@ function ForgetSuccessMessage() {
           Enter your email to reset your password
         </p>
         <div className="flex flex-col space-y-4">
-          <p className="font-normal text-sm md:w-[362px] w-[233px]">
+          <p className="font-normal text-sm w-full">
             Please follow the instructions in the Email to rest your password.
             If you do not recieve an Email, check in your spam
           </p>
@@ -28,7 +28,7 @@ function ForgetSuccessMessage() {
           johndoe@email.com
         </p>
         <div className="flex flex-col space-y-4">
-          <button className=" cursor-pointer border bg-[#0071E3] rounded-[6px] md:w-[384px] w-[300px] p-3 text-white font-medium text-base text-center">
+          <button className="btn rounded-[8px] w-full my-[12px]">
             Reset Email
           </button>
         </div>

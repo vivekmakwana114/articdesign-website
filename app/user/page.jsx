@@ -16,11 +16,13 @@ import MessageModal from "../../components/Modals/MessageModal";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { CgProfile } from "react-icons/cg";
 import dynamic from "next/dynamic";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
 import SaveLoader from "@/components/SaveLoader";
 import FormatCurrencyRate from "@/components/Currency/FormatCurrencyRate";
+import { useSelector } from "react-redux";
 
 const AccoutsModal = dynamic(
   () => import("../../components/Modals/AccountsModal"),
@@ -52,8 +54,8 @@ const maildata = [
 
 function UserContent() {
   const [orders, setOrders] = useState([]);
-  const currentUser = null; // Removed Redux state access
-  const searchParams = useSearchParams(); // Use useSearchParams to get query params
+  const currentUser = useSelector((state)=> state?.auth?.user); 
+  const searchParams = useSearchParams(); 
   const dashboard = searchParams.get("dashboard");
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState("");
@@ -85,11 +87,11 @@ function UserContent() {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
 
-  /* useEffect(() => {
+   useEffect(() => {
     if (!currentUser) {
       router.push("/");
     }
-  }, [currentUser]); */
+  }, [currentUser]); 
 
   useEffect(() => {
     // Format the initial date to YYYY-MM-DD if it's provided
@@ -102,25 +104,18 @@ function UserContent() {
   }, [initialBirthday]);
 
   useEffect(() => {
-    loadUser();
-    loadUserOrders();
-  }, []);
-
-  const loadUser = async () => {
-    try {
-      const res = await api.get(`/auth/profile`);
-      const data = res.data;
-      setFirstname(data.firstname);
-      setLastname(data.lastname);
-      setEmail(data.email);
-      setPhonenumber(data.phonenumber);
-      setInitialBirthday(data.birthday);
-      setImage(data.profilePicture);
-      setCountry(data.country);
-    } catch (err) {
-      console.log(err);
+    if (currentUser) {
+      setFirstname(currentUser?.firstName || "");
+      setLastname(currentUser?.lastName || "");
+      setEmail(currentUser?.email || "");
+      setPhonenumber(currentUser?.phone || "");
+      setInitialBirthday(currentUser?.birthday || "");
+      setImage(currentUser?.profilePicture || "");
+      setCountry(currentUser?.country || "");
     }
-  };
+    loadUserOrders();
+  }, [currentUser]);
+
   const loadUserOrders = async () => {
     try {
       const res = await api.get(`/orders/user-orders`);
@@ -564,7 +559,7 @@ function UserContent() {
             <div className="flex flex-row space-x-2">
               <div className="flex justify-start items-end pl-11">
                 <Image
-                  src={currentOrder?.thumbnailImage}
+                  src={currentOrder?.thumbnailImage || null}
                   alt="image"
                   width={73}
                   height={68.84}
@@ -684,13 +679,27 @@ function UserContent() {
         <div className="flex justify-center z-50">
           <div className="md:flex md:flex-col  md:items-end">
             <div className="space-y-4 my-5 md:flex md:flex-col  md:items-center">
-              <Image
-                src={image.Location}
-                alt="profileimage"
-                width={177}
-                height={177}
-                className="w-[117px] h-[117px] rounded-full"
-              />
+              {image && typeof image === "object" && image.Location ? (
+                <Image
+                  src={image.Location}
+                  alt="profileimage"
+                  width={117}
+                  height={117}
+                  className="w-[117px] h-[117px] rounded-full object-cover"
+                />
+              ) : image && typeof image === "string" ? (
+                <Image
+                  src={image}
+                  alt="profileimage"
+                  width={117}
+                  height={117}
+                  className="w-[117px] h-[117px] rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-[117px] h-[117px] rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                  <CgProfile size={50} />
+                </div>
+              )}
               <p className=" font-medium text-[#111827] text-sm">
                 {firstname} {lastname}
               </p>
@@ -740,6 +749,33 @@ function UserContent() {
           <div className="bg-white rounded-lg z-40 ">
             {dashboard === "personalinformation" && (
               <div className="col-span-2 space-y-5">
+                <div className="flex flex-col items-center mb-6">
+                  {image && typeof image === "object" && image.Location ? (
+                    <Image
+                      src={image.Location}
+                      alt="profileimage"
+                      width={117}
+                      height={117}
+                      className="w-[117px] h-[117px] rounded-full object-cover"
+                    />
+                  ) : image && typeof image === "string" ? (
+                    <Image
+                      src={image}
+                      alt="profileimage"
+                      width={117}
+                      height={117}
+                      className="w-[117px] h-[117px] rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-[117px] h-[117px] rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                      <CgProfile size={50} />
+                    </div>
+                  )}
+                  <p className="mt-3 font-medium text-[#111827] text-sm">
+                    {firstname} {lastname}
+                  </p>
+                  <p className="font-medium text-[#86868B] text-sm">{email}</p>
+                </div>
                 <div>
                   <p className=" text-[28px] font-bold text-[#111827]">
                     Personal Details
@@ -863,7 +899,7 @@ function UserContent() {
                                     key={i}
                                   >
                                     <Image
-                                      src={cartItem?.thumbnailImage}
+                                      src={cartItem?.thumbnailImage || null}
                                       alt="image"
                                       width={207.84}
                                       height={200.58}

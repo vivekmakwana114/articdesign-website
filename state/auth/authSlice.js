@@ -158,15 +158,11 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // Destructure rememberMe out, keep the rest as data
         const { rememberMe, ...payloadData } = action.payload;
-
-        // API response structure: { success, message, data: { user, token } }
-        // We need to extract from payloadData.data
         const responseData = payloadData.data || {};
 
         state.user = responseData.user;
-        state.tokens = responseData.token; // API returns 'token', we store as 'tokens'
+        state.tokens = responseData.token;
         // state.redirect = data.redirect;
 
         if (typeof window !== "undefined") {

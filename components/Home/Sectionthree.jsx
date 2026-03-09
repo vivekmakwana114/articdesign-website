@@ -12,20 +12,20 @@ function Sectionthree() {
 
   useEffect(() => {
     setIsMounted(true);
-    fetchTopProducts();
+    // fetchTopProducts();
   }, []);
 
-  const fetchTopProducts = async () => {
-    setLoading(true);
-    try {
-      const response = await api.get(`/orders/top/products?limit=${limit}`);
-      setTopproducts(response.data);
-    } catch (err) {
-      console.error("Failed to load top products:", err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchTopProducts = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await api.get(`/orders/top/products?limit=${limit}`);
+  //     setTopproducts(response.data);
+  //   } catch (err) {
+  //     console.error("Failed to load top products:", err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   return (
     <>
       <section className=" bg-[#F5F5F7] md:p-10 p-5 mt-10">

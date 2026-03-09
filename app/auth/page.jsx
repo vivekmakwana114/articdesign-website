@@ -41,8 +41,18 @@ const AuthPageContent = () => {
       setCurrentView("signup");
     } else if (view === "forgot-password") {
       setCurrentView("forgot-password");
+    } else if (view === "reset-success") {
+      setCurrentView("reset-success");
+    } else {
+      setCurrentView("signin");
     }
   }, [searchParams]);
+
+  const navigateTo = (view) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("view", view);
+    router.push(`/auth?${params.toString()}`);
+  };
 
   // Set document title based on current view
   useEffect(() => {
@@ -88,7 +98,7 @@ const AuthPageContent = () => {
       .then(() => {
         toast.dismiss();
         toast.success("Account created successfully!");
-        setCurrentView("signin");
+        navigateTo("signin");
       })
       .catch((err) => {
         toast.dismiss();
@@ -106,7 +116,7 @@ const AuthPageContent = () => {
       .then(() => {
         toast.dismiss();
         toast.success("Reset link sent. Please check your mail.");
-        setCurrentView("reset-success");
+        navigateTo("reset-success");
       })
       .catch((err) => {
         toast.dismiss();
@@ -152,7 +162,7 @@ const AuthPageContent = () => {
       .then(() => {
         toast.dismiss();
         toast.success("Password changed successfully");
-        setCurrentView("signin");
+        navigateTo("signin");
       })
       .catch((err) => {
         toast.dismiss();
@@ -166,8 +176,8 @@ const AuthPageContent = () => {
         return (
           <SignInForm
             onSubmit={handleLogin}
-            onForgotPassword={() => setCurrentView("forgot-password")}
-            onSwitchToSignUp={() => setCurrentView("signup")}
+            onForgotPassword={() => navigateTo("forgot-password")}
+            onSwitchToSignUp={() => navigateTo("signup")}
             loading={loading}
           />
         );
@@ -175,7 +185,7 @@ const AuthPageContent = () => {
         return (
           <SignUpForm
             onSubmit={handleSignup}
-            onSwitchToSignIn={() => setCurrentView("signin")}
+            onSwitchToSignIn={() => navigateTo("signin")}
             loading={loading}
           />
         );
@@ -183,7 +193,7 @@ const AuthPageContent = () => {
         return (
           <ForgotPasswordForm
             onSubmit={handleSendForgotPassword}
-            onBack={() => setCurrentView("signin")}
+            onBack={() => navigateTo("signin")}
             loading={loading}
           />
         );
@@ -194,7 +204,7 @@ const AuthPageContent = () => {
       case "reset-success":
         return (
           <ResetSuccessForm
-            onBack={() => setCurrentView("signin")}
+            onBack={() => navigateTo("signin")}
             onResend={handleResend}
             loading={loading}
           />
