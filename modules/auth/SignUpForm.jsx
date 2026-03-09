@@ -146,7 +146,7 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
       </div>
 
       <p className="text-[#000000] font-normal text-sm leading-5 w-full max-w-[384px] break-words whitespace-normal">
-        By continuing, I understand and agree to ArticDesign's{" "}
+        By continuing, I understand and agree to ArticDesign's{" "}<br/>
         <a href="/privacypolicy">
           <span className="underline underline-offset-1">Privacy Notice</span>
         </a>{" "}
@@ -154,7 +154,7 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
         <a href="/termsandconditions">
           <span className="underline underline-offset-1">Terms of Use</span>
         </a>{" "}
-        for creating an ArticDesign Account.
+        for creating an<br/> ArticDesign Account.
       </p>
     </div>
   );

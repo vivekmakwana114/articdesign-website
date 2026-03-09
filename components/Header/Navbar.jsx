@@ -20,14 +20,16 @@ import { MdOutlineClose } from "react-icons/md";
 import NavLinks from "./NavLinks";
 import Link from "next/link";
 import toast from "react-hot-toast";
-// Removed Cart Context import
 import Loader from "../Loader";
 import api from "@/lib/api";
 import { menus } from "./Mymenus";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/state/auth/authSlice";
 
 const Navbar = () => {
-  const cartState = { cartItems: [] }; // Mocking cartState
-  const currentUser = null; // Removed Redux state access
+  const dispatch = useDispatch();
+  const cartState = { cartItems: [] }; 
+  const currentUser = useSelector((state) => state.auth.user);
   const [open, setOpen] = useState(false);
   const [showsearch, setShowsearch] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -35,6 +37,7 @@ const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const dropdownRef = useRef(null);
+
   // Close dropdown when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -60,17 +63,14 @@ const Navbar = () => {
 
   const closeMobileMenu = () => {
     setShowProfileMenu(false);
-    setOpen(false); // Function to close the mobile menu
+    setOpen(false);
   };
-  const handleSignOut = async () => {
-    try {
-      await api.post(`/auth/signout`);
-      setShowProfileMenu(false);
-      toast.success("success");
-    } catch (error) {
-      console.log(error);
-    }
+
+  const handleSignOut = () => {
+    dispatch(logout());
+    toast.success("Logged out");
   };
+
   const handleSearchQuery = async () => {
     try {
       setSearchLoading(true);
@@ -261,8 +261,6 @@ const Navbar = () => {
         </div>
 
         {/* Mobile nav */}
-
-        {/* {currentUser ? ( */}
         <ul
           className={`
         md:hidden bg-[#ffffff] fixed h-full w-full top-0 overflow-y-auto bottom-0 py-20 pl-4 z-30
