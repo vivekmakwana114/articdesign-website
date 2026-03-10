@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { imageskin } from "../../assets";
 
 function Banner({
   image,
@@ -26,8 +27,8 @@ function Banner({
         }
       >
         <Image
-          src={image}
-          alt={title}
+          src={image || imageskin}
+          alt={title || "banner image"}
           width={400}
           height={500}
           className={

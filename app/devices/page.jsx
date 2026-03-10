@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
-import { taponeimage, taptwoimage, tapthreeimage } from "../../assets";
+import { taponeimage, taptwoimage, tapthreeimage, laptop, ipad, smartphogeometry } from "../../assets";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -11,11 +11,15 @@ import TabLink from "@/components/TabLink";
 
 import api from "@/lib/api";
 
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDevices } from "@/state/device/deviceSlice";
+
 function DevicesContent() {
-  const [devices, setDevices] = useState([]);
-  const [deviceLoading, setDeviceLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { devicesData, devicesStatus } = useSelector((state) => state.device);
+  
   const searchParams = useSearchParams(); // Use useSearchParams to get query params
-  const category = searchParams.get("category") || "laptops"; // Get the 'category' param or default to 'laptops'
+  const category = searchParams.get("category") || "laptop"; // Get the 'category' param or default to 'laptop'
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(category); // Initialize activeTab with category from URL
 
@@ -23,32 +27,28 @@ function DevicesContent() {
     setActiveTab(tab);
     router.push(`/devices?category=${tab}`); // Update URL with category param
   };
+
   useEffect(() => {
-    // Update activeTab based on query param only when it exists, otherwise fallback to 'laptops'
+    // Update activeTab based on query param only when it exists, otherwise fallback to 'laptop'
     if (category) {
       setActiveTab(category);
+    } else {
+      setActiveTab("laptop");
     }
   }, [category]);
 
   useEffect(() => {
-    fetchDevices();
+    dispatch(fetchDevices({ category }));
     window.scrollTo(0, 0);
-  }, [category]);
+  }, [category, dispatch]);
 
-  const fetchDevices = async () => {
-    setDeviceLoading(true);
-    try {
-      const response = await api.get(`/devices?category=${category}`);
-      setDevices(response.data.devices);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setDeviceLoading(false);
-    }
-  };
+  const devices = devicesData.filter((device) => 
+    device.name?.toLowerCase().includes(activeTab === "laptop" ? "mac" : activeTab)
+  );
+  const deviceLoading = devicesStatus === "loading";
 
   const renderTabContent = () => {
-    if (activeTab === "laptops") {
+    if (activeTab === "laptop") {
       return (
         <>
           {deviceLoading ? (
@@ -73,19 +73,19 @@ function DevicesContent() {
                   key={index}
                   className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px]"
                 >
-                  <Link href={`/skinlaptop?skin=${frame.slug}`}>
+                  <Link href={`/skinlaptop?skin=${frame._id}`}>
                     <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[329px]">
                       <div className="h-[70%]  relative flex items-center justify-center">
                         <Image
-                          src={frame.deviceImage}
-                          alt={frame.deviceName}
+                          src={frame.image || laptop}
+                          alt={frame.name || "laptop image"}
                           width={100}
                           height={300}
                           className="w-full h-auto object-contain p-2"
                         />
                       </div>
                       <p className="mt-2 text-center text-[#000000] md:text-base text-sm  font-medium">
-                        {frame.deviceName}
+                        {frame.name}
                       </p>
                       <p className="mt-2 text-center text-[#86868B] text-base font-medium">
                         {frame.chipSet}
@@ -98,7 +98,7 @@ function DevicesContent() {
           )}
         </>
       );
-    } else if (activeTab === "ipads") {
+    } else if (activeTab === "ipad") {
       return (
         <>
           {deviceLoading ? (
@@ -123,19 +123,19 @@ function DevicesContent() {
                   key={index}
                   className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px] "
                 >
-                  <Link href={`/skinipad?skin=${frame.slug}`}>
+                  <Link href={`/skinipad?skin=${frame._id}`}>
                     <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[329px]">
                       <div className="h-[70%]  relative flex items-center justify-center">
                         <Image
-                          src={frame.deviceImage}
-                          alt={frame.deviceName}
+                          src={frame.image || ipad}
+                          alt={frame.name || "ipad image"}
                           width={100}
                           height={300}
                           className="w-[70%] h-auto object-contain p-2"
                         />
                       </div>
                       <p className="mt-2 text-center text-[#000000] md:text-base text-sm  font-medium">
-                        {frame.deviceName}
+                        {frame.name}
                       </p>
                       <p className="mt-2 text-center text-[#86868B] text-base font-medium">
                         {frame.chipSet}
@@ -148,7 +148,7 @@ function DevicesContent() {
           )}
         </>
       );
-    } else if (activeTab === "phones") {
+    } else if (activeTab === "iphone") {
       return (
         <>
           {deviceLoading ? (
@@ -173,19 +173,19 @@ function DevicesContent() {
                   key={index}
                   className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px] "
                 >
-                  <Link href={`/skinphone?skin=${frame.slug}`}>
+                  <Link href={`/skinphone?skin=${frame._id}`}>
                     <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm  h-[329px]">
                       <div className="h-[70%]  relative flex items-center justify-center">
                         <Image
-                          src={frame.deviceImage}
-                          alt={frame.deviceName}
+                          src={frame.image || smartphogeometry}
+                          alt={frame.name || "phone image"}
                           width={100}
                           height={300}
                           className="w-auto h-[80%] object-contain p-2"
                         />
                       </div>
                       <p className="mt-2 text-center text-[#000000] md:text-base text-sm  font-medium">
-                        {frame.deviceName}
+                        {frame.name}
                       </p>
                     </div>
                   </Link>
@@ -228,7 +228,7 @@ function DevicesContent() {
         <div className="border-b border-gray-500 w-80 flex justify-center items-center">
           <div className="flex rounded-lg justify-center items-center gap-4 relative">
             <TabLink
-              category="laptops"
+              category="laptop"
               activeTab={activeTab}
               tabStyles={tabStyles}
               image={taponeimage}
@@ -237,7 +237,7 @@ function DevicesContent() {
             />
 
             <TabLink
-              category="ipads"
+              category="ipad"
               activeTab={activeTab}
               tabStyles={tabStyles}
               image={taptwoimage}
@@ -247,7 +247,7 @@ function DevicesContent() {
             />
 
             <TabLink
-              category="phones"
+              category="iphone"
               activeTab={activeTab}
               tabStyles={tabStyles}
               image={tapthreeimage}

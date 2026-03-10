@@ -12,7 +12,7 @@ const TabLink = ({ category, activeTab, tabStyles, image, label, onClick, imageC
     style={activeTab === category ? tabStyles.active : tabStyles.inactive}
     onClick={() => onClick(category)}
   >
-    <Image src={image} alt={label} className={imageClass || "w-[68.35px] h-[40px]"} />
+    <Image src={image} alt={label || "tab link"} className={imageClass || "w-[68.35px] h-[40px]"} />
     <h1 className="text-center">{label}</h1>
   </Link>
 );

@@ -7,19 +7,28 @@ import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 
 const initialValues = {
   password: "",
+  confirmPassword: "",
 };
 
 const validationSchema = Yup.object().shape({
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Confirm Password is required"),
 });
 
 const ResetPasswordForm = ({ onSubmit, loading }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -28,8 +37,9 @@ const ResetPasswordForm = ({ onSubmit, loading }) => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, actions) => {
-          onSubmit(values);
-          actions.resetForm();
+          // Sending only the password as per requirement
+          onSubmit({ password: values.password });
+          actions.setSubmitting(false);
         }}
       >
         {({ isSubmitting }) => (
@@ -42,13 +52,14 @@ const ResetPasswordForm = ({ onSubmit, loading }) => {
             </p>
 
             <div className="flex flex-col">
-              <label htmlFor="password" className="form__label">
-                Password
+              <label htmlFor="password" surname className="form__label">
+                New Password
               </label>
               <div className="relative">
                 <Field
                   id="password"
                   name="password"
+                  placeholder="Enter new password"
                   type={showPassword ? "text" : "password"}
                   className="form__input pr-10"
                 />
@@ -65,12 +76,45 @@ const ResetPasswordForm = ({ onSubmit, loading }) => {
                     />
                   )}
                 </span>
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="text-red-500 text-sm mt-1"
-                />
               </div>
+              <ErrorMessage
+                name="password"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="confirmPassword" surname className="form__label">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Field
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Re-enter new password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  className="form__input pr-10"
+                />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center">
+                  {showConfirmPassword ? (
+                    <HiOutlineEyeOff
+                      className="text-gray-500 hover:text-gray-700 cursor-pointer text-[20px]"
+                      onClick={toggleConfirmPasswordVisibility}
+                    />
+                  ) : (
+                    <HiOutlineEye
+                      className="text-gray-500 hover:text-gray-700 cursor-pointer text-[20px]"
+                      onClick={toggleConfirmPasswordVisibility}
+                    />
+                  )}
+                </span>
+              </div>
+              <ErrorMessage
+                name="confirmPassword"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
             </div>
 
             <div className="flex flex-col space-y-4">

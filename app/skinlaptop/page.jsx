@@ -1,5 +1,5 @@
 "use client";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import SkinSectionone from "@/components/skin/SkinSectionone";
 import SkinSectiontwo from "@/components/skin/SkinSectiontwo";
 import Sectionfive from "@/components/Home/Sectionfive";
@@ -7,43 +7,34 @@ import { useParams, useSearchParams } from "next/navigation";
 import Sectiontwo from "@/components/Home/Sectiontwo";
 import Footer from "@/components/Footer";
 
-import api from "@/lib/api";
-import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "@/state/product/productSlice";
+import { fetchDevices } from "@/state/device/deviceSlice";
 
 function SkinLaptopContent() {
-  const [products, setProducts] = useState([]);
-  const [productsLoading, setProductsLoading] = useState(false);
-  const [device, setDevice] = useState({});
-  const [devicesLoading, setDevicesLoading] = useState(false);
-  const searchParams = useSearchParams(); // Use useSearchParams to get query params
+  const dispatch = useDispatch();
+  const searchParams = useSearchParams();
   const skin = searchParams.get("skin");
-  useEffect(() => {
-    fetchProducts();
-    fetchDevice();
-  }, [skin]);
 
-  const fetchProducts = async () => {
-    setProductsLoading(true);
-    try {
-      const response = await api.get(`/products?skin=${skin}`);
-      setProducts(response.data.products);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setProductsLoading(false);
+  const { productsData, productsStatus } = useSelector((state) => state.product);
+  const { devicesData, devicesStatus } = useSelector((state) => state.device);
+
+  // Find the specific device if devicesData is fetched
+  const device = devicesData.find((d) => d._id === skin) || {};
+
+  useEffect(() => {
+    dispatch(fetchDevices({ category: "laptop" }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (device._id) {
+      dispatch(fetchProducts({ deviceId: device._id }));
     }
-  };
-  const fetchDevice = async () => {
-    setDevicesLoading(true);
-    try {
-      const response = await api.get(`/devices/${skin}`);
-      setDevice(response.data.device || {});
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setDevicesLoading(false);
-    }
-  };
+  }, [device._id, dispatch]);
+
+  const products = productsData;
+  const productsLoading = productsStatus === "loading";
+  const devicesLoading = devicesStatus === "loading";
 
   return (
     <section className="md:py-0 py-5">
@@ -51,7 +42,7 @@ function SkinLaptopContent() {
         params={skin}
         products={products}
         loading={productsLoading}
-        spantext={device?.deviceName}
+        spantext={device?.name}
         title="Wrap it in Skinsational Style! "
         subspantext="Elevate "
         subtitle=" to Iconic Status "

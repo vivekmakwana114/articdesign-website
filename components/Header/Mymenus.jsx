@@ -1,17 +1,17 @@
 export const menus = [
   {
     name: "MackBooks",
-    link: "laptops",
+    link: "laptop",
     params: true,
   },
   {
     name: "iPad",
-    link: "ipads",
+    link: "ipad",
     params: true,
   },
   {
     name: "iPhone",
-    link: "phones",
+    link: "iphone",
     params: true,
   },
   {

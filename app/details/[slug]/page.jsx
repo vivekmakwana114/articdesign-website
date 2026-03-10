@@ -11,28 +11,24 @@ import DetailsSection from "@/components/Details/DetailsSection";
 import Banner from "@/components/Banner/Banner";
 import { BannerData } from "@/components/Banner/BannerData";
 
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductDetails } from "@/state/product/productSlice";
+
 function Details() {
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const slug = pathname.split("/").pop();
-  const [product, setProduct] = useState({});
-  const [productsLoading, setProductsLoading] = useState(false);
+
+  const { product, detailsStatus } = useSelector((state) => state.product);
 
   useEffect(() => {
-    fetchProduct();
-    window.scrollTo(0, 0);
-  }, [slug]);
-
-  const fetchProduct = async () => {
-    setProductsLoading(true);
-    try {
-      const response = await api.get(`/products/${slug}`);
-      setProduct(response.data.product);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setProductsLoading(false);
+    if (slug) {
+      dispatch(fetchProductDetails(slug));
     }
-  };
+    window.scrollTo(0, 0);
+  }, [slug, dispatch]);
+
+  const productsLoading = detailsStatus === "loading";
   return (
     <>
       <DetailsSection product={product} loading={productsLoading} />
