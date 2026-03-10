@@ -11,40 +11,41 @@ import FormatCurrencyRate from "../Currency/FormatCurrencyRate";
 // Removed Cart Context import
 import GenerateUniqueId from "../GenerateUniqueId";
 import toast from "react-hot-toast";
+import { imageskin } from "../../assets";
 
 const getImageData = (product) => [
   {
     name: "Top skin",
     color: "Silver",
-    image: product?.topSkinImage,
+    image: product?.topSkinImage || imageskin,
     slug: "topskin",
     price: 100,
   },
   {
     name: "Palm rest skin",
     color: "Silver",
-    image: product?.palmRestSkinImage,
+    image: product?.palmRestSkinImage || imageskin,
     slug: "palmrest",
     price: 200,
   },
   {
     name: "Trackpad and palm rest",
     color: "Silver",
-    image: product?.trackpadAndPalmRestImage,
+    image: product?.trackpadAndPalmRestImage || imageskin,
     slug: "trackpad",
     price: 150,
   },
   {
     name: "Bottom Skin",
     color: "Silver",
-    image: product?.bottomSkinImage,
+    image: product?.bottomSkinImage || imageskin,
     slug: "bottomskin",
     price: 120,
   },
   {
     name: "With Logo Cutout",
     color: "Silver",
-    image: product?.withLogoCutoutImage,
+    image: product?.withLogoCutoutImage || imageskin,
     slug: "logocutout",
     price: 50,
   },
@@ -58,7 +59,10 @@ const colordata = [
     name: "Gold",
     slug: "gold",
   },
-  { name: "Grey", name: "Grey" },
+  {
+    name: "Grey",
+    slug: "grey",
+  },
 ];
 
 const DetailsSection = ({ product, loading }) => {
@@ -108,7 +112,7 @@ const DetailsSection = ({ product, loading }) => {
     const cartItem = {
       productId: product?._id,
       productName: product?.productName,
-      deviceName: product?.device?.deviceName,
+      deviceName: product?.deviceId?.name,
       thumbnailImage: product?.thumbnailImage,
       basePrice: product?.productPrice,
       options: selectedItems, // array of selected options
@@ -194,7 +198,7 @@ const DetailsSection = ({ product, loading }) => {
                             </p>
                             <Image
                               src={item.image}
-                              alt={item.name}
+                              alt={item.name || "skin option"}
                               width={300}
                               height={500}
                               className="md:w-[534px] md:h-[411px] w-[299.4px] h-[226.2px] bg-cover"
@@ -281,7 +285,7 @@ const DetailsSection = ({ product, loading }) => {
                   </div>
                   {loading
                     ? ""
-                    : product?.device?.category.slug !== "phones" && (
+                    : product?.deviceId?.name?.toLowerCase() !== "iphone" && (
                         <>
                           <div className="flex flex-row   justify-between items-center ">
                             <p className="text-sm font-normal w-full py-3 flex flex-col">

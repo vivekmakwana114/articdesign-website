@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import FormatCurrencyRate from "../Currency/FormatCurrencyRate";
+import { imageskin } from "../../assets";
 
 function SkinSectionone({
   products,
@@ -64,20 +65,20 @@ function SkinSectionone({
                 key={index}
                 className="w-full md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-4px] transition-all duration-500"
               >
-                <Link href={`/details/${frame.slug}`}>
+                <Link href={`/details/${frame._id}`}>
                   <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm md:h-[329px] h-full">
                     <Image
-                      src={frame.thumbnailImage}
-                      alt={frame.productName}
+                      src={(frame.images && frame.images[0]) || frame.thumbnailImage || imageskin}
+                      alt={frame.name || frame.productName || "skin image"}
                       width={100}
                       height={400}
                       className="w-full h-auto"
                     />
                     <p className="mt-2 text-center text-[#000000] md:text-base text-xs font-medium">
-                      {frame.productName}
+                      {frame.name || frame.productName}
                     </p>
                     <p className="mt-2 text-center text-[#86868B] md:text-base text-xs font-medium">
-                      <FormatCurrencyRate num={frame.productPrice} />
+                      <FormatCurrencyRate num={frame.basePrice || frame.productPrice} />
                     </p>
                   </div>
                 </Link>

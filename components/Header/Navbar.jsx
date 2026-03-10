@@ -37,7 +37,12 @@ const Navbar = () => {
   const [searchData, setSearchData] = useState("");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close dropdown when clicking outside of it
   useEffect(() => {
@@ -171,7 +176,7 @@ const Navbar = () => {
             />
           )}
           <div className="relative" ref={dropdownRef}>
-            {(() => {
+            {mounted && (() => {
               const profileSrc =
                 currentUser?.profile &&
                 currentUser.profile !== "null" &&
@@ -291,7 +296,7 @@ const Navbar = () => {
         duration-500 ${open ? "left-0" : "left-[-100%]"}
         `}
         >
-          {currentUser ? (
+          {mounted && (currentUser ? (
             <>
               <li className="text-base text-[#86868B] font-normal pl-4">
                 MY ACCOUNT
@@ -349,7 +354,7 @@ const Navbar = () => {
                 </Link>
               </li>
             </>
-          )}
+          ))}
           <li className="text-base text-[#86868B] font-normal pl-4 py-5">
             OUR CATEGORIES
           </li>
