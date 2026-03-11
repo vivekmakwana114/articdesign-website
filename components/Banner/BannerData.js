@@ -52,7 +52,7 @@ export const HomeBannerData = [
         title: " Elevate Your iPad's Style",
         description: " Peel, Stick, and Transform!",
         buttonText: "Customize yours",
-        link: "devices?category=ipads",
+        link: "devices?category=ipad",
         styles: {
             banner: "flex flex-col-reverse items-center justify-between bg-[#090A0E] h-[559px] md:h-[650px] md:w-[630px] w-screen md:rounded-[16px] pt-8",
             imageWrapper: "w-full flex justify-center",
@@ -67,7 +67,7 @@ export const HomeBannerData = [
         title: "Wrap Your iPhone in Elegance",
         description: "Unleash Your iPhone's True Beauty:",
         buttonText: "Get Started",
-        link: "devices?category=phones",
+        link: "devices?category=iphone",
         styles: {
             banner: "bg-[#F6F6F6] md:h-[650px] md:w-[630px] h-[559px] md:rounded-[16px] flex flex-col py-5 bg-[url('/image2.png')] bg-no-repeat md:bg-cover bg-center pt-10 ",
             imageWrapper: "hidden",
@@ -82,7 +82,7 @@ export const HomeBannerData = [
         title: "Unlock Macbook Beauty",
         description: "Your Style, Your Canvas, Your Statement",
         buttonText: "Get Started",
-        link: "devices?category=laptops",
+        link: "devices?category=laptop",
         styles: {
             banner: "md:px-0 px-5 md:h-[594px] md:w-[1300px] md:mx-0 md:rounded-[16px] md:shadow-sm md:shadow-[#00000084] md:ring-opacity-50 flex md:flex-row flex-col-reverse md:gap-0 gap-10 bg-white",
             imageWrapper: "md:mt-20 flex justify-center",

@@ -1,26 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import api from "@/lib/api";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTopProducts } from "@/state/cart/cartSlice";
+import { imageskin } from "../../assets";
 
 const Bought = () => {
-  const [topproducts, setTopproducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    fetchTopProducts();
-  }, []);
+  const dispatch = useDispatch();
+  const { topProducts: topproducts, topProductsStatus } = useSelector(
+    (state) => state.cart,
+  );
 
-  const fetchTopProducts = async () => {
-    setLoading(true);
-    try {
-      const response = await api.get(`/orders/top/products?limit=${4}`);
-      setTopproducts(response.data);
-    } catch (err) {
-      console.error("Failed to fetch top products:", err.message);
-    } finally {
-      setLoading(false);
+  const loading = topProductsStatus === "loading";
+
+  useEffect(() => {
+    if (topProductsStatus === "idle") {
+      dispatch(fetchTopProducts(4));
     }
-  };
+  }, [dispatch, topProductsStatus]);
 
   return (
     <section className="bg-[#F5F5F7] px-5 md:p-10">
@@ -55,18 +52,22 @@ const Bought = () => {
                     <Link href={`/details/${frame.slug}`}>
                       <div className="bg-[#ffffff] md:p-4 p-3 rounded-[8px] shadow-sm h[271px]">
                         <Image
-                          src={frame.thumbnailImage}
-                          alt={frame.productName}
+                          src={
+                            frame?.images?.[0] ||
+                            frame?.thumbnailImage ||
+                            imageskin
+                          }
+                          alt={frame?.productName || "Product image"}
                           width={100}
                           height={400}
                           className="md:w-[249px] w-full md:h-[232px] h-[130px]"
                         />
-                        <p className="mt-2 text-center text-[#000000] md:text-base text-xs  font-medium">
-                          {frame.productName}
+                        <p className="mt-2 text-center text-[#000000] md:text-base text-xs font-medium">
+                          {frame?.productName || frame?.name}
                         </p>
-                        {/* <p className="mt-2 text-center text-[#86868B] text-base font-medium">
-                    {frame.model}
-                  </p> */}
+                        <p className="mt-1 text-center text-[#86868B] md:text-sm text-xs font-medium">
+                          {frame?.device || frame?.deviceName || frame?.model}
+                        </p>
                       </div>
                     </Link>
                   </div>

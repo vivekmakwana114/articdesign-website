@@ -65,21 +65,36 @@ function SkinSectionone({
                 key={index}
                 className="w-full md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-4px] transition-all duration-500"
               >
-                <Link href={`/details/${frame._id}`}>
-                  <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm md:h-[329px] h-full">
+                <Link href={`/details/${frame.slug || frame._id}`}>
+                  <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm md:h-[329px] h-full flex flex-col items-center">
                     <Image
-                      src={(frame.images && frame.images[0]) || frame.thumbnailImage || imageskin}
+                      src={
+                        (frame.images && frame.images[0]) ||
+                        frame.thumbnailImage ||
+                        imageskin
+                      }
                       alt={frame.name || frame.productName || "skin image"}
                       width={100}
                       height={400}
-                      className="w-full h-auto"
+                      className="w-full h-auto object-contain flex-grow"
+                      style={{ maxHeight: "200px" }}
                     />
-                    <p className="mt-2 text-center text-[#000000] md:text-base text-xs font-medium">
-                      {frame.name || frame.productName}
-                    </p>
-                    <p className="mt-2 text-center text-[#86868B] md:text-base text-xs font-medium">
-                      <FormatCurrencyRate num={frame.basePrice || frame.productPrice} />
-                    </p>
+                    <div className="mt-auto w-full">
+                      <p className="mt-2 text-center text-[#000000] md:text-base text-xs font-medium line-clamp-2">
+                        {frame.name || frame.productName}
+                      </p>
+                      <p className="mt-1 text-center text-[#86868B] md:text-sm text-xs font-medium">
+                        {frame.deviceSeriesId?.name ||
+                          frame.deviceId?.name ||
+                          frame.device ||
+                          frame.deviceName}
+                      </p>
+                      <p className="mt-2 text-center text-[#86868B] md:text-base text-xs font-medium">
+                        <FormatCurrencyRate
+                          num={frame.basePrice || frame.productPrice}
+                        />
+                      </p>
+                    </div>
                   </div>
                 </Link>
               </div>

@@ -1,18 +1,9 @@
 "use client";
 import React, { useEffect, useState, Suspense, useRef } from "react";
-import { AiOutlineInfoCircle, AiOutlineSend } from "react-icons/ai";
-
-import {
-  deleteIcon,
-  mailprofile,
-  mark_email_read,
-  mark_email_unread,
-  profile2,
-  progressbar,
-  skinselectlaptop7,
-} from "../../assets";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+import { progressbar, skinselectlaptop7, profile2 } from "../../assets";
 import "react-datepicker/dist/react-datepicker.css";
-import MessageModal from "../../components/Modals/MessageModal";
+
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -40,27 +31,6 @@ const AccoutsModal = dynamic(
   },
 );
 
-const maildata = [
-  {
-    image: mailprofile,
-    title: "Message title goes in here",
-    body: "Message body goes in here",
-    date: "today",
-  },
-  {
-    image: mailprofile,
-    title: "Message title goes in here",
-    body: "Message body goes in here",
-    date: "today",
-  },
-  {
-    image: mailprofile,
-    title: "Message title goes in here",
-    body: "Message body goes in here",
-    date: "today",
-  },
-];
-
 // ============================================================
 // USER CONTENT — Main component wrapping all dashboard tabs
 // ============================================================
@@ -69,7 +39,11 @@ function UserContent() {
   const getProfileSrc = (src) => {
     if (!src || src === "null" || src === "") return null;
     if (typeof src === "object") return src.Location || src.profile || null;
-    if (typeof src === "string" && (src.startsWith("http") || src.startsWith("/"))) return src;
+    if (
+      typeof src === "string" &&
+      (src.startsWith("http") || src.startsWith("/"))
+    )
+      return src;
     return null;
   };
 
@@ -102,7 +76,7 @@ function UserContent() {
   const [otherReason, setOtherReason] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalReportOpen, setModalReportOpen] = useState(false);
-  const [modalInboxOpen, setModalInboxOpen] = useState(false);
+
   const [modalPasswordIsOpen, setModalPasswordIsOpen] = useState(false);
   const [proLoading, setProLoading] = useState(false);
   const [orderProblemMessage, setOrderProblemMessage] = useState("");
@@ -149,7 +123,7 @@ function UserContent() {
     if (initialBirthday) {
       try {
         let formattedDate;
-        // Handle DD-MM-YYYY format from API  
+        // Handle DD-MM-YYYY format from API
         if (/^\d{2}-\d{2}-\d{4}$/.test(initialBirthday)) {
           const [dd, mm, yyyy] = initialBirthday.split("-");
           formattedDate = `${yyyy}-${mm}-${dd}`;
@@ -251,7 +225,7 @@ function UserContent() {
         createTicket({
           subject: ticketSubject,
           description: ticketDescription,
-        })
+        }),
       ).unwrap();
       setTicketSubject("");
       setTicketDescription("");
@@ -328,13 +302,6 @@ function UserContent() {
 
   const [openSection, setOpenSection] = useState(dashboard);
   const [activeTab, setActiveTab] = useState(dashboard);
-  const [messageStates, setMessageStates] = useState(maildata.map(() => false));
-  // console.log("info", openSection);
-  const toggleCheckbox = (index) => {
-    const updatedStates = [...messageStates];
-    updatedStates[index] = !updatedStates[index];
-    setMessageStates(updatedStates);
-  };
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -351,9 +318,6 @@ function UserContent() {
     }
   };
 
-  const openInboxModal = () => {
-    setModalInboxOpen(true);
-  };
   const openReportModal = () => {
     setModalReportOpen(true);
   };
@@ -369,9 +333,7 @@ function UserContent() {
   const closePassModal = () => {
     setModalPasswordIsOpen(false);
   };
-  const closeInboxModal = () => {
-    setModalInboxOpen(false);
-  };
+
   const closeModal = () => {
     setModalIsOpen(false);
   };
@@ -541,9 +503,9 @@ function UserContent() {
         </div>
       );
 
-    // ── TAB: Orders ──
-    // Fetches and displays the user's customer orders.
-    // Data is pulled from Redux state (ordersData) via fetchCustomerOrders thunk.
+      // ── TAB: Orders ──
+      // Fetches and displays the user's customer orders.
+      // Data is pulled from Redux state (ordersData) via fetchCustomerOrders thunk.
     } else if (activeTab === "orders") {
       return (
         <div className="col-span-2 md:ml-5">
@@ -564,19 +526,30 @@ function UserContent() {
                       {/* Order header */}
                       <div className="flex justify-between items-center border-b pb-2">
                         <div>
-                          <span className="text-[#86868B] text-xs font-normal">Order ID: </span>
-                          <span className="text-[#1D1D1F] text-xs font-semibold uppercase">{order.orderId}</span>
+                          <span className="text-[#86868B] text-xs font-normal">
+                            Order ID:{" "}
+                          </span>
+                          <span className="text-[#1D1D1F] text-xs font-semibold uppercase">
+                            {order.orderId}
+                          </span>
                         </div>
                         <div className="flex gap-4">
-                          <span className={`text-xs font-normal px-2 py-1 rounded-full ${order?.deliveryStatus === "placed" ? "bg-blue-100 text-blue-600" : order.deliveryStatus === "returned" ? "bg-red-100 text-red-500" : "bg-green-100 text-green-600"}`}>
+                          <span
+                            className={`text-xs font-normal px-2 py-1 rounded-full ${order?.deliveryStatus === "placed" ? "bg-blue-100 text-blue-600" : order.deliveryStatus === "returned" ? "bg-red-100 text-red-500" : "bg-green-100 text-green-600"}`}
+                          >
                             {order.deliveryStatus}
                           </span>
-                          <span className="text-xs text-[#86868B]">{new Date(order.date).toLocaleDateString()}</span>
+                          <span className="text-xs text-[#86868B]">
+                            {new Date(order.date).toLocaleDateString()}
+                          </span>
                         </div>
                       </div>
                       {/* Products in each order */}
                       {order.items?.products?.map((product, j) => (
-                        <div key={j} className="md:grid md:grid-cols-4 gap-4 items-center border-b pb-4">
+                        <div
+                          key={j}
+                          className="md:grid md:grid-cols-4 gap-4 items-center border-b pb-4"
+                        >
                           <div className="flex flex-row items-center gap-5 col-span-2">
                             <div>
                               {product?.image ? (
@@ -588,16 +561,28 @@ function UserContent() {
                                   className="w-[94px] h-[91px] object-cover rounded"
                                 />
                               ) : (
-                                <div className="w-[94px] h-[91px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">No image</div>
+                                <div className="w-[94px] h-[91px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+                                  No image
+                                </div>
                               )}
                             </div>
                             <div>
-                              <h1 className="text-[#1D1D1F] text-[14px] font-medium">{product?.name}</h1>
+                              <h1 className="text-[#1D1D1F] text-[14px] font-medium">
+                                {product?.name}
+                              </h1>
                               <ul className="my-2 space-y-1">
-                                <h5 className="text-[#86868B] text-[11px] font-normal">Variant Areas</h5>
+                                <h5 className="text-[#86868B] text-[11px] font-normal">
+                                  Variant Areas
+                                </h5>
                                 {product?.variantAreas?.map((area, k) => (
-                                  <li key={k} className="text-[#1D1D1F] text-[11px] font-normal">
-                                    {area.name} {area.additionalPrice ? `(+₹${area.additionalPrice})` : ""}
+                                  <li
+                                    key={k}
+                                    className="text-[#1D1D1F] text-[11px] font-normal"
+                                  >
+                                    {area.name}{" "}
+                                    {area.additionalPrice
+                                      ? `(+₹${area.additionalPrice})`
+                                      : ""}
                                   </li>
                                 ))}
                               </ul>
@@ -605,7 +590,9 @@ function UserContent() {
                           </div>
                           <div className="flex flex-col items-center">
                             <p className="flex flex-col justify-center gap-1 rounded-[8px] border border-[#86868B] bg-[#EFEFEF] w-[105px] px-2">
-                              <span className="text-[#86868B] text-sm font-normal">Quantity</span>
+                              <span className="text-[#86868B] text-sm font-normal">
+                                Quantity
+                              </span>
                               <span>{product.quantity}</span>
                             </p>
                           </div>
@@ -615,7 +602,12 @@ function UserContent() {
                             </h1>
                             <h3
                               onClick={() => {
-                                setCurrentOrder({ ...product, orderId: order.orderId, orderDate: order.date, deliveryStatus: order.deliveryStatus });
+                                setCurrentOrder({
+                                  ...product,
+                                  orderId: order.orderId,
+                                  orderDate: order.date,
+                                  deliveryStatus: order.deliveryStatus,
+                                });
                                 handleTabClick("trackorder");
                               }}
                               className="py-2 cursor-pointer text-[#0071E3] text-[14px] font-normal text-end"
@@ -628,7 +620,9 @@ function UserContent() {
                       {/* Order total */}
                       <div className="flex justify-between items-center text-sm pt-1 pb-3">
                         <span className="text-[#86868B]">Order Total</span>
-                        <span className="font-bold text-[#1D1D1F]"><FormatCurrencyRate num={order.amount} /></span>
+                        <span className="font-bold text-[#1D1D1F]">
+                          <FormatCurrencyRate num={order.amount} />
+                        </span>
                       </div>
                     </React.Fragment>
                   ))}
@@ -643,15 +637,17 @@ function UserContent() {
         </div>
       );
 
-    // ── TAB: Track Order ──
-    // Shows a timeline-style progress view for a selected order.
-    // currentOrder is set when the user clicks "Track Order" in the Orders tab.
+      // ── TAB: Track Order ──
+      // Shows a timeline-style progress view for a selected order.
+      // currentOrder is set when the user clicks "Track Order" in the Orders tab.
     } else if (activeTab === "trackorder") {
       // If no order selected (e.g. direct URL), redirect back to orders
       if (!currentOrder || !currentOrder.name) {
         return (
           <div className="col-span-2 md:ml-5 flex flex-col items-center justify-center py-20 gap-4">
-            <p className="text-lg text-[#86868B]">No order selected to track.</p>
+            <p className="text-lg text-[#86868B]">
+              No order selected to track.
+            </p>
             <button
               onClick={() => handleTabClick("orders")}
               className="bg-[#0071E3] text-white text-sm px-6 py-2 rounded-md"
@@ -667,11 +663,26 @@ function UserContent() {
         placed: ["Pending"],
         processing: ["Pending", "Waiting to be Shipped"],
         shipped: ["Pending", "Waiting to be Shipped", "Shipped"],
-        "out-for-delivery": ["Pending", "Waiting to be Shipped", "Shipped", "Out for Delivery"],
-        delivered: ["Pending", "Waiting to be Shipped", "Shipped", "Out for Delivery", "Delivered"],
+        "out-for-delivery": [
+          "Pending",
+          "Waiting to be Shipped",
+          "Shipped",
+          "Out for Delivery",
+        ],
+        delivered: [
+          "Pending",
+          "Waiting to be Shipped",
+          "Shipped",
+          "Out for Delivery",
+          "Delivered",
+        ],
         returned: ["Pending"],
       };
-      const completedStatuses = deliveryStatusMap[currentOrder?.deliveryStatus] || [currentOrder?.deliveryStatus] || [];
+      const completedStatuses =
+        deliveryStatusMap[currentOrder?.deliveryStatus] || [
+          currentOrder?.deliveryStatus,
+        ] ||
+        [];
 
       return (
         <div className="flex flex-col">
@@ -692,7 +703,9 @@ function UserContent() {
                     className="w-[73px] h-[68px] object-cover rounded"
                   />
                 ) : (
-                  <div className="w-[73px] h-[68px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">No image</div>
+                  <div className="w-[73px] h-[68px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+                    No image
+                  </div>
                 )}
               </div>
 
@@ -745,7 +758,9 @@ function UserContent() {
                     <div className={`order-${index + 1} w-[394px] px-6 py-4`}>
                       <h3
                         className={`font-semibold text-base ${
-                          isStatusCompleted ? "text-[#0071E3]" : "text-[#1D1D1F]"
+                          isStatusCompleted
+                            ? "text-[#0071E3]"
+                            : "text-[#1D1D1F]"
                         }`}
                       >
                         {status}
@@ -753,7 +768,9 @@ function UserContent() {
                       <h3 className="mb-3 font-normal text-sm text-[#86868B]">
                         Updated on{" "}
                         {currentOrder?.orderDate
-                          ? new Date(currentOrder.orderDate).toLocaleDateString()
+                          ? new Date(
+                              currentOrder.orderDate,
+                            ).toLocaleDateString()
                           : "—"}
                       </h3>
                       {status === "Delivered" && isStatusCompleted && (
@@ -768,8 +785,9 @@ function UserContent() {
                           </h1>
                           <div className="pl-6 space-y-4">
                             <p className="text-sm font-normal">
-                              Oh no! If there&apos;s an issue with your package, <br/>send
-                              a report so we can help you fix it!
+                              Oh no! If there&apos;s an issue with your package,{" "}
+                              <br />
+                              send a report so we can help you fix it!
                             </p>
                             <button
                               onClick={() => openReportModal()}
@@ -788,45 +806,7 @@ function UserContent() {
           </div>
         </div>
       );
-    } else if (activeTab === "inbox") {
-      return (
-        <div className="col-span-2 md:ml-5">
-          <p className=" text-[28px] font-bold text-[#111827]">Inbox</p>
-          <p className=" text-sm font-normal text-[#86868B]">
-            View and manage messages with ArticDesign
-          </p>
-          <div className="flex flex-col gap-6 pt-10">
-            {maildata.map((mail, index) => (
-              <div key={index} className="flex flex-row items-start gap-4 border-b pb-6">
-                <div className="flex-shrink-0">
-                  <Image
-                    src={mail.image}
-                    alt="profile"
-                    width={48}
-                    height={48}
-                    className="w-[48px] h-[48px] rounded-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 space-y-1">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-[#111827] text-base font-semibold">{mail.title}</h3>
-                    <span className="text-[#86868B] text-xs">{mail.date}</span>
-                  </div>
-                  <p className="text-[#86868B] text-sm font-normal leading-relaxed">
-                    {mail.body}
-                  </p>
-                  <div className="flex gap-4 pt-2">
-                    <button className="text-[#0071E3] text-xs font-medium hover:underline">Mark as read</button>
-                    <button className="text-[#E31B00] text-xs font-medium hover:underline">Delete</button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
     }
-
 
     return null;
   };
@@ -895,16 +875,6 @@ function UserContent() {
                   onClick={() => handleTabClick("orders")}
                 >
                   Orders
-                </p>
-                <p
-                  className={`cursor-pointer ${
-                    activeTab === "inbox"
-                      ? " font-semibold  text-[#0071E3]"
-                      : "text-[#86868B]  font-normal"
-                  }`}
-                  onClick={() => handleTabClick("inbox")}
-                >
-                  Inbox
                 </p>
               </div>
             </div>
@@ -1056,19 +1026,30 @@ function UserContent() {
                         {/* Order header */}
                         <div className="flex justify-between items-center border-b pb-2">
                           <div>
-                            <span className="text-[#86868B] text-xs">Order ID: </span>
-                            <span className="text-[#1D1D1F] text-xs font-semibold uppercase">{order.orderId}</span>
+                            <span className="text-[#86868B] text-xs">
+                              Order ID:{" "}
+                            </span>
+                            <span className="text-[#1D1D1F] text-xs font-semibold uppercase">
+                              {order.orderId}
+                            </span>
                           </div>
                           <div className="flex gap-2 items-center">
-                            <span className={`text-xs px-2 py-1 rounded-full ${order.deliveryStatus === "placed" ? "bg-blue-100 text-blue-600" : order.deliveryStatus === "returned" ? "bg-red-100 text-red-500" : "bg-green-100 text-green-600"}`}>
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full ${order.deliveryStatus === "placed" ? "bg-blue-100 text-blue-600" : order.deliveryStatus === "returned" ? "bg-red-100 text-red-500" : "bg-green-100 text-green-600"}`}
+                            >
                               {order.deliveryStatus}
                             </span>
-                            <span className="text-xs text-[#86868B]">{new Date(order.date).toLocaleDateString()}</span>
+                            <span className="text-xs text-[#86868B]">
+                              {new Date(order.date).toLocaleDateString()}
+                            </span>
                           </div>
                         </div>
                         {/* Products */}
                         {order.items?.products?.map((product, j) => (
-                          <div key={j} className="flex flex-col gap-3 pb-4 border-b">
+                          <div
+                            key={j}
+                            className="flex flex-col gap-3 pb-4 border-b"
+                          >
                             <div className="flex gap-3 items-start">
                               {product?.image ? (
                                 <Image
@@ -1079,15 +1060,27 @@ function UserContent() {
                                   className="w-[80px] h-[80px] object-cover rounded"
                                 />
                               ) : (
-                                <div className="w-[80px] h-[80px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">No image</div>
+                                <div className="w-[80px] h-[80px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+                                  No image
+                                </div>
                               )}
                               <div className="flex-1">
-                                <h1 className="text-[#1D1D1F] text-[16px] font-medium">{product?.name}</h1>
-                                <h5 className="text-[#86868B] text-[12px] font-medium py-1">Variant Areas</h5>
+                                <h1 className="text-[#1D1D1F] text-[16px] font-medium">
+                                  {product?.name}
+                                </h1>
+                                <h5 className="text-[#86868B] text-[12px] font-medium py-1">
+                                  Variant Areas
+                                </h5>
                                 <ul>
                                   {product?.variantAreas?.map((area, k) => (
-                                    <li key={k} className="text-[#1D1D1F] text-[11px]">
-                                      {area.name} {area.additionalPrice ? `(+₹${area.additionalPrice})` : ""}
+                                    <li
+                                      key={k}
+                                      className="text-[#1D1D1F] text-[11px]"
+                                    >
+                                      {area.name}{" "}
+                                      {area.additionalPrice
+                                        ? `(+₹${area.additionalPrice})`
+                                        : ""}
                                     </li>
                                   ))}
                                 </ul>
@@ -1095,7 +1088,9 @@ function UserContent() {
                             </div>
                             <div className="flex justify-between items-center">
                               <p className="flex flex-col justify-center gap-1 rounded-[8px] border border-[#86868B] bg-[#EFEFEF] w-[105px] px-2">
-                                <span className="text-[#86868B] text-sm font-normal">Quantity</span>
+                                <span className="text-[#86868B] text-sm font-normal">
+                                  Quantity
+                                </span>
                                 <span>{product.quantity}</span>
                               </p>
                               <div className="space-y-1 text-right">
@@ -1105,7 +1100,12 @@ function UserContent() {
                                 <h3
                                   className="cursor-pointer text-[#0071E3] text-[14px] font-normal"
                                   onClick={() => {
-                                    setCurrentOrder({ ...product, orderId: order.orderId, orderDate: order.date, deliveryStatus: order.deliveryStatus });
+                                    setCurrentOrder({
+                                      ...product,
+                                      orderId: order.orderId,
+                                      orderDate: order.date,
+                                      deliveryStatus: order.deliveryStatus,
+                                    });
                                     handleTabClick("trackorder");
                                   }}
                                 >
@@ -1118,39 +1118,18 @@ function UserContent() {
                         {/* Order total */}
                         <div className="flex justify-between text-sm pb-2">
                           <span className="text-[#86868B]">Order Total</span>
-                          <span className="font-bold"><FormatCurrencyRate num={order.amount} /></span>
+                          <span className="font-bold">
+                            <FormatCurrencyRate num={order.amount} />
+                          </span>
                         </div>
                       </React.Fragment>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xl font-semibold pt-4">No Orders made yet</p>
+                  <p className="text-xl font-semibold pt-4">
+                    No Orders made yet
+                  </p>
                 )}
-              </div>
-            )}
-          </div>
-
-
-          {/* Inbox Section */}
-          <div className=" rounded-lg ">
-            {dashboard === "inbox" && (
-              <div className="p-4">
-                <p className=" text-[28px] font-bold text-[#111827]">Inbox</p>
-                <p className=" text-sm font-normal text-[#86868B]">
-                  View and manage messages with ArticDesign
-                </p>
-                <div className="flex flex-col gap-4 pt-6">
-                  {maildata.map((mail, index) => (
-                    <div key={index} className="flex items-center gap-4 border-b pb-4">
-                      <Image src={mail.image} alt="mail" width={40} height={40} className="rounded-full" />
-                      <div className="flex-1">
-                        <h4 className="text-sm font-semibold text-[#111827]">{mail.title}</h4>
-                        <p className="text-xs text-[#86868B] line-clamp-1">{mail.body}</p>
-                      </div>
-                      <span className="text-[10px] text-[#86868B]">{mail.date}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             )}
           </div>
@@ -1159,13 +1138,19 @@ function UserContent() {
           <div className="bg-white rounded-lg">
             {dashboard === "trackorder" && (
               <div>
-                <p className="pl-4 text-[28px] font-bold text-[#111827]">Order Tracker</p>
-                <p className="pl-4 text-sm font-normal text-[#86868B]">View and manage messages with ArticDesign</p>
+                <p className="pl-4 text-[28px] font-bold text-[#111827]">
+                  Order Tracker
+                </p>
+                <p className="pl-4 text-sm font-normal text-[#86868B]">
+                  View and manage messages with ArticDesign
+                </p>
 
                 {/* No order selected: show redirect */}
                 {!currentOrder || !currentOrder.name ? (
                   <div className="flex flex-col items-center justify-center py-16 gap-4">
-                    <p className="text-[#86868B] text-sm">No order selected to track.</p>
+                    <p className="text-[#86868B] text-sm">
+                      No order selected to track.
+                    </p>
                     <button
                       onClick={() => handleTabClick("orders")}
                       className="bg-[#0071E3] text-white text-sm px-6 py-2 rounded-md"
@@ -1173,121 +1158,174 @@ function UserContent() {
                       Go to Orders
                     </button>
                   </div>
-                ) : (() => {
-                  const deliveryStatusMap = {
-                    placed: ["Pending"],
-                    processing: ["Pending", "Waiting to be Shipped"],
-                    shipped: ["Pending", "Waiting to be Shipped", "Shipped"],
-                    "out-for-delivery": ["Pending", "Waiting to be Shipped", "Shipped", "Out for Delivery"],
-                    delivered: ["Pending", "Waiting to be Shipped", "Shipped", "Out for Delivery", "Delivered"],
-                    returned: ["Pending"],
-                  };
-                  const completedStatuses = deliveryStatusMap[currentOrder?.deliveryStatus] || [];
-                  return (
-                    <>
-                      {/* Product info header */}
-                      <div className="flex flex-row gap-3 items-center p-4">
-                        {currentOrder?.image ? (
-                          <Image
-                            src={currentOrder.image}
-                            alt="image"
-                            width={73}
-                            height={68}
-                            className="w-[73px] h-[68px] object-cover rounded"
-                          />
-                        ) : (
-                          <div className="w-[73px] h-[68px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">No image</div>
-                        )}
-                        <div className="flex-1">
-                          <p className="text-[#1D1D1F] font-medium text-sm">{currentOrder?.name}</p>
-                          <p className="text-[#86868B] font-normal text-[11px] capitalize">Status: {currentOrder?.deliveryStatus}</p>
+                ) : (
+                  (() => {
+                    const deliveryStatusMap = {
+                      placed: ["Pending"],
+                      processing: ["Pending", "Waiting to be Shipped"],
+                      shipped: ["Pending", "Waiting to be Shipped", "Shipped"],
+                      "out-for-delivery": [
+                        "Pending",
+                        "Waiting to be Shipped",
+                        "Shipped",
+                        "Out for Delivery",
+                      ],
+                      delivered: [
+                        "Pending",
+                        "Waiting to be Shipped",
+                        "Shipped",
+                        "Out for Delivery",
+                        "Delivered",
+                      ],
+                      returned: ["Pending"],
+                    };
+                    const completedStatuses =
+                      deliveryStatusMap[currentOrder?.deliveryStatus] || [];
+                    return (
+                      <>
+                        {/* Product info header */}
+                        <div className="flex flex-row gap-3 items-center p-4">
+                          {currentOrder?.image ? (
+                            <Image
+                              src={currentOrder.image}
+                              alt="image"
+                              width={73}
+                              height={68}
+                              className="w-[73px] h-[68px] object-cover rounded"
+                            />
+                          ) : (
+                            <div className="w-[73px] h-[68px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+                              No image
+                            </div>
+                          )}
+                          <div className="flex-1">
+                            <p className="text-[#1D1D1F] font-medium text-sm">
+                              {currentOrder?.name}
+                            </p>
+                            <p className="text-[#86868B] font-normal text-[11px] capitalize">
+                              Status: {currentOrder?.deliveryStatus}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[#1D1D1F] font-medium text-sm">
+                              Order
+                            </p>
+                            <p className="text-[#86868B] font-normal text-xs uppercase">
+                              {currentOrder?.orderId}
+                            </p>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-[#1D1D1F] font-medium text-sm">Order</p>
-                          <p className="text-[#86868B] font-normal text-xs uppercase">{currentOrder?.orderId}</p>
-                        </div>
-                      </div>
-                      {/* Timeline */}
-                      <div className="flex flex-col mb-10 px-4">
-                        <div className="relative">
-                          {predefinedStatuses.map((status, index) => {
-                            const isStatusCompleted = completedStatuses.includes(status);
-                            const isPrevStatusCompleted = index > 0 ? completedStatuses.includes(predefinedStatuses[index - 1]) : false;
-                            
-                            return (
-                              <div key={index} className="flex gap-5 w-full relative z-10">
-                                {/* Left side: Dot and split line segments for perfect connectivity */}
-                                <div className="flex flex-col items-center flex-shrink-0 w-[16px] relative min-h-[100px]">
-                                  {/* Top Line Segment (connects from previous row bottom to this dot top) */}
-                                  {index > 0 && (
-                                    <div 
-                                      className={`absolute top-0 h-[6px] w-[2.5px] z-10 ${
-                                        isPrevStatusCompleted ? "bg-[#0071E3]" : "bg-[#D9D9D9]"
+                        {/* Timeline */}
+                        <div className="flex flex-col mb-10 px-4">
+                          <div className="relative">
+                            {predefinedStatuses.map((status, index) => {
+                              const isStatusCompleted =
+                                completedStatuses.includes(status);
+                              const isPrevStatusCompleted =
+                                index > 0
+                                  ? completedStatuses.includes(
+                                      predefinedStatuses[index - 1],
+                                    )
+                                  : false;
+
+                              return (
+                                <div
+                                  key={index}
+                                  className="flex gap-5 w-full relative z-10"
+                                >
+                                  {/* Left side: Dot and split line segments for perfect connectivity */}
+                                  <div className="flex flex-col items-center flex-shrink-0 w-[16px] relative min-h-[100px]">
+                                    {/* Top Line Segment (connects from previous row bottom to this dot top) */}
+                                    {index > 0 && (
+                                      <div
+                                        className={`absolute top-0 h-[6px] w-[2.5px] z-10 ${
+                                          isPrevStatusCompleted
+                                            ? "bg-[#0071E3]"
+                                            : "bg-[#D9D9D9]"
+                                        }`}
+                                      ></div>
+                                    )}
+
+                                    {/* Dot (aligned to top of text title) */}
+                                    <div
+                                      className={`w-[16px] h-[16px] rounded-full shadow-md z-20 mt-1.5 ${
+                                        isStatusCompleted
+                                          ? "bg-[#0071E3]"
+                                          : "bg-[#D9D9D9]"
                                       }`}
                                     ></div>
-                                  )}
-                                  
-                                  {/* Dot (aligned to top of text title) */}
-                                  <div
-                                    className={`w-[16px] h-[16px] rounded-full shadow-md z-20 mt-1.5 ${
-                                      isStatusCompleted ? "bg-[#0071E3]" : "bg-[#D9D9D9]"
-                                    }`}
-                                  ></div>
-                                  
-                                  {/* Bottom Line Segment (connects from this dot top to next row top) */}
-                                  {index < predefinedStatuses.length - 1 && (
-                                    <div 
-                                      className={`absolute top-[6px] bottom-0 w-[2.5px] z-10 ${
-                                        isStatusCompleted ? "bg-[#0071E3]" : "bg-[#D9D9D9]"
-                                      }`}
-                                    ></div>
-                                  )}
-                                </div>
-                                  
-                                {/* Right side: Content container */}
-                                <div className="flex-1 pb-10">
-                                  <div className="mt-0">
-                                    <h3 className={`font-semibold text-sm ${isStatusCompleted ? "text-[#0071E3]" : "text-[#1D1D1F]"}`}>
-                                      {status}
-                                    </h3>
-                                    <h3 className="mb-2 font-normal text-xs text-[#86868B]">
-                                      Updated on {currentOrder?.orderDate ? new Date(currentOrder.orderDate).toLocaleDateString() : "—"}
-                                    </h3>
-                                    
-                                    {status === "Delivered" && isStatusCompleted && (
-                                      <div className="rounded-xl bg-[#F5F5F7] border border-[#D2D2D7] w-full p-4 space-y-4 mt-3 shadow-sm">
-                                        <div className="text-[#1D1D1F] flex gap-3 items-center">
-                                          <AiOutlineInfoCircle className="text-[#0071E3] text-lg" />
-                                          <span className="text-sm font-semibold">Have a problem with your package?</span>
-                                        </div>
-                                        <p className="text-xs font-normal leading-relaxed text-[#424245]">
-                                          Oh no! If there&apos;s an issue with your package, send a report so we can help you fix it!
-                                        </p>
-                                        <button
-                                          onClick={() => {
-                                            setTicketSubject(`Problem with order #${currentOrder.orderId}`);
-                                            openReportModal();
-                                          }}
-                                          className="w-full text-center text-white bg-[#0071E3] text-xs font-semibold rounded-lg px-4 py-2.5 hover:bg-[#0077ED] transition-all shadow-sm active:scale-[0.98]"
-                                        >
-                                          Submit a report
-                                        </button>
-                                      </div>
+
+                                    {/* Bottom Line Segment (connects from this dot top to next row top) */}
+                                    {index < predefinedStatuses.length - 1 && (
+                                      <div
+                                        className={`absolute top-[6px] bottom-0 w-[2.5px] z-10 ${
+                                          isStatusCompleted
+                                            ? "bg-[#0071E3]"
+                                            : "bg-[#D9D9D9]"
+                                        }`}
+                                      ></div>
                                     )}
                                   </div>
+
+                                  {/* Right side: Content container */}
+                                  <div className="flex-1 pb-10">
+                                    <div className="mt-0">
+                                      <h3
+                                        className={`font-semibold text-sm ${isStatusCompleted ? "text-[#0071E3]" : "text-[#1D1D1F]"}`}
+                                      >
+                                        {status}
+                                      </h3>
+                                      <h3 className="mb-2 font-normal text-xs text-[#86868B]">
+                                        Updated on{" "}
+                                        {currentOrder?.orderDate
+                                          ? new Date(
+                                              currentOrder.orderDate,
+                                            ).toLocaleDateString()
+                                          : "—"}
+                                      </h3>
+
+                                      {status === "Delivered" &&
+                                        isStatusCompleted && (
+                                          <div className="rounded-xl bg-[#F5F5F7] border border-[#D2D2D7] w-full p-4 space-y-4 mt-3 shadow-sm">
+                                            <div className="text-[#1D1D1F] flex gap-3 items-center">
+                                              <AiOutlineInfoCircle className="text-[#0071E3] text-lg" />
+                                              <span className="text-sm font-semibold">
+                                                Have a problem with your
+                                                package?
+                                              </span>
+                                            </div>
+                                            <p className="text-xs font-normal leading-relaxed text-[#424245]">
+                                              Oh no! If there&apos;s an issue
+                                              with your package, send a report
+                                              so we can help you fix it!
+                                            </p>
+                                            <button
+                                              onClick={() => {
+                                                setTicketSubject(
+                                                  `Problem with order #${currentOrder.orderId}`,
+                                                );
+                                                openReportModal();
+                                              }}
+                                              className="w-full text-center text-white bg-[#0071E3] text-xs font-semibold rounded-lg px-4 py-2.5 hover:bg-[#0077ED] transition-all shadow-sm active:scale-[0.98]"
+                                            >
+                                              Submit a report
+                                            </button>
+                                          </div>
+                                        )}
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
+                          </div>
                         </div>
-                      </div>
-                    </>
-                  );
-                })()}
+                      </>
+                    );
+                  })()
+                )}
               </div>
             )}
           </div>
-
         </div>
       </div>
 
@@ -1450,10 +1488,13 @@ function UserContent() {
                 Describe your issue and our team will get back to you shortly.
               </p>
             </div>
-            
+
             {/* Subject */}
             <div className="mb-4">
-              <label htmlFor="ticketSubject" className="block text-sm font-semibold text-[#1D1D1F] mb-2 pl-1">
+              <label
+                htmlFor="ticketSubject"
+                className="block text-sm font-semibold text-[#1D1D1F] mb-2 pl-1"
+              >
                 Subject
               </label>
               <input
@@ -1465,10 +1506,13 @@ function UserContent() {
                 className="w-full p-3 border border-[#D2D2D7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:border-transparent transition-all placeholder:text-[#86868B] bg-[#F5F5F7]"
               />
             </div>
-            
+
             {/* Description */}
             <div className="mb-6">
-              <label htmlFor="ticketDescription" className="block text-sm font-semibold text-[#1D1D1F] mb-2 pl-1">
+              <label
+                htmlFor="ticketDescription"
+                className="block text-sm font-semibold text-[#1D1D1F] mb-2 pl-1"
+              >
                 Description
               </label>
               <textarea
@@ -1480,14 +1524,18 @@ function UserContent() {
               />
             </div>
           </div>
-          
+
           <button
             onClick={handleSubmitProblem}
             type="submit"
             disabled={ticketStatus === "loading"}
             className="w-full bg-[#0071E3] rounded-xl p-4 text-white font-semibold text-sm hover:bg-[#0077ED] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
           >
-            {ticketStatus === "loading" ? <SaveLoader color="#ffffff" size={20} /> : "Submit Ticket"}
+            {ticketStatus === "loading" ? (
+              <SaveLoader color="#ffffff" size={20} />
+            ) : (
+              "Submit Ticket"
+            )}
           </button>
         </div>
       </AccoutsModal>

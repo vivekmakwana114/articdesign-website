@@ -19,7 +19,7 @@ function Sectionone() {
               title="Customize yours"
               textsize="16"
               fontweight="normal"
-              link="devices?category=ipads"
+              link="devices?category=ipad"
             />
           </div>
           <div className="flex flex-col items-center gap-y-3">
@@ -45,7 +45,7 @@ function Sectionone() {
               height={50}
               textsize="11.33"
               buttonpadding={2}
-              link="devices?category=phones"
+              link="devices?category=iphone"
             />
           </div>
         </div>
@@ -78,7 +78,7 @@ function Sectionone() {
                 height={50}
                 textsize="11.33px"
                 buttonpadding={2}
-                link="devices?category=laptops"
+                link="devices?category=laptop"
               />
             </div>
           </div>

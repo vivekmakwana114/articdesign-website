@@ -42,7 +42,7 @@ function Sectiontwo() {
     content?.description ||
     "Elevate Your Devices to Match Your Impeccable Style. Discover a World of Exquisite Possibilities: From Sleek Wood and Daring Carbon Fiber to Luxurious Leather and Edgy Grunge. It's More Than a Skin, It's a Revolution in Design.";
   const ctaText = content?.ctaText || "Style your device";
-  const ctaLink = content?.ctaLink || "devices?category=ipads";
+  const ctaLink = content?.ctaLink || "devices?category=ipad";
   const imageSrc = content?.imageUrl || ipadwithskin;
 
   return (
