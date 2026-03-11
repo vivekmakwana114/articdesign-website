@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { cartImpty } from "../../assets";
+import { cartImpty, imageskin } from "../../assets";
 import { Country } from "country-state-city";
 import ShippingModal from "@/components/Modals/ShippingModal";
 import Footer from "@/components/Footer";
@@ -10,25 +10,37 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-// Removed Redux imports
 import FormatCurrencyRate from "@/components/Currency/FormatCurrencyRate";
 import api from "@/lib/api";
 import SaveLoader from "@/components/SaveLoader";
+import { loadRazorpayScript } from "@/lib/razorpay";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchCart,
+  incrementItem,
+  decrementItem,
+  removeItem,
+  updateItem,
+  clearCart,
+} from "@/state/cart/cartSlice";
+import { getAddresses } from "@/state/address/addressService";
 
 const CheckOut = () => {
-  const currentUser = null; // Removed Redux state access
-  // const topproducts = []; // Removed Redux state access
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { user } = useSelector((state) => state.auth);
+  const { cartItems, cartData, cartStatus } = useSelector(
+    (state) => state.cart,
+  );
+  const currentUser = user;
+  const pathname = usePathname();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checkingOut, setCheckingOut] = useState(false);
-  // Cart state stubbed - will be re-integrated with new approach
-  const cartState = { cartItems: [], totalPrice: 0 };
-  const removeItemFromCart = () => {};
-  const updateItemInCart = () => {};
+  const [mounted, setMounted] = useState(false);
   const clearCartItems = () => {};
-  const pathname = usePathname();
   const [countries, setCountries] = useState([]);
-  const [quantity, setQuantity] = useState({});
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -40,21 +52,40 @@ const CheckOut = () => {
   const [orderNotes, setOrderNotes] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
 
-  const handleRemove = (productId) => {
-    removeItemFromCart(productId);
-    toast.success("Success");
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleRemove = (id) => {
+    dispatch(removeItem(id)).then(() => {
+      dispatch(fetchCart());
+      toast.success("Item removed");
+    });
   };
 
-  const handleQuantityChange = (productId, value) => {
-    const quantity = parseInt(value, 10);
-    // Only update if the value is a number and greater than 0
-    if (!isNaN(quantity) && quantity > 0) {
-      updateItemInCart({ productId, quantity });
+  const handleQuantityChange = (id, value) => {
+    const qty = parseInt(value, 10);
+    if (!isNaN(qty) && qty > 0) {
+      dispatch(updateItem({ id, data: { quantity: qty } })).then(() => {
+        dispatch(fetchCart());
+      });
     }
-    setQuantity((prevQuantity) => ({
-      ...prevQuantity,
-      [productId]: quantity,
-    }));
+  };
+
+  const handleIncrement = (id) => {
+    dispatch(incrementItem(id)).then(() => {
+      dispatch(fetchCart());
+    });
+  };
+
+  const handleDecrement = (id) => {
+    dispatch(decrementItem(id)).then(() => {
+      dispatch(fetchCart());
+    });
   };
 
   useEffect(() => {
@@ -78,76 +109,155 @@ const CheckOut = () => {
   }, [shippingAddress]);
 
   useEffect(() => {
-    fetchShippingAddress();
-  }, []);
+    if (currentUser?._id || currentUser?.id) {
+      fetchShippingAddress();
+    }
+  }, [currentUser]);
 
   const fetchShippingAddress = async () => {
     try {
-      const response = await api.get(`/orders/shipping/address`);
-      const data = response.data;
-      setShippingAddress(data);
-      setFirstName(data.firstName || "");
-      setLastName(data.lastName || "");
-      setPhoneNumber(data.phoneNumber || "");
-      setEmail(data.email || "");
-      setStreetAddress(data.streetAddress || "");
-      setTownCity(data.townCity || "");
-      setOrderNotes(data.orderNotes || "");
-      setCountry(data.country || "");
-      setApartment(data.apartment || "");
+      const userId = currentUser?._id || currentUser?.id;
+      if (!userId) return;
+      const response = await getAddresses(userId);
+      const addresses = response.data?.data || response.data || [];
+      const defaultAddr = addresses.find((a) => a.isDefault) || addresses[0];
+      if (defaultAddr) {
+        setShippingAddress(defaultAddr);
+        setFirstName(defaultAddr.firstName || "");
+        setLastName(defaultAddr.lastName || "");
+        setPhoneNumber(defaultAddr.phone || "");
+        setEmail(defaultAddr.email || "");
+        setStreetAddress(defaultAddr.streetAddress1 || "");
+        setTownCity(defaultAddr.city || "");
+        setCountry(defaultAddr.country || "");
+        setApartment(defaultAddr.streetAddress2 || "");
+      }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleUpdate = async () => {
-    setLoading(true);
-    try {
-      const response = await api.patch(`/orders/create/shipping-address`, {
-        address: {
-          country,
-          firstName,
-          lastName,
-          phoneNumber,
-          email,
-          streetAddress,
-          townCity,
-          orderNotes,
-          apartment,
-        },
-      });
-      setShippingAddress(response.data);
+  const handleProceedFromModal = (address) => {
+    if (address) {
+      setShippingAddress(address);
+      setFirstName(address.firstName || "");
+      setLastName(address.lastName || "");
+      setPhoneNumber(address.phone || "");
+      setEmail(address.email || "");
+      setStreetAddress(address.streetAddress1 || "");
+      setTownCity(address.city || "");
+      setCountry(address.country || "");
+      setApartment(address.streetAddress2 || "");
       setModalIsOpen(false);
-      toast.success("Success");
-      fetchShippingAddress();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+      toast.success("Address selected");
     }
   };
 
   const handleCheckOut = async () => {
+    if (!firstName || !streetAddress || !townCity) {
+      toast.error("Please provide a shipping address");
+      openModal();
+      return;
+    }
+
+    const res = await loadRazorpayScript();
+    if (!res) {
+      toast.error("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
     setCheckingOut(true);
     try {
-      const response = await api.post(`/orders`, {
-        address: {
-          country,
-          firstName,
-          lastName,
-          phoneNumber,
-          email,
-          streetAddress,
-          townCity,
-          orderNotes,
-          apartment,
-        },
-        cartItems: cartState?.cartItems,
+      // Capture variant areas that don't have valid ObjectIds to append to order notes
+      const customVariantNotes = cartItems
+        .flatMap((item) => {
+          const invalidVariants = (item.variantAreas || []).filter((v) => {
+            const id = v.variantAreaId || v._id || v.id;
+            return !id || !/^[0-9a-fA-F]{24}$/.test(id);
+          });
+          return invalidVariants.map(
+            (v) =>
+              `${
+                item.name ||
+                item.product?.productName ||
+                item.productName ||
+                "Product"
+              } - ${v.name || v.variantAreaId || v._id || v.id || "Custom Area"}`,
+          );
+        })
+        .filter(Boolean);
+
+      const finalOrderNotes =
+        customVariantNotes.length > 0
+          ? `${orderNotes ? orderNotes + "\n" : ""}Additional Options: ${customVariantNotes.join(
+              ", ",
+            )}`
+          : orderNotes;
+
+      const response = await api.post(`/v1/order`, {
+        orderType: "online",
+        products: cartItems.map((item) => ({
+          productId: item.productId || item.product?._id || item.product?.id,
+          name:
+            item.name ||
+            item.product?.productName ||
+            item.productName ||
+            "Product",
+          price: item.price || item.product?.price || 0,
+          quantity: item.quantity,
+          variantAreas:
+            item.variantAreas?.map((v) => ({
+              variantAreaId: v.variantAreaId || v._id || v.id,
+              name: v.name || "Custom Area",
+              additionalPrice: v.additionalPrice || 0,
+            })) || [],
+        })),
+        shippingAddress: shippingAddress?._id || shippingAddress?.id,
       });
-      toast.success("Success");
-      clearCartItems();
-      setCheckingOut(false);
+
+      // Razorpay data (matching your backend createOrder response payload)
+      const { razorpayOrderId, amount, currency, keyId } =
+        response.data.data || response.data;
+
+      const options = {
+        key:
+          keyId ||
+          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
+          "rzp_test_XXXXXXXXXXXXXX",
+        amount: amount,
+        currency: currency,
+        name: "Artic Designs",
+        description: "Payment for your Artic Designs Kit",
+        order_id: razorpayOrderId,
+        handler: async function (razorpayResponse) {
+          try {
+            await api.post("/v1/payment/verify", {
+              razorpay_order_id: razorpayResponse.razorpay_order_id,
+              razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+              razorpay_signature: razorpayResponse.razorpay_signature,
+            });
+            dispatch(clearCart());
+            toast.success("Payment Successful!");
+            router.push("/user?dashboard=orders");
+          } catch (err) {
+            toast.error("Payment verification failed");
+          }
+        },
+        prefill: {
+          name: `${firstName} ${lastName}`,
+          email: email,
+          contact: phoneNumber,
+        },
+        theme: {
+          color: "#0071E3",
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to create order");
+    } finally {
       setCheckingOut(false);
     }
   };
@@ -159,215 +269,222 @@ const CheckOut = () => {
   const closeModal = () => {
     setModalIsOpen(false);
   };
-  const subTotalPrice = cartState?.cartItems.reduce(
-    (total, sale) => total + sale.subTotalPrice,
-    0,
-  );
+  const subTotalPrice =
+    cartData?.summary?.subTotal ||
+    cartItems.reduce(
+      (total, item) =>
+        total + (item.total || item.totalPrice || item.subTotalPrice || 0),
+      0,
+    );
   return (
     <>
       <section className="md:pl-20 md:pr-10 ">
-        {cartState?.cartItems.length > 0 ? (
+        {cartItems.length > 0 ? (
           <>
             <h1 className="md:text-[48px] text-[27.13px] text-[#1D1D1F] font-semibold md:p-10 py-16 text-center">
-              Cart total is <FormatCurrencyRate num={cartState?.totalPrice} />
+              Cart total is{" "}
+              <FormatCurrencyRate
+                num={cartData?.summary?.total || cartData?.totalPrice || 0}
+              />
             </h1>
             <div className="md:grid md:grid-cols-3 md:p-10 gap-4 sm:border-t border-b border-[#DDDDDD] px-5">
-              {cartState?.cartItems?.map((item, i) => (
-                <>
-                  <div
-                    className="flex md:justify-end md:items-end justify-center items-center"
-                    key={i}
-                  >
+              {cartItems?.map((item, i) => (
+                <React.Fragment key={item.id || item._id || i}>
+                  <div className="flex md:justify-end md:items-end justify-center items-center">
                     <Image
-                      src={item?.thumbnailImage}
+                      src={
+                        item.image ||
+                        item?.product?.images?.[0] ||
+                        item?.thumbnailImage ||
+                        imageskin
+                      }
                       alt="image"
                       width={207.84}
                       height={196}
-                      className="w-[207.84px] h-[196px]"
+                      unoptimized={true}
+                      className="w-[207.84px] h-[196px] object-cover"
                     />
                   </div>
                   <div
                     className={`relative md:col-span-2 md:flex md:justify-between ${
-                      i === cartState?.cartItems?.length - 1
+                      i === cartItems?.length - 1
                         ? ""
                         : "border-b border-[#DDDDDD]"
                     } md:w-full`}
                   >
                     <div>
-                      <h1 className="text-[#1D1D1F] text-[24px] font-medium">
-                        {item?.productName}
+                      <h1 className="text-[#1D1D1F] text-[24px] font-medium mt-2">
+                        {item.name ||
+                          item?.product?.productName ||
+                          item?.productName}
                       </h1>
                       <h3 className="text-[#1D1D1F] text-[14px] font-normal">
-                        {item?.deviceName}
+                        {item.device ||
+                          item.deviceName ||
+                          item?.product?.device}
                       </h3>
                       <ul className="text-[#000000] text-[16px] font-normal my-2 space-y-2">
-                        <h5 className="text-[#86868B] text-[12px] font-medium ">
-                          Options
-                        </h5>
-                        {item?.options?.map((option, i) => (
+                        {item?.variantAreas?.length > 0 && (
+                          <h5 className="text-[#86868B] text-[12px] font-medium ">
+                            Options
+                          </h5>
+                        )}
+                        {item?.variantAreas?.map((option, idx) => (
                           <li
-                            key={i}
+                            key={option.variantAreaId || option._id || idx}
                             className="text-[#1D1D1F] text-[12px] font-normal"
                           >
-                            {option.name}
+                            {option.name}{" "}
+                            {option.additionalPrice
+                              ? `(₹${option.additionalPrice})`
+                              : ""}
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="md:relative md:right-0 md:bottom-0 absolute right-5 bottom-20 quantity">
+                    <div className="md:relative md:right-0 md:bottom-0 absolute right-5 bottom-20 quantity flex items-center gap-2">
+                      <button
+                        onClick={() => handleDecrement(item.id || item._id)}
+                        className="px-2 py-1 border rounded"
+                      >
+                        -
+                      </button>
                       <input
-                        id={`quantity-input-${item.productId}`}
+                        id={`quantity-input-${item.id || item._id}`}
                         type="number"
-                        value={
-                          quantity[item.productId] !== undefined
-                            ? quantity[item.productId]
-                            : item.quantity
-                        }
+                        value={item.quantity}
                         onChange={(e) =>
-                          handleQuantityChange(item.productId, e.target.value)
+                          handleQuantityChange(
+                            item.id || item._id,
+                            e.target.value,
+                          )
                         }
                         min={1}
-                        onKeyPress={(e) => {
-                          const allowedChars = /[0-9.]/;
-                          if (!allowedChars.test(e.key)) {
-                            e.preventDefault();
-                          }
-                        }}
-                        className="rounded-[8px] border focus:outline-none border-[#86868B] p-4 md:w-[105px] h-[52px] w-[105px] pt-8"
+                        className="rounded-[8px] border focus:outline-none border-[#86868B] p-2 md:w-[60px] text-center"
                       />
-
-                      <label
-                        for="quantity-input"
-                        className="absolute top-1 right-8  text-[#86868B] text-sm font-normal with-placeholder "
+                      <button
+                        onClick={() => handleIncrement(item.id || item._id)}
+                        className="px-2 py-1 border rounded"
                       >
-                        Quantity
-                      </label>
+                        +
+                      </button>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2 mt-2">
                       <h1 className="text-[#1D1D1F] text-[24px] font-bold">
-                        <FormatCurrencyRate num={item?.totalPrice} />
+                        <FormatCurrencyRate
+                          num={
+                            item.total ||
+                            item?.totalPrice ||
+                            item?.subTotalPrice
+                          }
+                        />
                       </h1>
                       <h3
-                        onClick={() => handleRemove(item.productId)}
+                        onClick={() => handleRemove(item.id || item._id)}
                         className=" cursor-pointer md:relative md:right-0 absolute right-5 bottom-3 text-[#0071E3] text-[14px] font-normal text-end"
                       >
                         Remove
                       </h3>
                     </div>
                   </div>
-                </>
+                </React.Fragment>
               ))}
             </div>
-            <div className=" md:border-b md:border-[#DDDDDD]">
-              <div className="md:ml-1">
-                <div className="grid grid-cols-3 gap-4 my-5 ">
-                  <div className="md:block hidden"></div>
-                  <div className="col-span-2 md:ml-0 ml-5 ">
-                    <h3 className="text-[#1D1D1F] text-[20px] font-medium">
-                      Shipping Address{" "}
-                    </h3>
-                    <div className="md:flex md:justify-between">
-                      {shippingAddress ? (
-                        <>
-                          <div className="text-[#6B7280] text-base font-normal space-y-5">
-                            <>
-                              <ul>
-                                <li>
-                                  <span className=" font-semibold">
-                                    Street Address:
-                                  </span>{" "}
-                                  {streetAddress}
-                                </li>
-                                <li>
-                                  <span className=" font-semibold">
-                                    Suburb:{" "}
-                                  </span>
-                                  {apartment}
-                                </li>
-                                <li>
-                                  <span className=" font-semibold">City: </span>
-                                  {townCity}
-                                </li>
-                              </ul>
-                              <button
-                                className="text-[#0071E3] text-base font-normal"
-                                onClick={openModal}
-                              >
-                                Edit...
-                              </button>
-                            </>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="text-[#1D1D1F] text-base font-normal">
-                            <>
-                              <h3 className="text-[#1D1D1F] text-base font-normal">
-                                Ship from our hands to your home by adding your
-                                shipping address
-                              </h3>
-                              <button
-                                className="text-[#0071E3] text-base font-normal md:py-5"
-                                onClick={openModal}
-                              >
-                                Add Shipping Address
-                              </button>
-                            </>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <hr />
-                <div className="md:grid md:grid-cols-3 gap-4 my-5 md:ml-0 ">
-                  <div className="md:block hidden"></div>
-                  <div className="col-span-2 space-y-4">
-                    <div className="md:flex justify-between md:space-x-0 flex space-x-32 md:m-0 m-5">
-                      <h3 className="text-[#1D1D1F] text-base font-normal">
-                        Subtotal
-                      </h3>
-                      <h3 className="text-[#1D1D1F] text-base font-normal">
-                        <FormatCurrencyRate num={subTotalPrice} />
-                      </h3>
-                    </div>
-                    <div className="md:flex justify-between md:space-x-0 flex space-x-32 md:m-0 m-5 ">
-                      <h3 className="text-[#1D1D1F] text-base font-normal">
-                        Shipping{" "}
-                      </h3>
-                      <h3 className="text-[#1D1D1F] text-base font-normal uppercase ">
-                        Free
-                      </h3>
-                    </div>
-
-                    <div className="md:flex justify-between md:space-x-0 flex space-x-32  md:m-0 m-5 md:border-t md:pt-5">
-                      <h1 className="text-[#000000] text-[20px] font-normal">
-                        Total
-                      </h1>
-                      <h1 className="text-[#000000] text-[20px] font-normal">
-                        <FormatCurrencyRate num={cartState?.totalPrice} />
-                      </h1>
-                    </div>
-                    {/* <div className="md:flex justify-between md:space-x-0 flex space-x-32  md:m-0 m-5">
-                      <h1 className="text-base font-normal"></h1>
-                      <h1 className="text-[#000000]  text-base font-normal">
-                        Discount Code:{" "}
-                        <span className="text-[#0071E3]"> 854613</span>
-                      </h1>
-                    </div> */}
-                  </div>
+            <div className="md:flex md:flex-col items-end md:pr-10 py-10 w-full mt-5 border-t border-[#DDDDDD]">
+              {/* Shipping Address Row */}
+              <div className="flex md:flex-row flex-col justify-between md:w-[60%] w-full border-b border-[#DDDDDD] pb-6 px-5 md:px-0">
+                <h3 className="text-[#1D1D1F] text-[20px] font-semibold mb-4 md:mb-0">
+                  Shipping Address
+                </h3>
+                <div className="text-left md:text-right flex flex-col md:items-end items-start text-[#6B7280] text-[14px] font-normal space-y-1">
+                  {shippingAddress ? (
+                    <>
+                      <p>Street Address: {streetAddress}</p>
+                      <p>Suburb: {apartment}</p>
+                      <p>City: {townCity}</p>
+                      <p>Postal Code: {shippingAddress?.postalCode || ""}</p>
+                      <button
+                        className="text-[#0071E3] text-[12px] font-medium mt-2"
+                        onClick={openModal}
+                      >
+                        Edit...
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <p>Ship from our hands to your home</p>
+                      <button
+                        className="text-[#0071E3] text-[14px] font-medium mt-2"
+                        onClick={openModal}
+                      >
+                        Add Shipping Address
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
-            </div>
-            <div className="md:flex md:justify-between flex justify-center items-center mt-5 mb-32">
-              <h1 className="text-[#000000] text-[20px] font-normal md:pt-5"></h1>
-              <button
-                onClick={handleCheckOut}
-                className="bg-[#0071E3]  md:w-[369px] w-[319px] rounded-[43px] text-base font-normal text-white p-3"
-              >
-                {checkingOut ? <SaveLoader /> : " Checkout "}
-              </button>
+
+              {/* Subtotal & Shipping Row */}
+              <div className="flex flex-col md:w-[60%] w-full space-y-4 border-b border-[#DDDDDD] py-6 px-5 md:px-0">
+                <div className="flex justify-between items-center w-full">
+                  <span className="text-[#1D1D1F] text-[16px]">Subtotal</span>
+                  <span className="text-[#1D1D1F] text-[16px]">
+                    <FormatCurrencyRate num={subTotalPrice} />
+                  </span>
+                </div>
+                <div className="flex justify-between items-center w-full">
+                  <span className="text-[#1D1D1F] text-[16px]">Shipping</span>
+                  <span className="text-[#1D1D1F] text-[16px] uppercase">
+                    Free
+                  </span>
+                </div>
+              </div>
+
+              {/* Total Row & Coupon Row */}
+              <div className="flex flex-col items-end md:w-[60%] w-full py-6 px-5 md:px-0">
+                <div className="flex justify-between items-center w-full mb-2">
+                  <span className="text-[#1D1D1F] text-[24px] font-medium">
+                    Total
+                  </span>
+                  <span className="text-[#1D1D1F] text-[24px] font-semibold">
+                    <FormatCurrencyRate
+                      num={
+                        cartData?.summary?.total || cartData?.totalPrice || 0
+                      }
+                    />
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center w-full mb-4">
+                  <span className="text-[#1D1D1F] text-[16px]">Discount</span>
+                  <span className="text-[#0071E3] text-[16px] font-semibold">
+                    -{" "}
+                    <FormatCurrencyRate
+                      num={cartData?.summary?.discount || 0}
+                    />
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center w-full mb-4">
+                  <span className="text-[#1D1D1F] text-[16px]">
+                    Applied Coupon
+                  </span>
+                  <span className="text-[#0071E3] text-[16px] font-semibold bg-[#E8F1FF] px-3 py-1 rounded-md">
+                    {cartData?.appliedCoupon?.couponCode || "N/A"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Checkout Button */}
+              <div className="flex justify-center md:justify-end w-full mt-6 mb-32 md:mb-10 px-5 md:px-0">
+                <button
+                  onClick={handleCheckOut}
+                  className="bg-[#0071E3] text-white py-3 md:w-[369px] w-full rounded-[43px] font-medium text-[16px]"
+                >
+                  {checkingOut ? <SaveLoader /> : "Checkout"}
+                </button>
+              </div>
             </div>
           </>
         ) : (
@@ -385,7 +502,7 @@ const CheckOut = () => {
                 height={129}
                 className="w-[165px] h-[129px]"
               />
-              {!currentUser ? (
+              {!mounted ? null : !currentUser ? (
                 <>
                   <p className="text-base font-normal md:p-0 p-5 text-center">
                     Sign in to see if you saved some items in cart
@@ -398,9 +515,7 @@ const CheckOut = () => {
                     Sign in
                   </Link>
                 </>
-              ) : (
-                ""
-              )}
+              ) : null}
               <Link
                 href="/"
                 className="text-sm pt-3 font-normal text-[#0071E3] border-b border-[#0071E3]"
@@ -410,169 +525,11 @@ const CheckOut = () => {
             </div>
           </>
         )}
-        <ShippingModal isOpen={modalIsOpen} onClose={closeModal}>
-          <div className=" space-y-5">
-            <div className="flex flex-col justify-center items-center md:gap-11 gap-2">
-              <h2 className="md:text-[48px] text-2xl font-semibold mb-2 text-[#1D1D1F] text-center pt-10">
-                Shipping Address
-              </h2>
-              <p className="text-[#86868B] md:text-base text-xs font-medium text-center md:w-[543px] w-[243px]">
-                Effortlessly elevate your style with our easy-to-apply
-                skins—peel, stick, and transform with simplicity and precision.
-              </p>
-            </div>
-
-            <div className="md:grid md:grid-cols-2 md:gap-8 md:space-y-0  space-y-5 my-5">
-              <div className="flex flex-col">
-                <label htmlFor="firstName" className="form__label">
-                  First name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="firstName"
-                  value={firstName}
-                  placeholder="Enter your first name"
-                  className="form__input"
-                  required
-                  onChange={(event) => setFirstName(event.target.value)}
-                />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="lastName" className="form__label">
-                  Last name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="lastName"
-                  value={lastName}
-                  placeholder="Enter your last name "
-                  className="form__input"
-                  required
-                  onChange={(event) => setLastName(event.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col">
-              <label htmlFor="phoneNumber" className="form__label">
-                Phone number <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="phoneNumber"
-                value={phoneNumber}
-                placeholder="+1  201-555-0123"
-                className="form__input"
-                required
-                onChange={(event) => setPhoneNumber(event.target.value)}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="email" className="form__label">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="email"
-                placeholder="Email Address"
-                value={email}
-                className="form__input"
-                required
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </div>
-            <div className="flex flex-col space-y-2">
-              <label htmlFor="streetaddress" className="form__label">
-                Street Address <span className="text-red-500">*</span>
-              </label>
-
-              <input
-                id="streetaddress"
-                placeholder="House number and Street name"
-                value={streetAddress}
-                className="form__input"
-                required
-                onChange={(event) => setStreetAddress(event.target.value)}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="streetaddress" className="form__label">
-                Apartment (Optional)
-              </label>
-              <input
-                id="streetaddress"
-                placeholder="Apartment, suite, unit etc. (Optional)"
-                className="form__input"
-                value={apartment}
-                onChange={(event) => setApartment(event.target.value)}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="city" className="form__label">
-                Town/City <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="city"
-                placeholder="Town/City"
-                value={townCity}
-                onChange={(event) => setTownCity(event.target.value)}
-                className="form__input"
-              />
-            </div>
-            <div>
-              <label htmlFor="country" className="form__label">
-                Country <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="country"
-                className="form__input"
-                name="country"
-                placeholder="Select Country"
-                value={country}
-                required
-                onChange={(event) => setCountry(event.target.value)}
-              >
-                <option>Select Country</option>
-                {countries.map(({ isoCode, name }) => (
-                  <option value={name} key={isoCode}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="message" className="form__label">
-                Order notes (Optional)
-              </label>
-              <textarea
-                id="message"
-                rows="6"
-                className="form__input"
-                value={orderNotes}
-                onChange={(event) => setOrderNotes(event.target.value)}
-                placeholder="Notes about your order, e.g special notes for delivery"
-              />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="items-center">
-              <input
-                id="default-checkbox"
-                type="checkbox"
-                value=""
-                className="w-4 h-4 text-blue-600  border-gray-300 rounded "
-              />
-              <label
-                for="default-checkbox"
-                className="ml-2 text-sm font-normal text-[#000000]"
-              >
-                Save shipping address for next purchase
-              </label>
-            </div>
-            <button
-              onClick={handleUpdate}
-              className="  btn rounded-[6px] w-[295px]"
-            >
-              {loading ? <SaveLoader /> : "Add shipping address"}
-            </button>
-          </div>
-        </ShippingModal>
+        <ShippingModal
+          isOpen={modalIsOpen}
+          onClose={closeModal}
+          onProceed={handleProceedFromModal}
+        />
       </section>
       <Bought
       // topproducts={topproducts}

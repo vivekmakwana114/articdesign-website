@@ -1,6 +1,5 @@
 "use client";
 
-import api from "@/lib/api";
 import Footer from "@/components/Footer";
 import Sectionfive from "@/components/Home/Sectionfive";
 import Sectiontwo from "@/components/Home/Sectiontwo";
@@ -28,7 +27,8 @@ function Details() {
     window.scrollTo(0, 0);
   }, [slug, dispatch]);
 
-  const productsLoading = detailsStatus === "loading";
+  const productsLoading =
+    detailsStatus === "loading" || detailsStatus === "idle";
   return (
     <>
       <DetailsSection product={product} loading={productsLoading} />

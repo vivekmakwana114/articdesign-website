@@ -76,16 +76,16 @@ function Footer() {
           <section>
             <h3 className="text-sm font-Inter font-semibold">Resources</h3>
             <ul className="flex flex-col gap-2 font-medium text-base font-inter pt-2 text-[#6B7280]">
-              <Link href="devices?category=laptops">
+              <Link href="devices?category=laptop">
                 <li>Skins</li>
               </Link>
-              <Link href="devices?category=phones">
+              <Link href="devices?category=iphone">
                 <li>iPhone</li>
               </Link>
-              <Link href="devices?category=ipads">
+              <Link href="devices?category=ipad">
                 <li>iPad</li>
               </Link>
-              <Link href="devices?category=laptops">
+              <Link href="devices?category=laptop">
                 <li>MacBook</li>
               </Link>
             </ul>

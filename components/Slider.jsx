@@ -69,7 +69,7 @@ const Slider = ({ images }) => {
                 title="Customize now"
                 textsize="24px"
                 fontweight="medium"
-                link="devices?category=phones"
+                link="devices?category=iphone"
               />
             </div>
           </div>
