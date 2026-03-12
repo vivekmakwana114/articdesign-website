@@ -135,7 +135,6 @@ function UserContent() {
         }
         if (formattedDate) setBirthday(formattedDate);
       } catch (e) {
-        console.log("Could not parse birthday:", initialBirthday);
       }
     }
   }, [initialBirthday]);
@@ -164,7 +163,7 @@ function UserContent() {
       const customerId = currentUser?._id || currentUser?.id;
       await dispatch(fetchCustomerOrders({ customerId })).unwrap();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
   // ── Change Password handler ──
@@ -190,7 +189,7 @@ function UserContent() {
       setNewPassword("");
       setConfirmPassword("");
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
   // ── Deactivate Account handler ──
@@ -211,7 +210,7 @@ function UserContent() {
       await api.post(`/auth/signout`);
       router.push("/");
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
   // ── Submit Order Problem / Support Ticket ──
@@ -231,7 +230,7 @@ function UserContent() {
       setTicketDescription("");
       closeReportModal();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
   // ── Update Profile / Personal Information ──
@@ -255,7 +254,7 @@ function UserContent() {
 
       setModalPasswordIsOpen(false);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

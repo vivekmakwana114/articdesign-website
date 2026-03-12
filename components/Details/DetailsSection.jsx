@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "@/state/cart/cartSlice";
 import GenerateUniqueId from "../GenerateUniqueId";
 import toast from "react-hot-toast";
-import { imageskin } from "../../assets";
 
 const DetailsSection = ({ product, loading }) => {
   const dispatch = useDispatch();
@@ -68,29 +67,22 @@ const DetailsSection = ({ product, loading }) => {
       productId: product?.productId || product?._id || product?.id || slugOrId,
       quantity: 1,
       variantAreaIds: variantAreaIds,
-      totalPrice: totalPrice,
+      price: totalPrice,
       image:
         (product?.images?.length > 0
           ? product.images[0]
           : product?.thumbnailImage) || "",
     };
 
-    console.log("DEBUG: Raw product object", product);
-    console.log("DEBUG: Product keys", Object.keys(product || {}));
-    if (product?.areasOfSkin?.length > 0) {
-      console.log("DEBUG: First area of skin", product.areasOfSkin[0]);
-      console.log(
-        "DEBUG: First area of skin keys",
-        Object.keys(product.areasOfSkin[0]),
-      );
-    }
-    console.log(
-      "DEBUG: constructed cartData",
-      JSON.stringify(cartData, null, 2),
-    );
+    console.log("DEBUG [1]: Full Add To Cart Request");
+    console.log("-> Raw Product Data:", JSON.stringify(product, null, 2));
+    console.log("-> Selected Options:", JSON.stringify(selectedOptions, null, 2));
+    console.log("-> Calculated Total Price:", totalPrice);
+    console.log("-> Final Payload Sent to Backend:", JSON.stringify(cartData, null, 2));
 
     dispatch(addItemToCart(cartData))
       .unwrap()
+
       .then(() => {
         toast.success("Added to cart successfully");
       })

@@ -77,12 +77,20 @@ const CheckOut = () => {
   };
 
   const handleIncrement = (id) => {
+    console.log("DEBUG [3]: Cart Increment Triggered");
+    console.log("-> Incrementing Item ID:", id);
+    console.log("-> Current Cart State Before Update:", JSON.stringify(cartItems, null, 2));
+
     dispatch(incrementItem(id)).then(() => {
       dispatch(fetchCart());
     });
   };
 
   const handleDecrement = (id) => {
+    console.log("DEBUG [2]: Cart Decrement Triggered");
+    console.log("-> Decrementing Item ID:", id);
+    console.log("-> Current Cart State Before Update:", JSON.stringify(cartItems, null, 2));
+
     dispatch(decrementItem(id)).then(() => {
       dispatch(fetchCart());
     });
@@ -194,26 +202,44 @@ const CheckOut = () => {
             )}`
           : orderNotes;
 
-      const response = await api.post(`/v1/order`, {
+      const orderPayload = {
         orderType: "online",
-        products: cartItems.map((item) => ({
-          productId: item.productId || item.product?._id || item.product?.id,
-          name:
-            item.name ||
-            item.product?.productName ||
-            item.productName ||
-            "Product",
-          price: item.price || item.product?.price || 0,
-          quantity: item.quantity,
-          variantAreas:
-            item.variantAreas?.map((v) => ({
-              variantAreaId: v.variantAreaId || v._id || v.id,
-              name: v.name || "Custom Area",
-              additionalPrice: v.additionalPrice || 0,
-            })) || [],
-        })),
+        discount: cartData?.summary?.discount || 0,
+        products: cartItems.map((item) => {
+          const variantTotal = item.variantAreas?.reduce((sum, v) => sum + (v.additionalPrice || 0), 0) || 0;
+          
+          // For frontend cart math debugging:
+          // UnitPrice coming from backend represents the price of 1 quantity of base item + its variants
+          // E.g base 100 + variant 300 = 400. We want to send 100.
+          
+          const unitPrice = item.unitPrice || item.price || item.product?.price || 0;
+          const basePrice = Math.max(0, unitPrice - variantTotal);
+          
+          return {
+            productId: item.productId || item.product?._id || item.product?.id,
+            name:
+              item.name ||
+              item.product?.productName ||
+              item.productName ||
+              "Product",
+            price: basePrice,
+            quantity: item.quantity,
+            variantAreas:
+              item.variantAreas?.map((v) => ({
+                variantAreaId: v.variantAreaId || v._id || v.id,
+                name: v.name || "Custom Area",
+                additionalPrice: v.additionalPrice || 0,
+              })) || [],
+          };
+        }),
         shippingAddress: shippingAddress?._id || shippingAddress?.id,
-      });
+      };
+
+      console.log("DEBUG [4]: Creating Checkout Order");
+      console.log("-> Raw Cart Data (State):", JSON.stringify(cartItems, null, 2));
+      console.log("-> Final Order Payload being sent to backend:", JSON.stringify(orderPayload, null, 2));
+
+      const response = await api.post(`/v1/order`, orderPayload);
 
       // Razorpay data (matching your backend createOrder response payload)
       const { razorpayOrderId, amount, currency, keyId } =
@@ -236,6 +262,16 @@ const CheckOut = () => {
               razorpay_payment_id: razorpayResponse.razorpay_payment_id,
               razorpay_signature: razorpayResponse.razorpay_signature,
             });
+
+            // Remove all cart items from the backend cart
+            if (cartItems && cartItems.length > 0) {
+              await Promise.all(
+                cartItems.map((item) =>
+                  dispatch(removeItem(item.id || item._id))
+                )
+              );
+            }
+
             dispatch(clearCart());
             toast.success("Payment Successful!");
             router.push("/user?dashboard=orders");

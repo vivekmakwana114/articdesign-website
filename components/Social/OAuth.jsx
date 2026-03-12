@@ -16,7 +16,6 @@ export default function OAuth() {
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
-      // return console.log(result);
 
       const res = await api.post(`/auth/outh`, {
         name: result.user.displayName,
@@ -25,14 +24,14 @@ export default function OAuth() {
       });
       const data = res.data;
       if (data.flag === false) {
-        console.log("error", data.message);
+        console.error("error", data.message);
         toast.error(data.message);
         return;
       }
       localStorage.setItem("accessToken", data.accessToken);
       router.push(returnUrl || "/"); // Redirect after successful submission
     } catch (error) {
-      console.log("could not login with google", error.message);
+      console.error("could not login with google", error.message);
     }
   };
 
@@ -45,17 +44,6 @@ export default function OAuth() {
       >
         <FcGoogle className="text-3xl" />{" "}
         <p className=" font-medium md:text-sm text-xs">Sign up with Google</p>
-      </button>
-
-      <button
-        type="button"
-        onClick={() => {
-          console.log("apple");
-        }}
-        className=" w-full text-[#2E2E2E]  border border-[#E9E9E9] rounded-[6px] p-3 flex justify-center items-center gap-3"
-      >
-        <FaApple className="text-3xl" />{" "}
-        <p className=" font-medium md:text-sm text-xs">Sign up with Apple</p>
       </button>
     </div>
   );

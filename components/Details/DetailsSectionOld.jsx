@@ -112,14 +112,13 @@ function DetailsSection({ product, loading }) {
       deviceName: product?.device?.deviceName,
       thumbnailImage: product?.thumbnailImage,
       basePrice: product?.productPrice,
-      options: selectedItems, // array of selected options
-      totalPrice: totalPrice, // total price including options
-      subTotalPrice: subTotalPrice, // total price including options
+      options: selectedItems, 
+      totalPrice: totalPrice, 
+      subTotalPrice: subTotalPrice, 
       orderId,
       color: selectedColor,
     };
-    // console.log("cartItem", cartItem);
-    addItemToCart(cartItem); // Call the addToCart function with the new cart item
+    addItemToCart(cartItem); 
     toast.success("Success");
   };
   const handleClickBack = () => {

@@ -33,7 +33,7 @@ const validationSchema = Yup.object({
 function ContactForm() {
   const handleSubmit = async (values, actions) => {
     try {
-      console.log("Form Values:", values);
+     
       toast.success("Form submitted successfully!");
       actions.resetForm();
     } catch (error) {
