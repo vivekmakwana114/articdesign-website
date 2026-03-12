@@ -17,7 +17,7 @@ function Footer() {
     },
     {
       title: "About",
-      content: ["Our Story", "Media Kit", "Blog", "Email us"],
+      content: ["Our Story", "Email us"],
     },
   ]);
 
@@ -60,16 +60,16 @@ function Footer() {
             <h3 className="text-sm font-inter font-semibold">Help & Support</h3>
             <ul className="flex flex-col gap-2 font-medium text-base font-inter pt-2 text-[#6B7280]">
               <li>
-                <Link href="/">FAQ</Link>
+                <Link href="/faq">FAQ</Link>
               </li>
               <li>
-                <Link href="/">How to Apply</Link>
+                <Link href="/how-to-apply">How to Apply</Link>
               </li>
               <li>
-                <Link href="/">Payments & Shipping</Link>
+                <Link href="/payment-shipping">Payments & Shipping</Link>
               </li>
               <li>
-                <Link href="/contactform">Contact Us</Link>
+                <Link href="/contactus">Contact Us</Link>
               </li>
             </ul>
           </section>
@@ -93,10 +93,14 @@ function Footer() {
           <section>
             <h3 className="text-sm font-inter font-semibold">About</h3>
             <ul className="flex flex-col gap-2 font-medium text-base font-inter pt-2 text-[#6B7280]">
-              <li>Our Story</li>
-              <li>Media Kit</li>
-              <li>Blog</li>
-              <li>Email us</li>
+              <li>
+                <Link href="/whyus">Our Story</Link>
+              </li>
+              {/* <li>Media Kit</li>
+              <li>Blog</li> */}
+              <li>
+                <a href="mailto:info@articwood.com">Email us</a>
+              </li>
             </ul>
           </section>
         </div>
@@ -140,7 +144,17 @@ function Footer() {
                   <ul className="flex flex-col gap-2 font-medium text-base font-inter text-[#6B7280]">
                     {section.content.map((item, itemIndex) => (
                       <li key={itemIndex} className="pl-2">
-                        <Link href="/">{item}</Link>
+                        {item === "Email us" ? (
+                          <a href="mailto:info@articwood.com">{item}</a>
+                        ) : (
+                          <Link href={
+                            item === "FAQ" ? "/faq" : 
+                            item === "Payments & Shipping" ? "/payment-shipping" : 
+                            item === "Our Story" ? "/whyus" :
+                            item === "How to Apply" ? "/how-to-apply" :
+                            "/"
+                          }>{item}</Link>
+                        )}
                       </li>
                     ))}
                   </ul>
