@@ -15,42 +15,42 @@ import { useEffect } from "react";
 const INITIAL_VIDEOS = [
   {
     id: "v1",
-    title: 'How to Apply Orange iPhone Skin',
-    model: 'iPhone 15 Pro Max',
-    category: "iphone",
-    youtubeId: "u_A3V4X_O_4", 
-    thumbnail: smartphogeometry,
+    title: 'How to Apply MacBook Skin',
+    model: 'MacBook Air / Pro',
+    category: "laptop",
+    youtubeId: "kkuVYUtQosg", 
+    thumbnail: "https://img.youtube.com/vi/kkuVYUtQosg/maxresdefault.jpg",
   },
   {
     id: "v2",
-    title: 'MacBook Air M1 Skin Installation',
-    model: 'MacBox Air (2020)',
-    category: "laptop",
-    youtubeId: "vB0S1gTz8vY",
-    thumbnail: laptop,
+    title: 'How to Apply iPhone Skin',
+    model: 'iPhone 15 / 16 Series',
+    category: "iphone",
+    youtubeId: "esc7ec26sJ8", 
+    thumbnail: "https://img.youtube.com/vi/esc7ec26sJ8/maxresdefault.jpg",
   },
   {
     id: "v3",
-    title: 'iPad Pro 11" M2 Skin Application',
-    model: 'iPad Pro 11 (4th Gen)',
+    title: 'How to Apply iPad Skin',
+    model: 'iPad Pro / Air',
     category: "ipad",
-    youtubeId: "vB0S1gTz8vY",
-    thumbnail: ipad,
+    youtubeId: "Dz_ayoHtprA", 
+    thumbnail: "https://img.youtube.com/vi/Dz_ayoHtprA/maxresdefault.jpg",
   },
   {
     id: "v4",
-    title: 'MacBook Pro 14" Full Body Wrap',
-    model: 'MacBook Pro 14 (2021)',
+    title: 'Precision Application Guide',
+    model: 'Full Body Coverage',
     category: "laptop",
-    youtubeId: "vB0S1gTz8vY",
-    thumbnail: laptop,
+    youtubeId: "Q5aE7h-AX5Q", 
+    thumbnail: "https://img.youtube.com/vi/Q5aE7h-AX5Q/maxresdefault.jpg",
   }
 ];
 
 // --- DYNAMIC FETCHING (OPTIONAL) ---
-// If you want videos to update automatically, provide the API Key from your client's Google Cloud account.
-const YOUTUBE_API_KEY = ""; 
-const CHANNEL_ID = "UC_articwoodtech"; 
+// If you want videos to update automatically, provide the API Key from your client's Google Cloud account in .env
+const YOUTUBE_API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || ""; 
+const CHANNEL_ID = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID || "UC_articwoodtech"; 
 
 const HowToApply = () => {
   const [activeTab, setActiveTab] = useState("laptop");
@@ -177,16 +177,16 @@ const HowToApply = () => {
                   className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group border border-gray-100"
                   onClick={() => setSelectedVideo(video)}
                 >
-                  <div className="aspect-square relative bg-[#F5F5F7] flex items-center justify-center overflow-hidden">
-                    <Image
-                      src={video.thumbnail}
-                      alt={video.title}
-                      fill
-                      className="object-contain group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/400x400?text=Tutorial';
-                      }}
-                    />
+                <div className="aspect-video relative bg-[#F5F5F7] flex items-center justify-center overflow-hidden">
+                  <Image
+                    src={video.thumbnail}
+                    alt={video.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/640x360?text=Tutorial';
+                    }}
+                  />
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                        <div className="w-16 h-16 bg-[#0071E3]/90 rounded-full flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
                           <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1" />

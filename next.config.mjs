@@ -26,6 +26,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "invennico-dev.s3.eu-north-1.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
     ],
   },
   reactStrictMode: true,
