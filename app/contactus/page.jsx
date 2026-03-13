@@ -12,6 +12,7 @@ const initialValues = {
   firstname: "",
   lastname: "",
   companyName: "",
+  email: "",
   phoneNumber: "",
   message: "",
 };
@@ -21,6 +22,7 @@ const validationSchema = Yup.object({
   firstname: Yup.string().required("First name is required"),
   lastname: Yup.string().required("Last name is required"),
   companyName: Yup.string(),
+  email: Yup.string().email("Invalid email address").required("Email is required"),
   phoneNumber: Yup.string()
     .required("Phone number is required")
     .matches(
@@ -33,14 +35,34 @@ const validationSchema = Yup.object({
 function ContactForm() {
   const handleSubmit = async (values, actions) => {
     try {
-     
-      toast.success("Form submitted successfully!");
-      actions.resetForm();
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName: `${values.firstname} ${values.lastname}`,
+          companyName: values.companyName,
+          email: values.email,
+          phone: values.phoneNumber,
+          message: values.message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success("Message sent successfully!");
+        actions.resetForm();
+      } else {
+        toast.error(result.error || "Failed to send message");
+      }
     } catch (error) {
       console.error("Submission error:", error);
       toast.error("Form submission failed!");
+    } finally {
+      actions.setSubmitting(false);
     }
-    actions.setSubmitting(false);
   };
 
   return (
@@ -50,7 +72,7 @@ function ContactForm() {
           <h1 className=" text-[48px] text-[#1D1D1F] font-semibold">
             SayHello
           </h1>
-          <h5 className="text-[#86868B] font-medium text-base">sdfsd’flsd</h5>
+          <h5 className="text-[#86868B] font-medium text-base">Reach out to us for futher support</h5>
         </div>
         <Formik
           initialValues={initialValues}
@@ -58,10 +80,10 @@ function ContactForm() {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form className="flex flex-col gap-5 p-10">
+            <Form className="flex flex-col gap-5 p-10 w-full">
               <div className="md:grid md:grid-cols-2 md:gap-10 flex flex-col">
                 <div className="flex flex-col">
-                  <label htmlFor="firstname" className="form__label">
+                  <label htmlFor="firstname" className="form__label text-[#111827] font-semibold">
                     First name
                   </label>
                   <Field
@@ -77,7 +99,7 @@ function ContactForm() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label htmlFor="lastname" className="form__label">
+                  <label htmlFor="lastname" className="form__label text-[#111827] font-semibold">
                     Last name
                   </label>
                   <Field
@@ -95,7 +117,7 @@ function ContactForm() {
               </div>
 
               <div className="flex flex-col">
-                <label htmlFor="companyName" className="form__label">
+                <label htmlFor="companyName" className="form__label text-[#111827] font-semibold">
                   Company Name (Optional)
                 </label>
                 <Field
@@ -104,10 +126,33 @@ function ContactForm() {
                   placeholder="Company Name (Optional)"
                   className="form__input"
                 />
+                <ErrorMessage
+                  name="companyName"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
               </div>
 
               <div className="flex flex-col">
-                <label htmlFor="phoneNumber" className="form__label">
+                <label htmlFor="email" className="form__label text-[#111827] font-semibold">
+                  Email
+                </label>
+                <Field
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="example@email.com"
+                  className="form__input"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="phoneNumber" className="form__label text-[#111827] font-semibold">
                   Phone number
                 </label>
                 <Field
@@ -124,7 +169,7 @@ function ContactForm() {
               </div>
 
               <div className="flex flex-col">
-                <label htmlFor="message" className="form__label">
+                <label htmlFor="message" className="form__label text-[#111827] font-semibold">
                   Message
                 </label>
                 <Field
@@ -145,7 +190,7 @@ function ContactForm() {
               <div className="flex md:flex-row flex-col gap-5">
                 <button
                   type="submit"
-                  className="rounded-md bg-[#4B4EFC] w-[96px] text-white p-2 h-[40px]"
+                  className="rounded-md bg-[#0071E3] w-[96px] text-white p-2 h-[40px]"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Submitting..." : "Submit"}

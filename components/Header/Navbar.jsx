@@ -5,15 +5,10 @@ import {
   AiOutlineLogout,
   AiOutlineSearch,
   AiOutlineCloseCircle,
+  AiOutlineMinus,
+  AiOutlinePlus,
 } from "react-icons/ai";
-import {
-  MdPhoneIphone,
-  MdOutlineLaptopMac,
-  MdDevicesOther,
-} from "react-icons/md";
-import { PiDeviceTabletLight } from "react-icons/pi";
 import { BiShoppingBag, BiSolidUpArrow } from "react-icons/bi";
-import { AiOutlineMail } from "react-icons/ai";
 import { FiPackage } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineClose } from "react-icons/md";
@@ -26,6 +21,7 @@ import api from "@/lib/api";
 import { menus } from "./Mymenus";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/state/auth/authSlice";
+import FormatCurrencyRate from "../Currency/FormatCurrencyRate";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -37,6 +33,7 @@ const Navbar = () => {
   const [searchData, setSearchData] = useState("");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [heading, setHeading] = useState("");
   const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -78,18 +75,23 @@ const Navbar = () => {
   };
 
   const handleSearchQuery = async () => {
+    if (!searchText.trim()) {
+      setSearchData([]);
+      return;
+    }
     try {
       setSearchLoading(true);
-      const res = await api.get(`/search?search=${searchText}`);
-      setSearchData(res.data);
+      const res = await api.get(`/v1/product?search=${searchText}`);
+      // Based on typical backend response structure where data is wrapped in a data property
+      setSearchData(res.data?.data || res.data);
       setSearchLoading(false);
     } catch (error) {
-      console.error(error);
+      console.error("Search Error:", error);
       setSearchLoading(false);
     }
   };
   return (
-    <nav className="md:bg-[#1D1D1F] bg-[#FFFFFF] sticky  w-full text-white font-inter md:px-14 md:h-[64px] md:z-50 z-30">
+    <nav className="md:bg-[#1D1D1F] bg-[#FFFFFF] fixed top-0 left-0 right-0 w-full text-white font-inter md:px-14 md:h-[64px] md:z-[100] z-[100]">
       <div className="flex items-center font-medium justify-between  h-[64px]">
         <div className="md:bg-[#1D1D1F] bg-[#1D1D1F]  z-50 p-5 md:w-auto w-[100%] flex justify-between md:border-none border-b">
           <p className=" font-extrabold md:text-[#ffffff] text-[#ffffff] ">
@@ -117,8 +119,8 @@ const Navbar = () => {
           </div>
         </div>
         {showsearch ? (
-          <div className=" relative">
-            <div className="md:flex hidden items-center bg-[#1D1D1F] p-2 rounded-sm md:w-[700px] w-full relative">
+          <div className="relative md:w-[700px] w-full">
+            <div className="md:flex hidden items-center bg-[#1D1D1F] p-2 rounded-sm w-full">
               <input
                 type="text"
                 className="flex-grow h-9 px-2 text-white bg-[#303030c7] border rounded-sm"
@@ -137,24 +139,52 @@ const Navbar = () => {
               </button>
             </div>
             {searchText ? (
-              <div className="px-3 py-5 bg-white rounded-sm absolute top-12 left-2 w-[688px] transition-all duration-700 shadow-md">
+              <div className="bg-white rounded-sm absolute top-12 left-0 w-full transition-all duration-700 shadow-md z-[60] overflow-hidden">
                 {searchLoading ? (
-                  <Loader />
+                  <div className="px-3 py-5">
+                    <Loader />
+                  </div>
+                ) : Array.isArray(searchData) && searchData.length > 0 ? (
+                  <div className="px-2 py-2 max-h-[400px] overflow-y-auto">
+                    {searchData.map((item) => (
+                      <React.Fragment key={item._id}>
+                        <Link
+                          href={`/details/${item.slug || item._id}`}
+                          onClick={() => {
+                            setSearchText("");
+                          }}
+                          className="flex items-center gap-4 py-2 px-2 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-none rounded-sm"
+                        >
+                          <div className="w-12 h-12 flex-shrink-0 relative overflow-hidden rounded-md border border-gray-200">
+                            <Image
+                              src={
+                                item.images?.[0] ||
+                                item.thumbnailImage ||
+                                "/placeholder.png"
+                              }
+                              alt={item.name || item.productName}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[#1D1D1F] text-sm font-semibold truncate max-w-[500px]">
+                              {item.name || item.productName}
+                            </span>
+                            <span className="text-[#0071E3] text-xs font-medium mt-1">
+                              <FormatCurrencyRate
+                                num={item.basePrice || item.price}
+                              />
+                            </span>
+                          </div>
+                        </Link>
+                      </React.Fragment>
+                    ))}
+                  </div>
                 ) : (
-                  Array.isArray(searchData) &&
-                  searchData?.map((item) => (
-                    <React.Fragment key={item._id}>
-                      <Link
-                        href={`/details/${item.slug}`}
-                        onClick={() => {
-                          setSearchText("");
-                        }}
-                        className="flex flex-col py-2 hover:text-blue-300 text-[#1D1D1F] text-base font-normal"
-                      >
-                        {item.productName}
-                      </Link>
-                    </React.Fragment>
-                  ))
+                  <div className="px-4 py-8 text-center text-[#1D1D1F] text-sm font-medium">
+                    No products found for &quot;{searchText}&quot;
+                  </div>
                 )}
               </div>
             ) : (
@@ -360,18 +390,43 @@ const Navbar = () => {
           </li>
 
           {menus.map((menu, i) => (
-            <li key={i}>
-              <Link
-                href={
-                  menu.params ? `/devices?category=${menu.link}` : menu.link
-                }
-                className="py-4 px-3 inline-block"
-                onClick={closeMobileMenu}
-              >
-                <span className="flex justify-center items-center gap-2 text-base font-normal text-[#1D1D1F]">
-                  {menu.name}
-                </span>
-              </Link>
+            <li key={i} className="flex flex-col">
+              <div className="flex justify-between items-center pr-10">
+                <Link
+                  href={
+                    menu.params ? `/devices?category=${menu.link}` : menu.link
+                  }
+                  className="py-4 px-3 inline-block"
+                  onClick={menu.submenus ? (e) => e.preventDefault() : closeMobileMenu}
+                >
+                  <span className="flex justify-center items-center gap-2 text-base font-normal text-[#1D1D1F]">
+                    {menu.name}
+                  </span>
+                </Link>
+                {menu.submenus && (
+                  <span 
+                    className="cursor-pointer text-[#1D1D1F]"
+                    onClick={() => setHeading(heading === menu.name ? "" : menu.name)}
+                  >
+                    {heading === menu.name ? <AiOutlineMinus /> : <AiOutlinePlus />}
+                  </span>
+                )}
+              </div>
+              {menu.submenus && heading === menu.name && (
+                <ul className="pl-6 bg-gray-50">
+                  {menu.submenus.map((sub, j) => (
+                    <li key={j}>
+                      <Link
+                        href={sub.link}
+                        className="py-2 px-3 block text-sm text-[#1D1D1F]"
+                        onClick={closeMobileMenu}
+                      >
+                        {sub.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
 

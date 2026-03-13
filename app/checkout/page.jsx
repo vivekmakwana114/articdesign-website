@@ -248,8 +248,7 @@ const CheckOut = () => {
       const options = {
         key:
           keyId ||
-          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
-          "rzp_test_XXXXXXXXXXXXXX",
+          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: amount,
         currency: currency,
         name: "Artic Designs",

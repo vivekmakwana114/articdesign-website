@@ -21,7 +21,13 @@ export const menus = [
   },
   {
     name: "Company",
-    link: "/",
+    link: "#",
     params: false,
+    submenus: [
+      { name: "Why Us?", link: "/whyus" },
+      { name: "Returns", link: "/returns" },
+      { name: "Gift Card", link: "/giftcard" },
+      { name: "Care", link: "/care" },
+    ],
   },
 ];
