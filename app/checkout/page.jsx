@@ -176,64 +176,11 @@ const CheckOut = () => {
 
     setCheckingOut(true);
     try {
-      // Capture variant areas that don't have valid ObjectIds to append to order notes
-      const customVariantNotes = cartItems
-        .flatMap((item) => {
-          const invalidVariants = (item.variantAreas || []).filter((v) => {
-            const id = v.variantAreaId || v._id || v.id;
-            return !id || !/^[0-9a-fA-F]{24}$/.test(id);
-          });
-          return invalidVariants.map(
-            (v) =>
-              `${
-                item.name ||
-                item.product?.productName ||
-                item.productName ||
-                "Product"
-              } - ${v.name || v.variantAreaId || v._id || v.id || "Custom Area"}`,
-          );
-        })
-        .filter(Boolean);
-
-      const finalOrderNotes =
-        customVariantNotes.length > 0
-          ? `${orderNotes ? orderNotes + "\n" : ""}Additional Options: ${customVariantNotes.join(
-              ", ",
-            )}`
-          : orderNotes;
-
       const orderPayload = {
         orderType: "online",
-        discount: cartData?.summary?.discount || 0,
-        products: cartItems.map((item) => {
-          const variantTotal = item.variantAreas?.reduce((sum, v) => sum + (v.additionalPrice || 0), 0) || 0;
-          
-          // For frontend cart math debugging:
-          // UnitPrice coming from backend represents the price of 1 quantity of base item + its variants
-          // E.g base 100 + variant 300 = 400. We want to send 100.
-          
-          const unitPrice = item.unitPrice || item.price || item.product?.price || 0;
-          const basePrice = Math.max(0, unitPrice - variantTotal);
-          
-          return {
-            productId: item.productId || item.product?._id || item.product?.id,
-            name:
-              item.name ||
-              item.product?.productName ||
-              item.productName ||
-              "Product",
-            price: basePrice,
-            quantity: item.quantity,
-            variantAreas:
-              item.variantAreas?.map((v) => ({
-                variantAreaId: v.variantAreaId || v._id || v.id,
-                name: v.name || "Custom Area",
-                additionalPrice: v.additionalPrice || 0,
-              })) || [],
-          };
-        }),
         shippingAddress: shippingAddress?._id || shippingAddress?.id,
       };
+
 
       console.log("DEBUG [4]: Creating Checkout Order");
       console.log("-> Raw Cart Data (State):", JSON.stringify(cartItems, null, 2));
