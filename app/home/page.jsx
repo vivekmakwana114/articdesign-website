@@ -8,6 +8,7 @@ import Sectiontwo from "@/components/Home/Sectiontwo";
 import Banner from "@/components/Banner/Banner";
 import { HomeBannerData } from "@/components/Banner/BannerData";
 import Slider from "@/components/Slider";
+import Bought from "@/components/Customers/Bought";
 
 export default function Home() {
   const images = [
@@ -54,6 +55,7 @@ export default function Home() {
       {/* <Sectionone /> */}
       <Sectiontwo />
       <Sectionthree />
+      <Bought />
       <SectionTestimonail />
       <Sectionfive />
       <Footer />

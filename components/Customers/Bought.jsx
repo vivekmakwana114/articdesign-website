@@ -1,34 +1,35 @@
-import React, { useEffect } from "react";
+"use client";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchTopProducts } from "@/state/cart/cartSlice";
+import { usePathname } from "next/navigation";
 import { imageskin } from "../../assets";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTopProducts } from "@/state/product/productSlice";
 
 const Bought = () => {
   const dispatch = useDispatch();
-  const { topProducts: topproducts, topProductsStatus } = useSelector(
-    (state) => state.cart,
-  );
-
+  const { topProducts, topProductsStatus } = useSelector((state) => state.product);
   const loading = topProductsStatus === "loading";
+  const pathname = usePathname();
 
-  useEffect(() => {
-    if (topProductsStatus === "idle") {
-      dispatch(fetchTopProducts(4));
-    }
-  }, [dispatch, topProductsStatus]);
+  React.useEffect(() => {
+    dispatch(fetchTopProducts());
+  }, [dispatch]);
 
   return (
     <section className="bg-[#F5F5F7] px-5 md:p-10">
       <div>
-        <h1 className="text-[#1D1D1F] font-semibold text-[28px] text-center py-10">
-          Customers also Bought
-        </h1>
+        {pathname === "/checkout" && (
+          <h1 className="text-[#1D1D1F] font-semibold text-[28px] text-center py-10">
+            Customers also Bought
+          </h1>
+        )}
         {loading ? (
           <section className="p-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {Array.from({ length: topproducts?.length }).map((_, index) => (
+              {Array.from({ length: 4 }).map((_, index) => (
                 <div
                   key={index}
                   className="animate-pulse transition-all duration-500 bg-gray-200 rounded-md p-4 md:h-[329px] h-full"
@@ -43,13 +44,13 @@ const Bought = () => {
         ) : (
           <>
             <div className="md:flex md:flex-wrap md:ml-16 grid grid-cols-2">
-              {Array.isArray(topproducts) &&
-                topproducts?.map((frame, index) => (
+              {Array.isArray(topProducts) &&
+                topProducts?.map((frame, index) => (
                   <div
                     key={index}
                     className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-10px] md:mx-[-10px] h-[329px]"
                   >
-                    <Link href={`/details/${frame.slug}`}>
+                    <Link href={`/details/${frame.slug || frame._id}`}>
                       <div className="bg-[#ffffff] md:p-4 p-3 rounded-[8px] shadow-sm h[271px]">
                         <Image
                           src={

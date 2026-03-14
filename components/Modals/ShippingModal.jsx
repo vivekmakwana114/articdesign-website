@@ -214,13 +214,13 @@ const ShippingModal = ({ isOpen, onClose, onProceed }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-[100] p-4 md:p-6">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-pointer"
         onClick={onClose}
       ></div>
       <div
-        className="bg-white rounded-2xl shadow-xl z-55 relative max-h-[90vh] overflow-y-auto w-full max-w-[650px] mx-4"
+        className="bg-white rounded-2xl shadow-2xl relative max-h-full overflow-y-auto w-full max-w-[650px]"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <button

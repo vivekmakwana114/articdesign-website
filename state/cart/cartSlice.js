@@ -6,15 +6,23 @@ import {
   incrementQuantity,
   decrementQuantity,
   removeFromCart,
-  getTopProducts,
 } from "./cartService";
 
 export const addItemToCart = createAsyncThunk(
   "cart/addItemToCart",
-  async (cartData, { rejectWithValue }) => {
+  async (cartData, { getState, rejectWithValue, dispatch }) => {
     try {
-      const res = await addToCartApi(cartData);
-      return res.data;
+      const { auth } = getState();
+      const hasToken = !!auth?.tokens?.access?.token;
+
+      if (hasToken) {
+        const res = await addToCartApi(cartData);
+        return res.data;
+      } else {
+        return rejectWithValue({
+          message: "Please login to add product into cart",
+        });
+      }
     } catch (err) {
       return rejectWithValue(
         err.response?.data || {
@@ -27,10 +35,17 @@ export const addItemToCart = createAsyncThunk(
 
 export const fetchCart = createAsyncThunk(
   "cart/fetchCart",
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
-      const res = await getCart();
-      return res.data;
+      const { auth } = getState();
+      const hasToken = !!auth?.tokens?.access?.token;
+
+      if (hasToken) {
+        const res = await getCart();
+        return res.data;
+      } else {
+        return { data: { items: [] }, guest: true };
+      }
     } catch (err) {
       return rejectWithValue(
         err.response?.data || { message: "Failed to fetch cart" },
@@ -41,10 +56,14 @@ export const fetchCart = createAsyncThunk(
 
 export const updateItem = createAsyncThunk(
   "cart/updateItem",
-  async ({ id, data }, { rejectWithValue }) => {
+  async ({ id, data }, { getState, rejectWithValue, dispatch }) => {
     try {
-      const res = await updateCartItem(id, data);
-      return res.data;
+      const { auth } = getState();
+      if (auth?.tokens?.access?.token) {
+        const res = await updateCartItem(id, data);
+        return res.data;
+      }
+      return rejectWithValue({ message: "Login required" });
     } catch (err) {
       return rejectWithValue(
         err.response?.data || { message: "Failed to update item" },
@@ -55,10 +74,14 @@ export const updateItem = createAsyncThunk(
 
 export const incrementItem = createAsyncThunk(
   "cart/incrementItem",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue, dispatch }) => {
     try {
-      const res = await incrementQuantity(id);
-      return res.data;
+      const { auth } = getState();
+      if (auth?.tokens?.access?.token) {
+        const res = await incrementQuantity(id);
+        return res.data;
+      }
+      return rejectWithValue({ message: "Login required" });
     } catch (err) {
       return rejectWithValue(
         err.response?.data || { message: "Failed to increment" },
@@ -69,10 +92,14 @@ export const incrementItem = createAsyncThunk(
 
 export const decrementItem = createAsyncThunk(
   "cart/decrementItem",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue, dispatch }) => {
     try {
-      const res = await decrementQuantity(id);
-      return res.data;
+      const { auth } = getState();
+      if (auth?.tokens?.access?.token) {
+        const res = await decrementQuantity(id);
+        return res.data;
+      }
+      return rejectWithValue({ message: "Login required" });
     } catch (err) {
       return rejectWithValue(
         err.response?.data || { message: "Failed to decrement" },
@@ -83,27 +110,17 @@ export const decrementItem = createAsyncThunk(
 
 export const removeItem = createAsyncThunk(
   "cart/removeItem",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue, dispatch }) => {
     try {
-      const res = await removeFromCart(id);
-      return res.data;
+      const { auth } = getState();
+      if (auth?.tokens?.access?.token) {
+        const res = await removeFromCart(id);
+        return res.data;
+      }
+      return rejectWithValue({ message: "Login required" });
     } catch (err) {
       return rejectWithValue(
         err.response?.data || { message: "Failed to remove item" },
-      );
-    }
-  },
-);
-
-export const fetchTopProducts = createAsyncThunk(
-  "cart/fetchTopProducts",
-  async (limit, { rejectWithValue }) => {
-    try {
-      const res = await getTopProducts(limit);
-      return res.data;
-    } catch (err) {
-      return rejectWithValue(
-        err.response?.data || { message: "Failed to fetch top products" },
       );
     }
   },
@@ -114,8 +131,6 @@ const initialState = {
   cartError: null,
   cartData: null,
   cartItems: [],
-  topProducts: [],
-  topProductsStatus: "idle",
 };
 
 const cartSlice = createSlice({
@@ -138,28 +153,25 @@ const cartSlice = createSlice({
       })
       .addCase(addItemToCart.fulfilled, (state, action) => {
         state.cartStatus = "succeeded";
-        // Optionally update cartData or cartItems if API returns them
       })
       .addCase(addItemToCart.rejected, (state, action) => {
         state.cartStatus = "failed";
         state.cartError = action.payload?.message || "Failed to add to cart";
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
-        state.cartItems = action.payload?.data?.items || [];
-        state.cartData = action.payload?.data;
+        if (!action.payload.guest) {
+          state.cartItems = action.payload?.data?.items || [];
+          state.cartData = action.payload?.data;
+        } else {
+          state.cartData = {
+            items: [],
+            totalPrice: 0,
+          };
+          state.cartItems = [];
+        }
       })
       .addCase(removeItem.fulfilled, (state, action) => {
-        // Optimistically filter or refetch
-      })
-      .addCase(fetchTopProducts.pending, (state) => {
-        state.topProductsStatus = "loading";
-      })
-      .addCase(fetchTopProducts.fulfilled, (state, action) => {
-        state.topProductsStatus = "succeeded";
-        state.topProducts = action.payload?.data || action.payload || [];
-      })
-      .addCase(fetchTopProducts.rejected, (state, action) => {
-        state.topProductsStatus = "failed";
+        // Handle post-removal UI update if needed, though fetchCart is usually called after
       });
   },
 });

@@ -34,8 +34,3 @@ export const removeFromCart = (id) => {
 export const applyCoupon = (data) => {
   return api.post(`/v1/cart/apply/coupon`, data);
 };
-
-// Get top products
-export const getTopProducts = (limit = 4) => {
-  return api.get(`/v1/cart/top/products?limit=${limit}`);
-};

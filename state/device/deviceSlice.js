@@ -1,12 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getDevices } from "./deviceService";
+import { getDevices, getPublicDevices } from "./deviceService";
 
 // Fetch devices async thunk
 export const fetchDevices = createAsyncThunk(
   "device/fetchDevices",
-  async (params, { rejectWithValue }) => {
+  async (params, { getState, rejectWithValue }) => {
     try {
-      const res = await getDevices(params);
+      const { auth } = getState();
+      const hasToken = !!auth?.tokens?.access?.token;
+      
+      const res = hasToken 
+        ? await getDevices(params) 
+        : await getPublicDevices(params);
+        
       return res.data;
     } catch (err) {
       return rejectWithValue(
