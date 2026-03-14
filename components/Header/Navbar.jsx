@@ -14,6 +14,7 @@ import { CgProfile } from "react-icons/cg";
 import { MdOutlineClose } from "react-icons/md";
 import NavLinks from "./NavLinks";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import Loader from "../Loader";
@@ -24,6 +25,7 @@ import { logout } from "@/state/auth/authSlice";
 import FormatCurrencyRate from "../Currency/FormatCurrencyRate";
 
 const Navbar = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const cartState = { cartItems: [] };
   const currentUser = useSelector((state) => state.auth.user);
@@ -72,6 +74,7 @@ const Navbar = () => {
   const handleSignOut = () => {
     dispatch(logout());
     toast.success("Logged out");
+    router.push("/");
   };
 
   const handleSearchQuery = async () => {
@@ -206,33 +209,34 @@ const Navbar = () => {
             />
           )}
           <div className="relative" ref={dropdownRef}>
-            {mounted && (() => {
-              const profileSrc =
-                currentUser?.profile &&
-                currentUser.profile !== "null" &&
-                currentUser.profile !== ""
-                  ? currentUser.profile.Location || currentUser.profile
-                  : null;
-              return profileSrc ? (
-                <div
-                  className="w-8 h-8 rounded-full overflow-hidden hover:cursor-pointer border border-gray-500"
-                  onClick={() => setShowProfileMenu(!showProfileMenu)}
-                >
-                  <Image
-                    src={profileSrc}
-                    alt="Profile"
-                    width={32}
-                    height={32}
-                    className="object-cover w-full h-full"
+            {mounted &&
+              (() => {
+                const profileSrc =
+                  currentUser?.profile &&
+                  currentUser.profile !== "null" &&
+                  currentUser.profile !== ""
+                    ? currentUser.profile.Location || currentUser.profile
+                    : null;
+                return profileSrc ? (
+                  <div
+                    className="w-8 h-8 rounded-full overflow-hidden hover:cursor-pointer border border-gray-500"
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  >
+                    <Image
+                      src={profileSrc}
+                      alt="Profile"
+                      width={32}
+                      height={32}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                ) : (
+                  <CgProfile
+                    className="hover:cursor-pointer"
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
                   />
-                </div>
-              ) : (
-                <CgProfile
-                  className="hover:cursor-pointer"
-                  onClick={() => setShowProfileMenu(!showProfileMenu)}
-                />
-              );
-            })()}
+                );
+              })()}
             {showProfileMenu && (
               <>
                 <BiSolidUpArrow className="absolute left-0 top-5 text-white" />
@@ -326,65 +330,66 @@ const Navbar = () => {
         duration-500 ${open ? "left-0" : "left-[-100%]"}
         `}
         >
-          {mounted && (currentUser ? (
-            <>
-              <li className="text-base text-[#86868B] font-normal pl-4">
-                MY ACCOUNT
-              </li>
-              <li>
-                <Link
-                  href="/user?dashboard=personalinformation"
-                  className="py-4 px-3 inline-block"
-                  onClick={closeMobileMenu} // Close the mobile menu when the link is clicked
-                >
-                  <span className="flex justify-center items-center gap-2 text-base font-normal text-[#1D1D1F]">
-                    <CgProfile /> Personal Information
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/user?dashboard=orders"
-                  className="py-4 px-3 inline-block"
-                  onClick={closeMobileMenu} // Close the mobile menu when the link is clicked
-                >
-                  <span className="flex justify-center items-center gap-2 text-base font-normal text-[#1D1D1F]">
-                    <FiPackage /> Orders
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/checkout"
-                  className="py-4 px-3 inline-block"
-                  onClick={closeMobileMenu} // Close the mobile menu when the link is clicked
-                >
-                  <span className="flex justify-center items-center gap-2 text-base font-normal text-[#1D1D1F]">
-                    <BiShoppingBag /> Cart (2)
-                  </span>
-                </Link>
-              </li>
-              <hr />
-            </>
-          ) : (
-            <>
-              <li className="py-4 px-3 justify-center items-center gap-2 text-[20px] font-normal text-[#1D1D1F]">
-                Welcome to ArticDesign
-              </li>
-              <li className=" space-x-2 m-3">
-                <Link href="/auth?view=signup" onClick={closeMobileMenu}>
-                  <button className="bg-[#0071E3] rounded-[4px] w-[108px] p-3 text-white font-medium text-[13px] ">
-                    Register
-                  </button>
-                </Link>
-                <Link href="/auth" onClick={closeMobileMenu}>
-                  <button className="bg-[#0071E3] rounded-[4px] opacity-50 w-[108px] p-3 text-white font-medium text-[13px] ">
-                    Sign in
-                  </button>
-                </Link>
-              </li>
-            </>
-          ))}
+          {mounted &&
+            (currentUser ? (
+              <>
+                <li className="text-base text-[#86868B] font-normal pl-4">
+                  MY ACCOUNT
+                </li>
+                <li>
+                  <Link
+                    href="/user?dashboard=personalinformation"
+                    className="py-4 px-3 inline-block"
+                    onClick={closeMobileMenu} // Close the mobile menu when the link is clicked
+                  >
+                    <span className="flex justify-center items-center gap-2 text-base font-normal text-[#1D1D1F]">
+                      <CgProfile /> Personal Information
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/user?dashboard=orders"
+                    className="py-4 px-3 inline-block"
+                    onClick={closeMobileMenu} // Close the mobile menu when the link is clicked
+                  >
+                    <span className="flex justify-center items-center gap-2 text-base font-normal text-[#1D1D1F]">
+                      <FiPackage /> Orders
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/checkout"
+                    className="py-4 px-3 inline-block"
+                    onClick={closeMobileMenu} // Close the mobile menu when the link is clicked
+                  >
+                    <span className="flex justify-center items-center gap-2 text-base font-normal text-[#1D1D1F]">
+                      <BiShoppingBag /> Cart (2)
+                    </span>
+                  </Link>
+                </li>
+                <hr />
+              </>
+            ) : (
+              <>
+                <li className="py-4 px-3 justify-center items-center gap-2 text-[20px] font-normal text-[#1D1D1F]">
+                  Welcome to ArticDesign
+                </li>
+                <li className=" space-x-2 m-3">
+                  <Link href="/auth?view=signup" onClick={closeMobileMenu}>
+                    <button className="bg-[#0071E3] rounded-[4px] w-[108px] p-3 text-white font-medium text-[13px] ">
+                      Register
+                    </button>
+                  </Link>
+                  <Link href="/auth" onClick={closeMobileMenu}>
+                    <button className="bg-[#0071E3] rounded-[4px] opacity-50 w-[108px] p-3 text-white font-medium text-[13px] ">
+                      Sign in
+                    </button>
+                  </Link>
+                </li>
+              </>
+            ))}
           <li className="text-base text-[#86868B] font-normal pl-4 py-5">
             OUR CATEGORIES
           </li>
@@ -397,18 +402,26 @@ const Navbar = () => {
                     menu.params ? `/devices?category=${menu.link}` : menu.link
                   }
                   className="py-4 px-3 inline-block"
-                  onClick={menu.submenus ? (e) => e.preventDefault() : closeMobileMenu}
+                  onClick={
+                    menu.submenus ? (e) => e.preventDefault() : closeMobileMenu
+                  }
                 >
                   <span className="flex justify-center items-center gap-2 text-base font-normal text-[#1D1D1F]">
                     {menu.name}
                   </span>
                 </Link>
                 {menu.submenus && (
-                  <span 
+                  <span
                     className="cursor-pointer text-[#1D1D1F]"
-                    onClick={() => setHeading(heading === menu.name ? "" : menu.name)}
+                    onClick={() =>
+                      setHeading(heading === menu.name ? "" : menu.name)
+                    }
                   >
-                    {heading === menu.name ? <AiOutlineMinus /> : <AiOutlinePlus />}
+                    {heading === menu.name ? (
+                      <AiOutlineMinus />
+                    ) : (
+                      <AiOutlinePlus />
+                    )}
                   </span>
                 )}
               </div>

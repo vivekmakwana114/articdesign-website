@@ -118,6 +118,7 @@ function UserContent() {
     }
   }, [currentUser]);
 
+
   useEffect(() => {
     // Format the initial date to YYYY-MM-DD for the date input
     if (initialBirthday) {
@@ -809,6 +810,10 @@ function UserContent() {
 
     return null;
   };
+
+  if (!currentUser) {
+    return null;
+  }
 
   return (
     <section className="md:p-20">

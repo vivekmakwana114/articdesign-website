@@ -148,6 +148,26 @@ const authSlice = createSlice({
         }
       }
     },
+    loginSuccess: (state, action) => {
+      const { user, tokens, rememberMe = true } = action.payload;
+      state.user = user;
+      state.tokens = tokens;
+      state.status = "succeeded";
+      state.error = null;
+
+      if (typeof window !== "undefined") {
+        try {
+          const authData = JSON.stringify({ user, tokens });
+          if (rememberMe) {
+            localStorage.setItem("auth", authData);
+            sessionStorage.removeItem("auth");
+          } else {
+            sessionStorage.setItem("auth", authData);
+            localStorage.removeItem("auth");
+          }
+        } catch (_) {}
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -241,5 +261,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUserRole, logout, updateUserAuthData } = authSlice.actions;
+export const { setUserRole, logout, updateUserAuthData, loginSuccess } =
+  authSlice.actions;
 export default authSlice.reducer;

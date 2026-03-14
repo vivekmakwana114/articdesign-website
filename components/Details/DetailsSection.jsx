@@ -57,16 +57,16 @@ const DetailsSection = ({ product, loading }) => {
       .map((optionName) => {
         const area = product?.areasOfSkin?.find((a) => a.name === optionName);
         if (!area) return null;
-        // In this API, variantAreaId might be null, so we send the object or name if ID is missing.
-        // It seems the backend expects variantAreaId, if it's null we might need to send the name as the ID.
         return area?.variantAreaId || area?._id || area?.id || area?.name;
       })
       .filter(Boolean);
 
     const cartData = {
       productId: product?.productId || product?._id || product?.id || slugOrId,
+      productName: product?.productName,
       quantity: 1,
       variantAreaIds: variantAreaIds,
+      variantAreas: selectedOptions.map((optionName) => product?.areasOfSkin?.find((a) => a.name === optionName)),
       price: totalPrice,
       image:
         (product?.images?.length > 0
@@ -74,15 +74,8 @@ const DetailsSection = ({ product, loading }) => {
           : product?.thumbnailImage) || "",
     };
 
-    console.log("DEBUG [1]: Full Add To Cart Request");
-    console.log("-> Raw Product Data:", JSON.stringify(product, null, 2));
-    console.log("-> Selected Options:", JSON.stringify(selectedOptions, null, 2));
-    console.log("-> Calculated Total Price:", totalPrice);
-    console.log("-> Final Payload Sent to Backend:", JSON.stringify(cartData, null, 2));
-
     dispatch(addItemToCart(cartData))
       .unwrap()
-
       .then(() => {
         toast.success("Added to cart successfully");
       })
@@ -93,11 +86,6 @@ const DetailsSection = ({ product, loading }) => {
 
   const handleCheckoutClick = (e) => {
     e.preventDefault();
-    if (!currentUser) {
-      toast.error("Please login to checkout");
-      router.push(`/auth?returnUrl=${encodeURIComponent(pathname)}`);
-      return;
-    }
 
     const pathParts = pathname.split("/").filter(Boolean);
     const slugOrId = pathParts[pathParts.length - 1];
@@ -112,8 +100,11 @@ const DetailsSection = ({ product, loading }) => {
 
     const cartData = {
       productId: product?.productId || product?._id || product?.id || slugOrId,
+      productName: product?.productName,
       quantity: 1,
       variantAreaIds: variantAreaIds,
+      variantAreas: selectedOptions.map((optionName) => product?.areasOfSkin?.find((a) => a.name === optionName)),
+      price: totalPrice,
       totalPrice: totalPrice,
       image:
         (product?.images?.length > 0
@@ -212,7 +203,7 @@ const DetailsSection = ({ product, loading }) => {
                                 typeof img === "string" &&
                                 img.startsWith("http")
                               }
-                              className="md:w-[534px] md:h-[411px] w-[299.4px] h-[226.2px] bg-cover"
+                              className="md:w-[500px] md:h-[400px] w-[299.4px] h-[226.2px] bg-cover"
                             />
                           </div>
                         ))}

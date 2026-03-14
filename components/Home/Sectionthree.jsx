@@ -12,20 +12,19 @@ function Sectionthree() {
 
   useEffect(() => {
     setIsMounted(true);
-    // fetchTopProducts();
-  }, []);
-
-  // const fetchTopProducts = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await api.get(`/orders/top/products?limit=${limit}`);
-  //     setTopproducts(response.data);
-  //   } catch (err) {
-  //     console.error("Failed to load top products:", err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+    const fetchTopProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await api.get(`/v1/cart/top/products?limit=${limit}`);
+        setTopproducts(response.data?.data || response.data || []);
+      } catch (err) {
+        console.error("Failed to load top products:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTopProducts();
+  }, [limit]);
   return (
     <>
       <section className=" bg-[#F5F5F7] md:p-10 p-5 mt-10">
@@ -70,11 +69,11 @@ function Sectionthree() {
                   key={index}
                   className="w-full md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-10px] md:mx-[-7px] h-[329px]"
                 >
-                  <Link href={`/details/${frame.slug}`}>
+                  <Link href={`/details/${frame.slug || frame._id}`}>
                     <div className="bg-[#ffffff] md:p-4 p-2 rounded-[8px] shadow-sm">
                       <Image
-                        src={frame.thumbnailImage}
-                        alt={frame.productName}
+                        src={frame.thumbnailImage || (frame.images && frame.images[0]) || "/placeholder.png"}
+                        alt={frame.productName || "Product image"}
                         width={100}
                         height={400}
                         className="md:w-[249px] w-full md:h-[232px] h-[130px] bg-contain"

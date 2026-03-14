@@ -79,7 +79,10 @@ const CheckOut = () => {
   const handleIncrement = (id) => {
     console.log("DEBUG [3]: Cart Increment Triggered");
     console.log("-> Incrementing Item ID:", id);
-    console.log("-> Current Cart State Before Update:", JSON.stringify(cartItems, null, 2));
+    console.log(
+      "-> Current Cart State Before Update:",
+      JSON.stringify(cartItems, null, 2),
+    );
 
     dispatch(incrementItem(id)).then(() => {
       dispatch(fetchCart());
@@ -89,7 +92,10 @@ const CheckOut = () => {
   const handleDecrement = (id) => {
     console.log("DEBUG [2]: Cart Decrement Triggered");
     console.log("-> Decrementing Item ID:", id);
-    console.log("-> Current Cart State Before Update:", JSON.stringify(cartItems, null, 2));
+    console.log(
+      "-> Current Cart State Before Update:",
+      JSON.stringify(cartItems, null, 2),
+    );
 
     dispatch(decrementItem(id)).then(() => {
       dispatch(fetchCart());
@@ -162,6 +168,12 @@ const CheckOut = () => {
   };
 
   const handleCheckOut = async () => {
+    if (!currentUser) {
+      toast.error("Please login to proceed with the checkout and payment.");
+      router.push(`/auth?returnUrl=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
     if (!firstName || !streetAddress || !townCity) {
       toast.error("Please provide a shipping address");
       openModal();
@@ -176,68 +188,20 @@ const CheckOut = () => {
 
     setCheckingOut(true);
     try {
-      // Capture variant areas that don't have valid ObjectIds to append to order notes
-      const customVariantNotes = cartItems
-        .flatMap((item) => {
-          const invalidVariants = (item.variantAreas || []).filter((v) => {
-            const id = v.variantAreaId || v._id || v.id;
-            return !id || !/^[0-9a-fA-F]{24}$/.test(id);
-          });
-          return invalidVariants.map(
-            (v) =>
-              `${
-                item.name ||
-                item.product?.productName ||
-                item.productName ||
-                "Product"
-              } - ${v.name || v.variantAreaId || v._id || v.id || "Custom Area"}`,
-          );
-        })
-        .filter(Boolean);
-
-      const finalOrderNotes =
-        customVariantNotes.length > 0
-          ? `${orderNotes ? orderNotes + "\n" : ""}Additional Options: ${customVariantNotes.join(
-              ", ",
-            )}`
-          : orderNotes;
-
       const orderPayload = {
         orderType: "online",
-        discount: cartData?.summary?.discount || 0,
-        products: cartItems.map((item) => {
-          const variantTotal = item.variantAreas?.reduce((sum, v) => sum + (v.additionalPrice || 0), 0) || 0;
-          
-          // For frontend cart math debugging:
-          // UnitPrice coming from backend represents the price of 1 quantity of base item + its variants
-          // E.g base 100 + variant 300 = 400. We want to send 100.
-          
-          const unitPrice = item.unitPrice || item.price || item.product?.price || 0;
-          const basePrice = Math.max(0, unitPrice - variantTotal);
-          
-          return {
-            productId: item.productId || item.product?._id || item.product?.id,
-            name:
-              item.name ||
-              item.product?.productName ||
-              item.productName ||
-              "Product",
-            price: basePrice,
-            quantity: item.quantity,
-            variantAreas:
-              item.variantAreas?.map((v) => ({
-                variantAreaId: v.variantAreaId || v._id || v.id,
-                name: v.name || "Custom Area",
-                additionalPrice: v.additionalPrice || 0,
-              })) || [],
-          };
-        }),
         shippingAddress: shippingAddress?._id || shippingAddress?.id,
       };
 
       console.log("DEBUG [4]: Creating Checkout Order");
-      console.log("-> Raw Cart Data (State):", JSON.stringify(cartItems, null, 2));
-      console.log("-> Final Order Payload being sent to backend:", JSON.stringify(orderPayload, null, 2));
+      console.log(
+        "-> Raw Cart Data (State):",
+        JSON.stringify(cartItems, null, 2),
+      );
+      console.log(
+        "-> Final Order Payload being sent to backend:",
+        JSON.stringify(orderPayload, null, 2),
+      );
 
       const response = await api.post(`/v1/order`, orderPayload);
 
@@ -246,9 +210,7 @@ const CheckOut = () => {
         response.data.data || response.data;
 
       const options = {
-        key:
-          keyId ||
-          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: keyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: amount,
         currency: currency,
         name: "Artic Designs",
@@ -266,8 +228,8 @@ const CheckOut = () => {
             if (cartItems && cartItems.length > 0) {
               await Promise.all(
                 cartItems.map((item) =>
-                  dispatch(removeItem(item.id || item._id))
-                )
+                  dispatch(removeItem(item.id || item._id)),
+                ),
               );
             }
 
@@ -540,7 +502,7 @@ const CheckOut = () => {
               {!mounted ? null : !currentUser ? (
                 <>
                   <p className="text-base font-normal md:p-0 p-5 text-center">
-                    Sign in to see if you saved some items in cart
+                    Sign in to see your cart items
                   </p>
 
                   <Link

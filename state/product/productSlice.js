@@ -1,12 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getProducts, getProductById } from "./productService";
+import { 
+  getProducts, 
+  getProductById, 
+  getPublicProducts, 
+  getPublicProductById,
+  getTopProducts
+} from "./productService";
 
 // Fetch products async thunk
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
-  async (params, { rejectWithValue }) => {
+  async (params, { getState, rejectWithValue }) => {
     try {
-      const res = await getProducts(params);
+      const { auth } = getState();
+      const hasToken = !!auth?.tokens?.access?.token;
+
+      const res = hasToken
+        ? await getProducts(params)
+        : await getPublicProducts(params);
+
       return res.data;
     } catch (err) {
       return rejectWithValue(
@@ -19,13 +31,40 @@ export const fetchProducts = createAsyncThunk(
 // Fetch single product async thunk
 export const fetchProductDetails = createAsyncThunk(
   "product/fetchProductDetails",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
-      const res = await getProductById(id);
+      const { auth } = getState();
+      const hasToken = !!auth?.tokens?.access?.token;
+
+      const res = hasToken
+        ? await getProductById(id)
+        : await getPublicProductById(id);
+
       return res.data;
     } catch (err) {
       return rejectWithValue(
         err.response?.data || { message: err.message || "Failed to fetch product details" }
+      );
+    }
+  }
+);
+
+// Fetch top products async thunk
+export const fetchTopProducts = createAsyncThunk(
+  "product/fetchTopProducts",
+  async (limit = 4, { getState, rejectWithValue }) => {
+    try {
+      const { auth } = getState();
+      const hasToken = !!auth?.tokens?.access?.token;
+
+      const res = hasToken
+        ? await getTopProducts(limit)
+        : await getPublicProducts({ limit });
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || { message: err.message || "Failed to fetch top products" }
       );
     }
   }
@@ -40,6 +79,9 @@ const initialState = {
   detailsStatus: "idle",
   detailsError: null,
   product: null,
+
+  topProducts: [],
+  topProductsStatus: "idle",
 };
 
 const productSlice = createSlice({
@@ -82,6 +124,17 @@ const productSlice = createSlice({
       .addCase(fetchProductDetails.rejected, (state, action) => {
         state.detailsStatus = "failed";
         state.detailsError = action.payload?.message || "Failed to fetch product details";
+      })
+      // Fetch Top Products
+      .addCase(fetchTopProducts.pending, (state) => {
+        state.topProductsStatus = "loading";
+      })
+      .addCase(fetchTopProducts.fulfilled, (state, action) => {
+        state.topProductsStatus = "succeeded";
+        state.topProducts = action.payload?.data || action.payload || [];
+      })
+      .addCase(fetchTopProducts.rejected, (state, action) => {
+        state.topProductsStatus = "failed";
       });
   },
 });
