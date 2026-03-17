@@ -77,26 +77,12 @@ const CheckOut = () => {
   };
 
   const handleIncrement = (id) => {
-    console.log("DEBUG [3]: Cart Increment Triggered");
-    console.log("-> Incrementing Item ID:", id);
-    console.log(
-      "-> Current Cart State Before Update:",
-      JSON.stringify(cartItems, null, 2),
-    );
-
     dispatch(incrementItem(id)).then(() => {
       dispatch(fetchCart());
     });
   };
 
   const handleDecrement = (id) => {
-    console.log("DEBUG [2]: Cart Decrement Triggered");
-    console.log("-> Decrementing Item ID:", id);
-    console.log(
-      "-> Current Cart State Before Update:",
-      JSON.stringify(cartItems, null, 2),
-    );
-
     dispatch(decrementItem(id)).then(() => {
       dispatch(fetchCart());
     });
@@ -192,17 +178,6 @@ const CheckOut = () => {
         orderType: "online",
         shippingAddress: shippingAddress?._id || shippingAddress?.id,
       };
-
-      console.log("DEBUG [4]: Creating Checkout Order");
-      console.log(
-        "-> Raw Cart Data (State):",
-        JSON.stringify(cartItems, null, 2),
-      );
-      console.log(
-        "-> Final Order Payload being sent to backend:",
-        JSON.stringify(orderPayload, null, 2),
-      );
-
       const response = await api.post(`/v1/order`, orderPayload);
 
       // Razorpay data (matching your backend createOrder response payload)

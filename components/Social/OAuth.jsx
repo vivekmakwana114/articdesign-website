@@ -20,7 +20,6 @@ export default function OAuth() {
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
-      console.log(idToken,"idToken");
 
       // Extract first and last name from displayName
       const nameParts = result.user.displayName
