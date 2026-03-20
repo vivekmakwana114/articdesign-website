@@ -128,7 +128,7 @@ const DetailsSection = ({ product, loading }) => {
 
   return (
     <section className="bg-white">
-      <div className="md:grid md:grid-cols-2 flex flex-col gap-6 md:gap-12 p-6">
+      <div className="md:grid md:grid-cols-2 flex flex-col gap-6 md:gap-12 md:p-6">
         {/* Left Section */}
         <div>
           {loading ? (

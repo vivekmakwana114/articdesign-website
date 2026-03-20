@@ -32,18 +32,10 @@ function Details() {
   return (
     <>
       <DetailsSection product={product} loading={productsLoading} />
-      <div className="md:px-10 md:py-5 mx-auto px-4">
+      <div className="md:px-10 md:py-5 mx-auto">
         {BannerData.map((item, index) => (
-          <div
-            key={index}
-            className="md:h-[500px] md:flex md:flex-row flex flex-col-reverse my-20  md:mx-20 md:gap-x-2 md:justify-center bg-[#F5F5F7] md:rounded-[16px] md:pr-20"
-          >
-            <Banner
-              image={item.image}
-              title={item.title}
-              description={item.description}
-              reverse={item.reverse}
-            />
+          <div key={index} className="my-20 md:mx-20">
+            <Banner {...item} />
           </div>
         ))}
       </div>
