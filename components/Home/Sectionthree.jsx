@@ -72,7 +72,7 @@ function Sectionthree() {
               topproducts.map((frame, index) => (
                 <div
                   key={index}
-                  className="w-full md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-10px] md:mx-[-7px] h-[329px]"
+                  className="w-full md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-10px] md:mx-[-7px] md:h-[329px] h-auto"
                 >
                   <Link href={`/details/${frame.slug || frame._id}`}>
                     <div className="bg-[#ffffff] md:p-4 p-2 rounded-[8px] shadow-sm">
@@ -83,7 +83,7 @@ function Sectionthree() {
                         height={400}
                         className="md:w-[249px] w-full md:h-[232px] h-[130px] bg-contain"
                       />
-                      <p className="mt-2 text-start text-[#000000] text-base font-semibold">
+                      <p className="mt-2 text-start text-[#000000] text-[12px] font-semibold">
                         {frame.productName || frame.name}
                       </p>
                     </div>

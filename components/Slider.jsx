@@ -7,7 +7,23 @@ import Button from "./Button";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Image from "next/image";
 
+import { useEffect, useState } from "react";
+
 const Slider = ({ images }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="animate-pulse bg-gray-200 md:h-[593px] h-[407px] w-full flex items-center justify-center">
+         <span className="text-gray-400">Loading slider...</span>
+      </div>
+    );
+  }
+
   return (
     <Carousel
       showThumbs={false}

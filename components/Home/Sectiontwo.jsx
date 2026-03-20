@@ -12,27 +12,11 @@ function Sectiontwo() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Section content is now static as the backend endpoint is not available
   useEffect(() => {
-    let isMounted = true;
-    const fetchContent = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        // Adjust this endpoint to your actual CMS/Backend route
-        const res = await api.get(`/home/section-two`);
-        const data = res.data;
-        if (data) setContent(data?.section || data);
-      } catch (e) {
-        if (isMounted) setError(e?.message || "Failed to load content");
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-    fetchContent();
-    return () => {
-      isMounted = false;
-    };
+    // Left empty or can be removed entirely
   }, []);
+
 
   const titlePrefix = content?.titlePrefix || "Unleash";
   const highlight = content?.highlight || "Skinsational Protection!";
@@ -47,7 +31,7 @@ function Sectiontwo() {
 
   return (
     <section className=" bg-[#FCFCFC]  md:px-2 ">
-      <div className="flex lg:flex-row  md:mx-20 md:gap-x-9 md:justify-center items-center flex-col py-28 md:py-0 gap-16">
+      <div className="flex lg:flex-row  md:mx-20 md:gap-x-9 md:justify-center items-center flex-col md:py-0 gap-16">
         <Image
           src={imageSrc}
           alt="image"
