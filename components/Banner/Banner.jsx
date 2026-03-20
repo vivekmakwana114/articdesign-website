@@ -28,7 +28,7 @@ function Banner({
       >
         <Image
           src={image || imageskin}
-          alt={title || "banner image"}
+          alt={typeof title === "string" ? title : "banner image"}
           width={400}
           height={500}
           className={
@@ -40,7 +40,12 @@ function Banner({
 
       {/* Text Content */}
 
-      <div className={styles.textWrapper || "space-y-3 md:flex  md:flex-col md:justify-center md:items-center "}>
+      <div
+        className={
+          styles.textWrapper ||
+          "space-y-3 md:flex  md:flex-col md:justify-center md:items-center "
+        }
+      >
         <h1
           className={
             styles.title ||
@@ -58,8 +63,8 @@ function Banner({
           {description}
         </p>
 
-        {buttonText && (
-          link ? (
+        {buttonText &&
+          (link ? (
             <Link
               href={link}
               className={
@@ -79,8 +84,7 @@ function Banner({
             >
               {buttonText}
             </button>
-          )
-        )}
+          ))}
       </div>
     </div>
   );
