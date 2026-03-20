@@ -28,7 +28,9 @@ const Navbar = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const cartState = { cartItems: [] };
-  const currentUser = useSelector((state) => state.auth.user);
+  const authState = useSelector((state) => state.auth);
+  const currentUser = authState?.user;
+  const hasToken = !!authState?.tokens?.access?.token;
   const [open, setOpen] = useState(false);
   const [showsearch, setShowsearch] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -84,9 +86,10 @@ const Navbar = () => {
     }
     try {
       setSearchLoading(true);
-      const res = await api.get(`/v1/product?search=${searchText}`);
+      const endpoint = hasToken ? "/v1/product" : "/v1/product/public";
+      const res = await api.get(`${endpoint}?search=${searchText}`);
       // Based on typical backend response structure where data is wrapped in a data property
-      setSearchData(res.data?.data || res.data);
+      setSearchData(res.data?.data || res.data || []);
       setSearchLoading(false);
     } catch (error) {
       console.error("Search Error:", error);

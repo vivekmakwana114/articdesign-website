@@ -150,7 +150,7 @@ const HowToApply = () => {
         {/* Search Bar */}
         <div className="max-w-xl mx-auto relative px-4">
           <div className="relative flex items-center">
-            <AiOutlineSearch className="absolute left-8 text-gray-400 text-xl" />
+            <AiOutlineSearch className="absolute left-4 text-black text-xl" />
             <input
               type="text"
               placeholder="Enter your device name"
