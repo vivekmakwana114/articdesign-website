@@ -55,7 +55,6 @@ export default function Home() {
       {/* <Sectionone /> */}
       <Sectiontwo />
       <Sectionthree />
-      <Bought />
       <SectionTestimonail />
       <Sectionfive />
       <Footer />

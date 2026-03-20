@@ -63,7 +63,7 @@ const Slider = ({ images }) => {
             <p className="md:text-lg md:w-[600px] w-[261px]">
               {image.description}
             </p>
-            <p className="md:text-lg ">{image.subdescription}</p>
+            {/* <p className="md:text-lg ">{image.subdescription}</p> */}
             <div className="">
               <Button
                 title="Customize now"

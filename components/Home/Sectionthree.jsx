@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import api from "@/lib/api";
@@ -10,12 +11,16 @@ function Sectionthree() {
   const [limit, setLimit] = useState(8);
   const [isMounted, setIsMounted] = useState(false);
 
+  const authState = useSelector((state) => state.auth);
+  const hasToken = !!authState?.tokens?.access?.token;
+
   useEffect(() => {
     setIsMounted(true);
     const fetchTopProducts = async () => {
       setLoading(true);
       try {
-        const response = await api.get(`/v1/cart/top/products?limit=${limit}`);
+        const endpoint = hasToken ? "/v1/cart/top/products" : "/v1/product/public";
+        const response = await api.get(`${endpoint}?limit=${limit}`);
         setTopproducts(response.data?.data || response.data || []);
       } catch (err) {
         console.error("Failed to load top products:", err.message);
@@ -24,7 +29,7 @@ function Sectionthree() {
       }
     };
     fetchTopProducts();
-  }, [limit]);
+  }, [limit, hasToken]);
   return (
     <>
       <section className=" bg-[#F5F5F7] md:p-10 p-5 mt-10">
@@ -73,13 +78,13 @@ function Sectionthree() {
                     <div className="bg-[#ffffff] md:p-4 p-2 rounded-[8px] shadow-sm">
                       <Image
                         src={frame.thumbnailImage || (frame.images && frame.images[0]) || "/placeholder.png"}
-                        alt={frame.productName || "Product image"}
+                        alt={frame.productName || frame.name || "Product image"}
                         width={100}
                         height={400}
                         className="md:w-[249px] w-full md:h-[232px] h-[130px] bg-contain"
                       />
-                      <p className="mt-2 text-start text-[#000000] text-base font-medium">
-                        {frame.productName}
+                      <p className="mt-2 text-start text-[#000000] text-base font-semibold">
+                        {frame.productName || frame.name}
                       </p>
                     </div>
                   </Link>

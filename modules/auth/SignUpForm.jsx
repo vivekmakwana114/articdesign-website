@@ -146,7 +146,7 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
       </div>
 
       <p className="text-[#000000] font-normal text-sm leading-5 w-full max-w-[384px] break-words whitespace-normal">
-        By continuing, I understand and agree to ArticDesign's{" "}<br/>
+        By continuing, I understand and agree to ArticDesign's <br />
         <a href="/privacypolicy">
           <span className="underline underline-offset-1">Privacy Notice</span>
         </a>{" "}
@@ -154,7 +154,8 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
         <a href="/termsandconditions">
           <span className="underline underline-offset-1">Terms of Use</span>
         </a>{" "}
-        for creating an<br/> ArticDesign Account.
+        for creating an
+        <br /> ArticDesign Account.
       </p>
     </div>
   );
@@ -260,23 +261,26 @@ const Step2 = ({ formData, setFormData }) => {
           />
         </div>
 
-        <div className="flex flex-col relative">
+        <div className="flex flex-col space-y-2">
           <label htmlFor="birthday" className="form__label">
             Birthday
           </label>
-          <DatePicker
-            ref={datepickerRef}
-            selected={formData.birthday}
-            onChange={handleDateChange}
-            dateFormat="MMMM d, yyyy"
-            placeholderText="mm/dd.yyyy"
-            maxDate={new Date()}
-            className="form__input"
-          />
-          <MdCalendarMonth
-            className="absolute right-2 top-10 text-xl text-[#6B7280] cursor-pointer"
-            onClick={handleIconClick}
-          />
+          <div className="relative flex items-center">
+            <DatePicker
+              ref={datepickerRef}
+              selected={formData.birthday}
+              onChange={handleDateChange}
+              dateFormat="MMMM d, yyyy"
+              placeholderText="mm/dd/yyyy"
+              maxDate={new Date()}
+              className="form__input w-full pr-10"
+              wrapperClassName="w-full"
+            />
+            <MdCalendarMonth
+              className="absolute right-3 text-xl text-[#6B7280] cursor-pointer"
+              onClick={handleIconClick}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col">
