@@ -30,15 +30,15 @@ function Sectiontwo() {
   const imageSrc = content?.imageUrl || ipadwithskin;
 
   return (
-    <section className=" bg-[#FCFCFC]  md:px-2 ">
-      <div className="flex lg:flex-row  md:mx-20 md:gap-x-9 md:justify-center items-center flex-col md:py-0 gap-16">
+    <section className=" bg-[#FCFCFC] md:px-2 pt-10">
+      <div className="flex lg:flex-row  md:mx-20 md:gap-x-9 md:justify-center items-center flex-col md:py-0">
         <Image
           src={imageSrc}
           alt="image"
           className="md:h-[560px] md:w-[510px] h-[309px] w-[309px] bg-contain"
           priority={true}
         />
-        <div className="space-y-3 md:flex  md:flex-col md:justify-center">
+        <div className="space-y-3 md:flex  md:flex-col md:justify-center mt-[84px]">
           <h1 className="md:text-[36px] text-[21px] md:font-bold font-semibold text-[#000000]">
             {titlePrefix}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F260] to-[#0575E6]">
@@ -48,7 +48,7 @@ function Sectiontwo() {
           <h4 className="text-[#8C8C8C] md:text-2xl text-base font-semibold">
             {subtitle}
           </h4>
-          <p className="text-[#86868B] md:text-base text-sm md:font-medium font-normal md:w-[543px] w-[294px] ">
+          <p className="text-[#86868B] md:text-base text-sm font-medium md:w-[543px] w-[294px] ">
             {description}
           </p>
           <br />

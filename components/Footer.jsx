@@ -9,15 +9,28 @@ function Footer() {
   const [sections, setSections] = useState([
     {
       title: "Help & Support",
-      content: ["FAQ", "How to Apply", "Payments & Shipping", "Contact Us"],
+      content: [
+        { label: "FAQ", href: "/faq" },
+        { label: "How to Apply", href: "/how-to-apply" },
+        { label: "Payments & Shipping", href: "/payment-shipping" },
+        { label: "Contact Us", href: "/contactus" },
+      ],
     },
     {
       title: "Resources",
-      content: ["Skins", "iPhone", "iPad", "MacBook"],
+      content: [
+        { label: "Skins", href: "/devices?category=laptop" },
+        { label: "iPhone", href: "/devices?category=iphone" },
+        { label: "iPad", href: "/devices?category=ipad" },
+        { label: "MacBook", href: "/devices?category=laptop" },
+      ],
     },
     {
       title: "About",
-      content: ["Our Story", "Email us"],
+      content: [
+        { label: "Our Story", href: "/whyus" },
+        { label: "Email us", href: "mailto:info@articwood.com" },
+      ],
     },
   ]);
 
@@ -76,16 +89,16 @@ function Footer() {
           <section>
             <h3 className="text-sm font-Inter font-semibold">Resources</h3>
             <ul className="flex flex-col gap-2 font-medium text-base font-inter pt-2 text-[#6B7280]">
-              <Link href="devices?category=laptop">
+              <Link href="/devices?category=laptop">
                 <li>Skins</li>
               </Link>
-              <Link href="devices?category=iphone">
+              <Link href="/devices?category=iphone">
                 <li>iPhone</li>
               </Link>
-              <Link href="devices?category=ipad">
+              <Link href="/devices?category=ipad">
                 <li>iPad</li>
               </Link>
-              <Link href="devices?category=laptop">
+              <Link href="/devices?category=laptop">
                 <li>MacBook</li>
               </Link>
             </ul>
@@ -118,14 +131,14 @@ function Footer() {
         </section>
       </div>
 
-      <div className="gap-10 border-b-2 py-9 mb-20 flex flex-col-reverse pr-5 pl-3 md:hidden">
+      <div className="gap-10 border-b-2 pt-8 flex flex-col-reverse pr-5 pl-3 md:hidden">
         {sections.map((section, index) => (
           <div key={index} className="mb-4 border-t">
             <div
-              className="flex justify-between cursor-pointer"
+              className="flex justify-between cursor-pointer pt-2"
               onClick={() => toggleSection(index)}
             >
-              <h3 className="text-sm font-inter font-semibold">
+              <h3 className="text-[16px] font-inter font-semibold">
                 {section.title}
               </h3>
               {activeSection.includes(index) ? (
@@ -144,16 +157,10 @@ function Footer() {
                   <ul className="flex flex-col gap-2 font-medium text-base font-inter text-[#6B7280]">
                     {section.content.map((item, itemIndex) => (
                       <li key={itemIndex} className="pl-2">
-                        {item === "Email us" ? (
-                          <a href="mailto:info@articwood.com">{item}</a>
+                        {item.label === "Email us" ? (
+                          <a href={item.href}>{item.label}</a>
                         ) : (
-                          <Link href={
-                            item === "FAQ" ? "/faq" : 
-                            item === "Payments & Shipping" ? "/payment-shipping" : 
-                            item === "Our Story" ? "/whyus" :
-                            item === "How to Apply" ? "/how-to-apply" :
-                            "/"
-                          }>{item}</Link>
+                          <Link href={item.href}>{item.label}</Link>
                         )}
                       </li>
                     ))}
@@ -165,9 +172,9 @@ function Footer() {
         ))}
       </div>
       {/* Mobile-only social links section moved here so it's visible on small screens */}
-      <section className="px-5 pb-8 md:hidden">
-        <h3 className="text-sm font-inter font-semibold">ArticWood</h3>
-        <h3 className="text-sm font-inter font-normal pt-3 text-[#6B7280]">
+      <section className="px-5 pb-8 pt-8 md:hidden">
+        <h3 className="text-[16px] font-inter font-semibold">ArticWood</h3>
+        <h3 className="text-[14px] font-inter font-normal pt-3 text-[#6B7280]">
           Gain new customers with our brand new acquisition funnels.
         </h3>
         <div className="flex gap-4 my-3">

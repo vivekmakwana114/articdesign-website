@@ -136,9 +136,9 @@ export const HomeBannerData = [
     link: "devices?category=ipad",
     styles: {
       banner:
-        "flex flex-col-reverse items-center justify-between bg-[#090A0E] h-[559px] md:h-[650px] md:w-[630px] w-screen md:rounded-[16px] pt-8",
+        "flex flex-col-reverse items-center justify-between bg-[#090A0E] h-[433px] md:h-[650px] md:w-[630px] w-full md:rounded-[16px] pt-8",
       imageWrapper: "w-full flex justify-center",
-      imageClass: "md:h-[329px] md:w-[429px] h-[206.6px]",
+      imageClass: "md:h-[329px] md:w-[429px] w-[300px] h-[206.6px]",
       title:
         "md:text-[28px] text-[20.21px] font-bold text-white mt-10 text-center",
       description: "md:text-[17px] text-[12.27px] text-[#86868B] text-center",
@@ -156,9 +156,9 @@ export const HomeBannerData = [
       banner:
         "bg-[#F6F6F6] md:h-[650px] md:w-[630px] h-[559px] md:rounded-[16px] flex flex-col py-5 bg-[url('/image2.png')] bg-no-repeat md:bg-cover bg-center pt-10 ",
       imageWrapper: "hidden",
-      textWrapper: " flex flex-col justify-center items-center space-y-2 py-5",
+      textWrapper: " flex flex-col justify-center items-center",
       title:
-        "md:text-[22px] text-[19.83px] font-medium text-[#1D1D1F] w-[370.58px] text-center",
+        "md:text-[22px] text-[19.83px] font-Medium text-[#1D1D1F] w-[370.58px] text-center",
       description: "font-normal text-[#86868B] text-[17px]",
       button:
         "flex justify-center items-center rounded-[26px] bg-[#0071E3] px-4 py-2 text-white text-center w-fit",
@@ -172,7 +172,7 @@ export const HomeBannerData = [
     link: "devices?category=laptop",
     styles: {
       banner:
-        "md:px-0 px-5 md:h-[594px] md:w-[1300px] md:mx-0 md:rounded-[16px] md:shadow-sm md:shadow-[#00000084] md:ring-opacity-50 flex md:flex-row flex-col-reverse md:gap-0 gap-10 bg-white",
+        "md:px-0 px-5 md:h-[594px] md:w-[1300px] md:mx-0 md:rounded-[16px] md:shadow-sm md:shadow-[#00000084] md:ring-opacity-50 flex md:flex-row flex-col-reverse md:gap-0 gap-10 bg-white pb-6 pt-6",
       imageWrapper: "md:mt-20 flex justify-center",
       imageClass: "md:h-[380px] md:w-[790px] w-full",
       textWrapper:
