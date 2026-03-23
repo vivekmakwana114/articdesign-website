@@ -48,10 +48,10 @@ const Bought = () => {
                 topProducts?.map((frame, index) => (
                   <div
                     key={index}
-                    className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-10px] md:mx-[-10px] h-[329px]"
+                    className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-10px] md:mx-[-10px] md:h-[329px] h-auto"
                   >
                     <Link href={`/details/${frame.slug || frame._id}`}>
-                      <div className="bg-[#ffffff] md:p-4 p-3 rounded-[8px] shadow-sm h[271px]">
+                      <div className="bg-[#ffffff] md:p-4 p-2 rounded-[8px] shadow-sm">
                         <Image
                           src={
                             frame?.images?.[0] ||

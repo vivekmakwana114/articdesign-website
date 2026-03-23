@@ -103,30 +103,47 @@ const Navbar = () => {
           <p className=" font-extrabold md:text-[#ffffff] text-[#ffffff] ">
             <Link href="/">ArticWood</Link>
           </p>
-          <div
-            className="text-xl font-normal md:hidden flex justify-center items-center "
-            onClick={() => setOpen(!open)}
-          >
-            {open ? (
-              <>
-                <span className=" text-[#ffffff] cursor-pointer">
-                  <MdOutlineClose />
+          <div className="flex items-center gap-4 md:hidden">
+            <AiOutlineSearch
+              className="hover:cursor-pointer text-xl text-white"
+              onClick={() => setShowsearch(true)}
+            />
+            
+            <Link href="/checkout" className="relative text-xl text-white">
+              <BiShoppingBag className="hover:cursor-pointer" />
+              {cartState?.cartItems.length > 0 && (
+                <p className="flex items-center justify-center h-4 w-4 rounded-full bg-red-500 absolute -top-1 -right-2">
+                  <span className="text-white text-[10px] font-medium">
+                    {cartState?.cartItems.length}
+                  </span>
+                </p>
+              )}
+            </Link>
+
+            <div
+              className="text-xl font-normal flex justify-center items-center"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? (
+                <>
+                  <span className="text-[#ffffff] cursor-pointer">
+                    <MdOutlineClose />
+                  </span>
+                  <span className="font-normal text-sm text-[#ffffff] cursor-pointer ml-1">
+                    Close
+                  </span>
+                </>
+              ) : (
+                <span className="text-[#ffffff] cursor-pointer">
+                  <AiOutlineMenu />
                 </span>
-                {/* text-[#0071E3]  */}
-                <span className="md:hidden font-normal text-sm text-[#ffffff] cursor-pointer">
-                  Close
-                </span>
-              </>
-            ) : (
-              <span className="text-[#ffffff] cursor-pointer">
-                <AiOutlineMenu />
-              </span>
-            )}{" "}
+              )}
+            </div>
           </div>
         </div>
         {showsearch ? (
-          <div className="relative md:w-[700px] w-full">
-            <div className="md:flex hidden items-center bg-[#1D1D1F] p-2 rounded-sm w-full">
+          <div className="md:relative absolute top-0 left-0 h-[64px] md:w-[700px] w-full bg-[#1D1D1F] z-[60] flex items-center px-4">
+            <div className="flex items-center bg-[#1D1D1F] p-2 rounded-sm w-full">
               <input
                 type="text"
                 className="flex-grow h-9 px-2 text-white bg-[#303030c7] border rounded-sm"
@@ -138,7 +155,7 @@ const Navbar = () => {
               />
 
               <button
-                className="p-2 text-white absolute right-3 text-lg"
+                className="p-4 text-white absolute right-3 text-lg"
                 onClick={() => setShowsearch(false)}
               >
                 <AiOutlineCloseCircle />

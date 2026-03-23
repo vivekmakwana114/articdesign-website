@@ -118,7 +118,6 @@ function UserContent() {
     }
   }, [currentUser]);
 
-
   useEffect(() => {
     // Format the initial date to YYYY-MM-DD for the date input
     if (initialBirthday) {
@@ -135,8 +134,7 @@ function UserContent() {
           }
         }
         if (formattedDate) setBirthday(formattedDate);
-      } catch (e) {
-      }
+      } catch (e) {}
     }
   }, [initialBirthday]);
 
@@ -520,26 +518,26 @@ function UserContent() {
           ) : ordersData?.length > 0 ? (
             <>
               <div className="md:pl-2 md:pr-2">
-                <div className="flex flex-col gap-6 p-5 md:pt-10 md:pb-10">
+                <div className="flex flex-col gap-6 md:pt-10 md:pb-10">
                   {ordersData?.map((order, i) => (
                     <React.Fragment key={order._id || i}>
                       {/* Order header */}
                       <div className="flex justify-between items-center border-b pb-2">
                         <div>
-                          <span className="text-[#86868B] text-xs font-normal">
+                          <span className="text-[#86868B] text-sm font-normal">
                             Order ID:{" "}
                           </span>
-                          <span className="text-[#1D1D1F] text-xs font-semibold uppercase">
+                          <span className="text-[#1D1D1F] text-sm font-semibold uppercase">
                             {order.orderId}
                           </span>
                         </div>
                         <div className="flex gap-4">
                           <span
-                            className={`text-xs font-normal px-2 py-1 rounded-full ${order?.deliveryStatus === "placed" ? "bg-blue-100 text-blue-600" : order.deliveryStatus === "returned" ? "bg-red-100 text-red-500" : "bg-green-100 text-green-600"}`}
+                            className={`text-sm font-normal px-2 py-1 rounded-full ${order?.deliveryStatus === "placed" ? "bg-blue-100 text-blue-600" : order.deliveryStatus === "returned" ? "bg-red-100 text-red-500" : "bg-green-100 text-green-600"}`}
                           >
                             {order.deliveryStatus}
                           </span>
-                          <span className="text-xs text-[#86868B]">
+                          <span className="text-sm font-normal flex items-center justify-center text-[#86868B]">
                             {new Date(order.date).toLocaleDateString()}
                           </span>
                         </div>
@@ -892,7 +890,7 @@ function UserContent() {
           Tabs are rendered by checking the ?dashboard= URL param directly.
           Sections: Personal Information | Orders | Track Order
           ============================================================ */}
-      <div className="md:hidden h-screen block max-w-md mx-auto p-5">
+      <div className="md:hidden h-screen block max-w-md mx-auto p-4 pt-20">
         <div className="space-y-2">
           {/* Personal Information Section */}
           <div className="bg-white rounded-lg z-40 ">
@@ -1014,7 +1012,7 @@ function UserContent() {
           {/* Orders Section */}
           <div className=" rounded-lg ">
             {dashboard === "orders" && (
-              <div className="p-4">
+              <div>
                 <p className=" text-[28px] font-bold text-[#111827]">Orders</p>
                 <p className=" text-sm font-normal text-[#86868B]">
                   View and manage your orders with ArticDesign
@@ -1052,70 +1050,85 @@ function UserContent() {
                         {order.items?.products?.map((product, j) => (
                           <div
                             key={j}
-                            className="flex flex-col gap-3 pb-4 border-b"
+                            className="flex flex-col gap-4 pb-4 border-b"
                           >
-                            <div className="flex gap-3 items-start">
+                            {/* Row 1: Image Centered */}
+                            <div className="flex justify-center items-center w-full my-4">
                               {product?.image ? (
                                 <Image
                                   src={product.image}
-                                  alt="image"
-                                  width={80}
-                                  height={80}
-                                  className="w-[80px] h-[80px] object-cover rounded"
+                                  alt="product image"
+                                  width={220}
+                                  height={220}
+                                  className="w-[220px] h-[220px] object-contain rounded"
                                 />
                               ) : (
-                                <div className="w-[80px] h-[80px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+                                <div className="w-[220px] h-[220px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
                                   No image
                                 </div>
                               )}
-                              <div className="flex-1">
-                                <h1 className="text-[#1D1D1F] text-[16px] font-medium">
-                                  {product?.name}
-                                </h1>
-                                <h5 className="text-[#86868B] text-[12px] font-medium py-1">
-                                  Variant Areas
-                                </h5>
-                                <ul>
+                            </div>
+
+                            {/* Row 2 & 3: Details stacked left */}
+                            <div className="flex flex-col text-start">
+                              <h1 className="text-[#1D1D1F] text-[18px] font-semibold">
+                                {product?.name}
+                              </h1>
+                              <p className="text-[#86868B] text-[12px] font-normal">
+                                {product?.device ||
+                                  product?.deviceName ||
+                                  product?.model ||
+                                  ""}
+                              </p>
+                            </div>
+
+                            {/* Row 4: Options and Quantity */}
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="text-[#1D1D1F] text-[12px] font-medium">
+                                  Options
+                                </p>
+                                <ul className="space-y-1 mt-1">
                                   {product?.variantAreas?.map((area, k) => (
                                     <li
                                       key={k}
-                                      className="text-[#1D1D1F] text-[11px]"
+                                      className="text-[#86868B] text-[12px] font-normal"
                                     >
-                                      {area.name}{" "}
-                                      {area.additionalPrice
-                                        ? `(+₹${area.additionalPrice})`
-                                        : ""}
+                                      {area.name}
                                     </li>
                                   ))}
                                 </ul>
                               </div>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <p className="flex flex-col justify-center gap-1 rounded-[8px] border border-[#86868B] bg-[#EFEFEF] w-[105px] px-2">
-                                <span className="text-[#86868B] text-sm font-normal">
+                              {/* Quantity Box */}
+                              <div className="flex flex-col justify-center gap-1 rounded-[8px] border border-[#E5E7EB] bg-[#F3F4F6] px-3 py-1 text-center">
+                                <span className="text-[#86868B] text-xs font-normal">
                                   Quantity
                                 </span>
-                                <span>{product.quantity}</span>
-                              </p>
-                              <div className="space-y-1 text-right">
-                                <h1 className="text-[#1D1D1F] text-[20px] font-bold">
-                                  <FormatCurrencyRate num={product?.price} />
-                                </h1>
-                                <h3
-                                  className="cursor-pointer text-[#0071E3] text-[14px] font-normal"
-                                  onClick={() => {
-                                    setCurrentOrder({
-                                      ...product,
-                                      orderId: order.orderId,
-                                      orderDate: order.date,
-                                      deliveryStatus: order.deliveryStatus,
-                                    });
-                                    handleTabClick("trackorder");
-                                  }}
-                                >
-                                  Track Order
-                                </h3>
+                                <span className="text-[#1D1D1F] text-sm font-semibold">
+                                  {product.quantity}
+                                </span>
                               </div>
+                            </div>
+
+                            {/* Row 5: Price and Track Order */}
+                            <div className="flex justify-between items-center mt-2">
+                              <h1 className="text-[#1D1D1F] text-[24px] font-bold">
+                                <FormatCurrencyRate num={product?.price} />
+                              </h1>
+                              <h3
+                                className="cursor-pointer text-[#0071E3] text-[14px] font-medium"
+                                onClick={() => {
+                                  setCurrentOrder({
+                                    ...product,
+                                    orderId: order.orderId,
+                                    orderDate: order.date,
+                                    deliveryStatus: order.deliveryStatus,
+                                  });
+                                  handleTabClick("trackorder");
+                                }}
+                              >
+                                Track Order
+                              </h3>
                             </div>
                           </div>
                         ))}
@@ -1142,10 +1155,10 @@ function UserContent() {
           <div className="bg-white rounded-lg">
             {dashboard === "trackorder" && (
               <div>
-                <p className="pl-4 text-[28px] font-bold text-[#111827]">
+                <p className="text-[28px] font-bold text-[#111827]">
                   Order Tracker
                 </p>
-                <p className="pl-4 text-sm font-normal text-[#86868B]">
+                <p className="text-sm font-normal text-[#86868B] mb-2">
                   View and manage messages with ArticDesign
                 </p>
 
@@ -1164,71 +1177,96 @@ function UserContent() {
                   </div>
                 ) : (
                   (() => {
-                    const deliveryStatusMap = {
-                      placed: ["Pending"],
-                      processing: ["Pending", "Waiting to be Shipped"],
-                      shipped: ["Pending", "Waiting to be Shipped", "Shipped"],
+                    const mobileStatuses = [
+                      "Delivered",
+                      "Out for Delivery",
+                      "Shipped",
+                      "Waiting to be Shipped",
+                      "Pending Confirmation",
+                      "Order Placed",
+                    ];
+                    const mobileDeliveryStatusMap = {
+                      placed: ["Order Placed"],
+                      processing: ["Order Placed", "Pending Confirmation"],
+                      shipped: [
+                        "Order Placed",
+                        "Pending Confirmation",
+                        "Waiting to be Shipped",
+                        "Shipped",
+                      ],
                       "out-for-delivery": [
-                        "Pending",
+                        "Order Placed",
+                        "Pending Confirmation",
                         "Waiting to be Shipped",
                         "Shipped",
                         "Out for Delivery",
                       ],
                       delivered: [
-                        "Pending",
+                        "Order Placed",
+                        "Pending Confirmation",
                         "Waiting to be Shipped",
                         "Shipped",
                         "Out for Delivery",
                         "Delivered",
                       ],
-                      returned: ["Pending"],
+                      returned: ["Order Placed"],
                     };
                     const completedStatuses =
-                      deliveryStatusMap[currentOrder?.deliveryStatus] || [];
+                      mobileDeliveryStatusMap[currentOrder?.deliveryStatus] ||
+                      [];
+
                     return (
                       <>
                         {/* Product info header */}
-                        <div className="flex flex-row gap-3 items-center p-4">
-                          {currentOrder?.image ? (
-                            <Image
-                              src={currentOrder.image}
-                              alt="image"
-                              width={73}
-                              height={68}
-                              className="w-[73px] h-[68px] object-cover rounded"
-                            />
-                          ) : (
-                            <div className="w-[73px] h-[68px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
-                              No image
-                            </div>
-                          )}
-                          <div className="flex-1">
-                            <p className="text-[#1D1D1F] font-medium text-sm">
-                              {currentOrder?.name}
-                            </p>
-                            <p className="text-[#86868B] font-normal text-[11px] capitalize">
-                              Status: {currentOrder?.deliveryStatus}
-                            </p>
+                        <div className="flex flex-col gap-4">
+                          <div className="flex justify-start items-start w-full">
+                            {currentOrder?.image ? (
+                              <Image
+                                src={currentOrder.image}
+                                alt="image"
+                                width={120}
+                                height={120}
+                                className="w-[120px] h-[120px] object-contain rounded"
+                              />
+                            ) : (
+                              <div className="w-[120px] h-[120px] bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+                                No image
+                              </div>
+                            )}
                           </div>
-                          <div className="text-right">
-                            <p className="text-[#1D1D1F] font-medium text-sm">
-                              Order
-                            </p>
-                            <p className="text-[#86868B] font-normal text-xs uppercase">
-                              {currentOrder?.orderId}
-                            </p>
+                          <div className="flex flex-col gap-2 w-full text-start">
+                            <div>
+                              <p className="text-[#1D1D1F] font-semibold text-base">
+                                {currentOrder?.name}
+                              </p>
+                              <p className="text-[#86868B] font-normal text-[11px] capitalize">
+                                {currentOrder?.device ||
+                                  currentOrder?.deviceName ||
+                                  currentOrder?.model ||
+                                  ""}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-[#1D1D1F] font-semibold text-base ">
+                                Order Number
+                              </p>
+                              <p className="text-[#86868B] font-normal text-[16px] ">
+                                {currentOrder?.orderId || "—"}
+                              </p>
+                            </div>
                           </div>
                         </div>
+
                         {/* Timeline */}
-                        <div className="flex flex-col mb-10 px-4">
+                        <div className="flex flex-col mb-10">
                           <div className="relative">
-                            {predefinedStatuses.map((status, index) => {
+                            {mobileStatuses.map((status, index) => {
                               const isStatusCompleted =
                                 completedStatuses.includes(status);
                               const isPrevStatusCompleted =
                                 index > 0
                                   ? completedStatuses.includes(
-                                      predefinedStatuses[index - 1],
+                                      mobileStatuses[index - 1],
                                     )
                                   : false;
 
@@ -1260,7 +1298,7 @@ function UserContent() {
                                     ></div>
 
                                     {/* Bottom Line Segment (connects from this dot top to next row top) */}
-                                    {index < predefinedStatuses.length - 1 && (
+                                    {index < mobileStatuses.length - 1 && (
                                       <div
                                         className={`absolute top-[6px] bottom-0 w-[2.5px] z-10 ${
                                           isStatusCompleted
@@ -1290,7 +1328,7 @@ function UserContent() {
 
                                       {status === "Delivered" &&
                                         isStatusCompleted && (
-                                          <div className="rounded-xl bg-[#F5F5F7] border border-[#D2D2D7] w-full p-4 space-y-4 mt-3 shadow-sm">
+                                          <div className="rounded-xl bg-[#E0FBFD] border border-[#C2F2F5] w-full p-4 space-y-4 mt-3 shadow-sm">
                                             <div className="text-[#1D1D1F] flex gap-3 items-center">
                                               <AiOutlineInfoCircle className="text-[#0071E3] text-lg" />
                                               <span className="text-sm font-semibold">
@@ -1310,7 +1348,7 @@ function UserContent() {
                                                 );
                                                 openReportModal();
                                               }}
-                                              className="w-full text-center text-white bg-[#0071E3] text-xs font-semibold rounded-lg px-4 py-2.5 hover:bg-[#0077ED] transition-all shadow-sm active:scale-[0.98]"
+                                              className="w-full text-center text-[#0071E3] bg-transparent text-xs font-semibold rounded-lg px-4 py-2.5 border border-[#0071E3] hover:bg-[#EAF5FF] transition-all shadow-sm active:scale-[0.98]"
                                             >
                                               Submit a report
                                             </button>
@@ -1486,9 +1524,9 @@ function UserContent() {
           <div className="relative">
             <div className="flex flex-col justify-center items-center mb-6">
               <h3 className="text-[#1D1D1F] text-[24px] md:text-[28px] font-semibold text-center mb-2">
-                Submit a Ticket
+                Submit a Report
               </h3>
-              <p className="text-[#86868B] text-center text-sm font-normal max-w-[300px]">
+              <p className="text-[#86868B] text-center text-sm font-normal max-w-[300px] md:whitespace-nowrap">
                 Describe your issue and our team will get back to you shortly.
               </p>
             </div>

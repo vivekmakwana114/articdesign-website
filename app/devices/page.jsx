@@ -1,6 +1,13 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
-import { taponeimage, taptwoimage, tapthreeimage, laptop, ipad, smartphogeometry } from "../../assets";
+import {
+  taponeimage,
+  taptwoimage,
+  tapthreeimage, 
+  laptop,
+  ipad,
+  smartphogeometry,
+} from "../../assets";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -9,7 +16,6 @@ import Footer from "@/components/Footer";
 import Sectiontwo from "@/components/Home/Sectiontwo";
 import TabLink from "@/components/TabLink";
 
-import api from "@/lib/api";
 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDevices } from "@/state/device/deviceSlice";
@@ -17,7 +23,7 @@ import { fetchDevices } from "@/state/device/deviceSlice";
 function DevicesContent() {
   const dispatch = useDispatch();
   const { devicesData, devicesStatus } = useSelector((state) => state.device);
-  
+
   const searchParams = useSearchParams(); // Use useSearchParams to get query params
   const category = searchParams.get("category") || "laptop"; // Get the 'category' param or default to 'laptop'
   const router = useRouter();
@@ -42,8 +48,10 @@ function DevicesContent() {
     window.scrollTo(0, 0);
   }, [category, dispatch]);
 
-  const devices = devicesData.filter((device) => 
-    device.name?.toLowerCase().includes(activeTab === "laptop" ? "mac" : activeTab)
+  const devices = devicesData.filter((device) =>
+    device.name
+      ?.toLowerCase()
+      .includes(activeTab === "laptop" ? "mac" : activeTab),
   );
   const deviceLoading = devicesStatus === "loading";
 
@@ -67,29 +75,33 @@ function DevicesContent() {
               </div>
             </section>
           ) : (
-            <div className="md:flex md:flex-wrap md:ml-16 grid grid-cols-2">
+            <div className="md:flex md:flex-wrap md:ml-16 px-3 grid grid-cols-2">
               {devices?.map((frame, index) => (
                 <div
                   key={index}
                   className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px]"
                 >
                   <Link href={`/skinlaptop?skin=${frame._id}`}>
-                    <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[329px]">
-                      <div className="h-[70%]  relative flex items-center justify-center">
+                    <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[215px] md:h-[300px] flex flex-col">
+                      <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden">
                         <Image
                           src={frame.image || laptop}
                           alt={frame.name || "laptop image"}
                           width={100}
                           height={300}
-                          className="w-full h-auto object-contain p-2"
+                          className="w-full h-full md:h-full object-contain p-2"
                         />
                       </div>
-                      <p className="mt-2 text-center text-[#000000] md:text-base text-sm  font-medium">
-                        {frame.name}
-                      </p>
-                      <p className="mt-2 text-center text-[#86868B] text-base font-medium">
-                        {frame.chipSet}
-                      </p>
+                      <div className="mt-2 text-center">
+                        <p className="text-[#000000] md:text-base text-sm font-medium">
+                          {frame.name}
+                        </p>
+                        {frame.chipSet && (
+                          <p className="text-[#86868B] md:text-sm text-xs font-medium mt-1">
+                            {frame.chipSet}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </Link>
                 </div>
@@ -124,22 +136,26 @@ function DevicesContent() {
                   className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px] "
                 >
                   <Link href={`/skinipad?skin=${frame._id}`}>
-                    <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[329px]">
-                      <div className="h-[70%]  relative flex items-center justify-center">
+                    <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[215px] md:h-[300px] flex flex-col">
+                      <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden">
                         <Image
                           src={frame.image || ipad}
                           alt={frame.name || "ipad image"}
                           width={100}
                           height={300}
-                          className="w-[70%] h-auto object-contain p-2"
+                          className="w-full h-full object-contain p-2"
                         />
                       </div>
-                      <p className="mt-2 text-center text-[#000000] md:text-base text-sm  font-medium">
-                        {frame.name}
-                      </p>
-                      <p className="mt-2 text-center text-[#86868B] text-base font-medium">
-                        {frame.chipSet}
-                      </p>
+                      <div className="mt-2 text-center">
+                        <p className="text-[#000000] md:text-base text-sm font-medium">
+                          {frame.name}
+                        </p>
+                        {frame.chipSet && (
+                          <p className="text-[#86868B] md:text-sm text-xs font-medium mt-1">
+                            {frame.chipSet}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </Link>
                 </div>
@@ -174,19 +190,26 @@ function DevicesContent() {
                   className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px] "
                 >
                   <Link href={`/skinphone?skin=${frame._id}`}>
-                    <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm  h-[329px]">
-                      <div className="h-[70%]  relative flex items-center justify-center">
+                    <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[215px] md:h-[300px] flex flex-col">
+                      <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden">
                         <Image
                           src={frame.image || smartphogeometry}
                           alt={frame.name || "phone image"}
                           width={100}
                           height={300}
-                          className="w-auto h-[80%] object-contain p-2"
+                          className="w-full h-full object-contain p-2"
                         />
                       </div>
-                      <p className="mt-2 text-center text-[#000000] md:text-base text-sm  font-medium">
-                        {frame.name}
-                      </p>
+                      <div className="mt-2 text-center">
+                        <p className="text-[#000000] md:text-base text-sm font-medium">
+                          {frame.name}
+                        </p>
+                        {frame.chipSet && (
+                          <p className="text-[#86868B] md:text-sm text-xs font-medium mt-1">
+                            {frame.chipSet}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </Link>
                 </div>
@@ -234,6 +257,7 @@ function DevicesContent() {
               image={taponeimage}
               label="Mac"
               onClick={handleTabClick}
+              imageClass="w-[60px] h-[60px] object-contain"
             />
 
             <TabLink
@@ -243,7 +267,7 @@ function DevicesContent() {
               image={taptwoimage}
               label="iPad"
               onClick={handleTabClick}
-              imageClass="w-[40px] h-[50px]"
+              imageClass="w-[50px] h-[40px] object-contain"
             />
 
             <TabLink
@@ -253,13 +277,13 @@ function DevicesContent() {
               image={tapthreeimage}
               label="Phone"
               onClick={handleTabClick}
-              imageClass="w-[40px] h-[45px]"
+              imageClass="w-[50px] h-[40px] object-contain"
             />
           </div>
         </div>
       </div>
       <br />
-      <div className="mb-24">{renderTabContent()}</div>
+      <div className="mb-8">{renderTabContent()}</div>
 
       <Sectiontwo />
       <Footer />

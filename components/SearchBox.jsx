@@ -22,7 +22,7 @@ const SearchBox = ({ onSearch }) => {
       />
 
       <button
-        className="p-2 text-white absolute right-3 text-lg"
+        className="p-4 text-white absolute right-3 text-lg"
         onClick={() => setShowSearch(false)}
       >
         <AiOutlineCloseCircle />

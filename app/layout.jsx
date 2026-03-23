@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
           <Suspense fallback={null}>
             <Navbar />
           </Suspense>
-          <main className="pt-[64px]">{children}</main>
+          <main>{children}</main>
 
           {/* <Footer /> */}
         </StateProvider>

@@ -12,7 +12,7 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-center items-center md:items-start md:w-1/2 px-6 md:pl-16 text-center md:text-left",
       title:
-        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left",
+        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left mt-4",
       description:
         "text-[#86868B] md:text-[16px] text-[12px] font-medium text-center md:text-left",
     },
@@ -30,7 +30,7 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-center items-center md:items-start md:w-1/2 px-6 md:pl-16 text-center md:text-left",
       title:
-        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left",
+        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left mt-4",
       description:
         "text-[#86868B] md:text-[16px] text-[12px] font-medium text-center md:text-left",
     },
@@ -48,7 +48,7 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-center items-center md:items-start md:w-1/2 px-6 md:pl-16 text-center md:text-left",
       title:
-        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left",
+        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left mt-4",
       description:
         "text-[#86868B] md:text-[16px] text-[12px] font-medium text-center md:text-left",
     },
@@ -83,7 +83,7 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-center items-center md:items-start md:w-1/2 px-6 md:pl-16 text-center md:text-left",
       title:
-        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left",
+        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left mt-4",
       description:
         "text-[#86868B] md:text-[16px] text-[12px] font-medium text-center md:text-left",
     },
@@ -100,9 +100,9 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-start md:justify-center items-start md:w-1/2 px-6 md:pl-16 text-left",
       title:
-        "md:text-[36px] text-[26px] font-bold text-[#1D1D1F] text-left whitespace-pre-line w-[310px] md:w-full drop-shadow-md md:drop-shadow-none",
+        "md:text-[36px] text-[26px] font-bold text-white text-left whitespace-pre-line w-[310px] md:w-full drop-shadow-md md:drop-shadow-none pt-16",
       description:
-        "text-[#1D1D1F] md:text-white md:text-[16px] text-[14px] font-semibold md:font-medium text-left whitespace-pre-wrap md:w-full w-[310px] drop-shadow-md md:drop-shadow-none",
+        "text-white md:text-white md:text-[16px] text-[14px] font-semibold md:font-medium text-left whitespace-pre-wrap md:w-full w-[310px] drop-shadow-md md:drop-shadow-none",
     },
   },
  
@@ -113,7 +113,7 @@ export const BannerData = [
       "Get ready for rich, true-to-life prints that pop off your device.",
     styles: {
       banner:
-        "flex flex-col-reverse bg-[#F5F5F7] md:rounded-[16px] text-center w-full md:h-[400px]",
+        "flex flex-col-reverse bg-[#F5F5F7] md:rounded-[16px] text-center w-full md:h-[500px] pt-12",
       textWrapper:
         "space-y-2 flex flex-col items-center px-6 text-center max-w-lg mb-6 mx-auto",
       imageWrapper: "w-full flex items-end mt-auto",

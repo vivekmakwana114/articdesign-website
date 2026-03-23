@@ -128,7 +128,7 @@ const DetailsSection = ({ product, loading }) => {
 
   return (
     <section className="bg-white">
-      <div className="md:grid md:grid-cols-2 flex flex-col gap-6 md:gap-12 md:p-6">
+      <div className="md:grid md:grid-cols-2 flex flex-col gap-6 md:gap-12 md:p-6 pt-[64px]">
         {/* Left Section */}
         <div>
           {loading ? (
@@ -147,7 +147,7 @@ const DetailsSection = ({ product, loading }) => {
                 <span className=" text-[#0071E3] flex flex-col md:justify-start md:items-start justify-center items-start">
                   <p
                     onClick={handleClickBack}
-                    className="flex gap-2 justify-center items-center cursor-pointer "
+                    className="flex gap-2 justify-center items-center cursor-pointer pl-2"
                   >
                     <HiOutlineArrowNarrowLeft className="text-2xl justify-center items-center" />
                     <span className="text-sm font-normal pr-28 w-full">
@@ -249,7 +249,7 @@ const DetailsSection = ({ product, loading }) => {
             </div>
           ) : (
             <>
-              <div className="md:px-10 px-5  flex md:justify-start  md:items-start  flex-col">
+              <div className="md:px-10 px-4  flex md:justify-start  md:items-start  flex-col">
                 <p className="md:text-[36px] text-[26px] font-normal text-[#1D1D1F]">
                   Configure your Kit
                 </p>

@@ -30,7 +30,7 @@ function Sectiontwo() {
   const imageSrc = content?.imageUrl || ipadwithskin;
 
   return (
-    <section className=" bg-[#FCFCFC] md:px-2 pt-10">
+    <section className=" bg-[#F5F5F7] md:px-2 pt-10">
       <div className="flex lg:flex-row  md:mx-20 md:gap-x-9 md:justify-center items-center flex-col md:py-0">
         <Image
           src={imageSrc}
