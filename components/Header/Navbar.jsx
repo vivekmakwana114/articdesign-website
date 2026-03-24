@@ -398,12 +398,12 @@ const Navbar = () => {
                 </li>
                 <li className=" space-x-2 m-3">
                   <Link href="/auth?view=signup" onClick={closeMobileMenu}>
-                    <button className="bg-[#0071E3] rounded-[4px] w-[108px] p-3 text-white font-medium text-[13px] ">
+                    <button className="bg-[#0071E3] rounded-[4px] w-[108px] p-3 text-white font-medium text-[13px] cursor-pointer">
                       Register
                     </button>
                   </Link>
                   <Link href="/auth" onClick={closeMobileMenu}>
-                    <button className="bg-[#0071E3] rounded-[4px] opacity-50 w-[108px] p-3 text-white font-medium text-[13px] ">
+                    <button className="bg-[#0071E3] rounded-[4px] w-[108px] p-3 text-white font-medium text-[13px] cursor-pointer">
                       Sign in
                     </button>
                   </Link>
