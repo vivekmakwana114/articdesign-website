@@ -224,7 +224,7 @@ const ShippingModal = ({ isOpen, onClose, onProceed }) => {
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <button
-          className="absolute right-6 top-6 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+          className="absolute right-6 top-8 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
           onClick={onClose}
         >
           <Image src={closeIcon} alt="Close" width={20} height={20} />

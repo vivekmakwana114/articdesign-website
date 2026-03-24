@@ -16,7 +16,7 @@ function SkinSectiontwo() {
           Skins That Safeguard with Ease!
         </p>
       </div>
-      <div className="w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-lg mb-10 cursor-pointer relative">
+      <div className="w-full max-w-4xl aspect-video rounded-md overflow-hidden shadow-lg mb-10 cursor-pointer relative">
         {!isPlaying ? (
           <div className="relative w-full h-full" onClick={() => setIsPlaying(true)}>
             <Image

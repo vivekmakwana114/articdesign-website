@@ -67,7 +67,7 @@ function ContactForm() {
 
   return (
     <>
-      <section className="flex flex-col justify-center items-center md:px-80 md:py-1 px-10">
+      <section className="flex flex-col justify-center items-center md:px-80 md:py-1">
         <div className=" flex justify-center items-center flex-col my-10">
           <h1 className=" text-[48px] text-[#1D1D1F] font-semibold">
             SayHello
@@ -80,7 +80,7 @@ function ContactForm() {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form className="flex flex-col gap-5 p-10 w-full">
+            <Form className="flex flex-col gap-5 p-5 w-full">
               <div className="md:grid md:grid-cols-2 md:gap-10 flex flex-col">
                 <div className="flex flex-col">
                   <label htmlFor="firstname" className="form__label text-[#111827] font-semibold">
@@ -188,13 +188,7 @@ function ContactForm() {
               </div>
 
               <div className="flex md:flex-row flex-col gap-5">
-                <button
-                  type="submit"
-                  className="rounded-md bg-[#0071E3] w-[96px] text-white p-2 h-[40px]"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Submitting..." : "Submit"}
-                </button>
+                
                 <p className="md:w-[680px] w-[336px] text-sm text-[#9CA3AF]">
                   By pressing the submit button, I agree to articdesign
                   contacting me by email and/or phone to share opportunities
@@ -202,6 +196,13 @@ function ContactForm() {
                   also understand that any information I’ve shared in this form
                   is subject to articdesign Privacy Policy.
                 </p>
+                <button
+                  type="submit"
+                  className="rounded-md bg-[#0071E3] w-[96px] text-white p-2 h-[40px]"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </button>
               </div>
             </Form>
           )}
@@ -211,7 +212,7 @@ function ContactForm() {
       <section className="bg-[#FAFAFA] h-[380px] md:px-20">
         <div className="md:grid md:grid-cols-3 h-full w-full   md:gap-24 gap-10 py-9 flex flex-col justify-center items-center">
           <div className="">
-            <h3 className=" text-sm font-inter font-semibold md:text-start text-center">
+            <h3 className=" text-[18px] font-inter font-semibold md:text-start text-center">
               Address
             </h3>
             <br />
@@ -225,7 +226,7 @@ function ContactForm() {
             </div>
           </div>
           <div className="">
-            <h3 className="text-sm font-Inter font-semibold md:text-start text-center">
+            <h3 className="text-[18px] font-inter font-semibold md:text-start text-center">
               Call Us
             </h3>
             <p className="text-[#6B7280] font-normal text-base pt-3">
@@ -233,15 +234,15 @@ function ContactForm() {
             </p>
           </div>
           <div className="">
-            <h3 className="text-sm font-Inter font-semibold md:text-start text-center">
+            <h3 className="text-[18px] font-inter font-semibold md:text-start text-center">
               Socials
             </h3>
-            <ul className="flex  gap-2 font-normal text-base font-inter pt-3 text-[#6B7280]">
+            <ul className="flex  gap-8 font-normal text-[16px] font-inter pt-3 text-[#6B7280]">
               <li className=" underline underline-offset-2">
-                <Link href="#">facebook</Link>
+                <Link href="#">Facebook</Link>
               </li>
               <li className=" underline underline-offset-2">
-                <Link href="#">twitter</Link>
+                <Link href="#">Twitter</Link>
               </li>
               <li className=" underline underline-offset-2">
                 <Link href="#">Instagram</Link>

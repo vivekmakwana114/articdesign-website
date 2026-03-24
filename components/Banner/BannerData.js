@@ -12,7 +12,7 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-center items-center md:items-start md:w-1/2 px-6 md:pl-16 text-center md:text-left",
       title:
-        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left",
+        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left mt-4",
       description:
         "text-[#86868B] md:text-[16px] text-[12px] font-medium text-center md:text-left",
     },
@@ -30,7 +30,7 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-center items-center md:items-start md:w-1/2 px-6 md:pl-16 text-center md:text-left",
       title:
-        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left",
+        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left mt-4",
       description:
         "text-[#86868B] md:text-[16px] text-[12px] font-medium text-center md:text-left",
     },
@@ -48,7 +48,7 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-center items-center md:items-start md:w-1/2 px-6 md:pl-16 text-center md:text-left",
       title:
-        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left",
+        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left mt-4",
       description:
         "text-[#86868B] md:text-[16px] text-[12px] font-medium text-center md:text-left",
     },
@@ -83,7 +83,7 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-center items-center md:items-start md:w-1/2 px-6 md:pl-16 text-center md:text-left",
       title:
-        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left",
+        "md:text-[36px] text-[24px] font-bold text-[#1D1D1F] text-center md:text-left mt-4",
       description:
         "text-[#86868B] md:text-[16px] text-[12px] font-medium text-center md:text-left",
     },
@@ -100,9 +100,9 @@ export const BannerData = [
       textWrapper:
         "space-y-3 flex flex-col justify-start md:justify-center items-start md:w-1/2 px-6 md:pl-16 text-left",
       title:
-        "md:text-[36px] text-[26px] font-bold text-[#1D1D1F] text-left whitespace-pre-line w-[310px] md:w-full drop-shadow-md md:drop-shadow-none",
+        "md:text-[36px] text-[26px] font-bold text-white text-left whitespace-pre-line w-[310px] md:w-full drop-shadow-md md:drop-shadow-none pt-16",
       description:
-        "text-[#1D1D1F] md:text-white md:text-[16px] text-[14px] font-semibold md:font-medium text-left whitespace-pre-wrap md:w-full w-[310px] drop-shadow-md md:drop-shadow-none",
+        "text-white md:text-white md:text-[16px] text-[14px] font-semibold md:font-medium text-left whitespace-pre-wrap md:w-full w-[310px] drop-shadow-md md:drop-shadow-none",
     },
   },
  
@@ -113,7 +113,7 @@ export const BannerData = [
       "Get ready for rich, true-to-life prints that pop off your device.",
     styles: {
       banner:
-        "flex flex-col-reverse bg-[#F5F5F7] md:rounded-[16px] text-center w-full md:h-[400px]",
+        "flex flex-col-reverse bg-[#F5F5F7] md:rounded-[16px] text-center w-full md:h-[500px] pt-12",
       textWrapper:
         "space-y-2 flex flex-col items-center px-6 text-center max-w-lg mb-6 mx-auto",
       imageWrapper: "w-full flex items-end mt-auto",
@@ -136,9 +136,9 @@ export const HomeBannerData = [
     link: "devices?category=ipad",
     styles: {
       banner:
-        "flex flex-col-reverse items-center justify-between bg-[#090A0E] h-[559px] md:h-[650px] md:w-[630px] w-screen md:rounded-[16px] pt-8",
+        "flex flex-col-reverse items-center justify-between bg-[#090A0E] h-[433px] md:h-[650px] md:w-[630px] w-full md:rounded-[16px] pt-8",
       imageWrapper: "w-full flex justify-center",
-      imageClass: "md:h-[329px] md:w-[429px] h-[206.6px]",
+      imageClass: "md:h-[329px] md:w-[429px] w-[300px] h-[206.6px]",
       title:
         "md:text-[28px] text-[20.21px] font-bold text-white mt-10 text-center",
       description: "md:text-[17px] text-[12.27px] text-[#86868B] text-center",
@@ -156,9 +156,9 @@ export const HomeBannerData = [
       banner:
         "bg-[#F6F6F6] md:h-[650px] md:w-[630px] h-[559px] md:rounded-[16px] flex flex-col py-5 bg-[url('/image2.png')] bg-no-repeat md:bg-cover bg-center pt-10 ",
       imageWrapper: "hidden",
-      textWrapper: " flex flex-col justify-center items-center space-y-2 py-5",
+      textWrapper: " flex flex-col justify-center items-center",
       title:
-        "md:text-[22px] text-[19.83px] font-medium text-[#1D1D1F] w-[370.58px] text-center",
+        "md:text-[22px] text-[19.83px] font-Medium text-[#1D1D1F] w-[370.58px] text-center",
       description: "font-normal text-[#86868B] text-[17px]",
       button:
         "flex justify-center items-center rounded-[26px] bg-[#0071E3] px-4 py-2 text-white text-center w-fit",
@@ -172,7 +172,7 @@ export const HomeBannerData = [
     link: "devices?category=laptop",
     styles: {
       banner:
-        "md:px-0 px-5 md:h-[594px] md:w-[1300px] md:mx-0 md:rounded-[16px] md:shadow-sm md:shadow-[#00000084] md:ring-opacity-50 flex md:flex-row flex-col-reverse md:gap-0 gap-10 bg-white",
+        "md:px-0 px-5 md:h-[594px] md:w-[1300px] md:mx-0 md:rounded-[16px] md:shadow-sm md:shadow-[#00000084] md:ring-opacity-50 flex md:flex-row flex-col-reverse md:gap-0 gap-10 bg-white pb-6 pt-6",
       imageWrapper: "md:mt-20 flex justify-center",
       imageClass: "md:h-[380px] md:w-[790px] w-full",
       textWrapper:

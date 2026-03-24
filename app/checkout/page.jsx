@@ -285,7 +285,7 @@ const CheckOut = () => {
                     } md:w-full`}
                   >
                     <div>
-                      <h1 className="text-[#1D1D1F] text-[24px] font-medium mt-2">
+                      <h1 className="flex items-cetner justify-center pb-8 text-[#1D1D1F] text-[24px] font-medium mt-2">
                         {item.name ||
                           item?.product?.productName ||
                           item?.productName}
@@ -295,29 +295,61 @@ const CheckOut = () => {
                           item.deviceName ||
                           item?.product?.device}
                       </h3>
-                      <ul className="text-[#000000] text-[16px] font-normal my-2 space-y-2">
-                        {item?.variantAreas?.length > 0 && (
-                          <h5 className="text-[#86868B] text-[12px] font-medium ">
-                            Options
-                          </h5>
-                        )}
-                        {item?.variantAreas?.map((option, idx) => (
-                          <li
-                            key={option.variantAreaId || option._id || idx}
-                            className="text-[#1D1D1F] text-[12px] font-normal"
+                      <div className="flex justify-between items-start mt-4">
+                        <div>
+                          {item?.variantAreas?.length > 0 && (
+                            <h5 className="text-[#86868B] text-[12px] font-medium ">
+                              Options
+                            </h5>
+                          )}
+                          <ul className="text-[#000000] text-[16px] font-normal my-2 space-y-2">
+                            {item?.variantAreas?.map((option, idx) => (
+                              <li
+                                key={option.variantAreaId || option._id || idx}
+                                className="text-[#1D1D1F] text-[12px] font-normal"
+                              >
+                                {option.name}{" "}
+                                {option.additionalPrice
+                                  ? `(₹${option.additionalPrice})`
+                                  : ""}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        
+                        {/* Mobile Quantity Selector */}
+                        <div className="md:hidden flex items-center border border-[#DDDDDD] rounded-[8px] p-1 gap-1 h-fit">
+                          <button
+                            onClick={() => handleDecrement(item.id || item._id)}
+                            className="p-2 text-sm font-bold"
                           >
-                            {option.name}{" "}
-                            {option.additionalPrice
-                              ? `(₹${option.additionalPrice})`
-                              : ""}
-                          </li>
-                        ))}
-                      </ul>
+                            -
+                          </button>
+                          <input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              handleQuantityChange(
+                                item.id || item._id,
+                                e.target.value,
+                              )
+                            }
+                            min={1}
+                            className="w-[28px] text-center focus:outline-none text-sm bg-transparent font-medium"
+                          />
+                          <button
+                            onClick={() => handleIncrement(item.id || item._id)}
+                            className="p-2 text-sm font-bold"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="md:relative md:right-0 md:bottom-0 absolute right-5 bottom-20 quantity flex items-center gap-2">
+                    <div className="hidden md:flex md:relative absolute right-5 bottom-20 quantity items-center gap-1 md:gap-2">
                       <button
                         onClick={() => handleDecrement(item.id || item._id)}
-                        className="px-2 py-1 border rounded"
+                        className="p-1 md:px-2 md:py-1 border rounded text-xs md:text-base"
                       >
                         -
                       </button>
@@ -332,17 +364,18 @@ const CheckOut = () => {
                           )
                         }
                         min={1}
-                        className="rounded-[8px] border focus:outline-none border-[#86868B] p-2 md:w-[60px] text-center"
+                        className="rounded-[8px] border focus:outline-none border-[#86868B] p-1 md:p-2 w-[40px] md:w-[60px] text-center text-xs md:text-base"
                       />
                       <button
                         onClick={() => handleIncrement(item.id || item._id)}
-                        className="px-2 py-1 border rounded"
+                        className="p-1 md:px-2 md:py-1 border rounded text-xs md:text-base"
                       >
                         +
                       </button>
                     </div>
 
-                    <div className="space-y-2 mt-2">
+
+                    <div className="flex justify-between items-center mt-4 md:block md:space-y-2 md:mt-2">
                       <h1 className="text-[#1D1D1F] text-[24px] font-bold">
                         <FormatCurrencyRate
                           num={
@@ -354,9 +387,9 @@ const CheckOut = () => {
                       </h1>
                       <h3
                         onClick={() => handleRemove(item.id || item._id)}
-                        className=" cursor-pointer md:relative md:right-0 absolute right-5 bottom-3 text-[#0071E3] text-[14px] font-normal text-end"
+                        className="cursor-pointer text-[#0071E3] text-[14px] font-normal"
                       >
-                        Remove
+                        Remove from cart
                       </h3>
                     </div>
                   </div>

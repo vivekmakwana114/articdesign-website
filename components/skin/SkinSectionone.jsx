@@ -19,25 +19,25 @@ function SkinSectionone({
   const loadMoreProducts = () => setVisibleProducts((prev) => prev + 8); // Load 4 more items on each click
 
   return (
-    <section className="bg-[#ffffff] md:p-5 md:m-8">
-      <div className="md:ml-5 ml-5 flex flex-col gap-5">
+    <section className="bg-[#ffffff] md:p-5 md:m-8 my-6">
+      <div className="md:ml-5 ml-5 flex flex-col gap-5 m-6">
         <div className="md:w-full md:h-[108px] w-[230px]">
-          <p className="md:text-[36px] text-[14px] font-bold text-[#86868B]">
+          <p className="md:text-[36px] text-[16px] font-bold text-[#86868B]">
             {title}
           </p>
-          <span className="md:text-[36px] text-[14px] font-bold text-[#86868B] ">
+          <span className="md:text-[36px] text-[16px] font-bold text-[#86868B] whitespace-nowrap ">
             {subspantext}
           </span>
-          <span className="text-[#1D1D1F] md:text-[36px] text-[14px] font-bold">
+          <span className="text-[#1D1D1F] md:text-[36px] text-[16px] font-bold whitespace-nowrap">
             {spantext}
             <span className="text-[#86868B]">{subtitle}</span>
           </span>
         </div>
         <div>
-          <h5 className="font-bold md:text-[16px] text-[13px] text-[#000000] md:w-full">
+          <h5 className="font-bold md:text-[16px] text-[14px] text-[#000000] md:w-full">
             {slogan}
           </h5>
-          <h5 className="font-bold md:text-[16px] text-[13px] text-[#000000] md:w-full">
+          <h5 className="font-bold md:text-[16px] text-[14px] text-[#000000] md:w-full">
             {subslogan}
           </h5>
         </div>

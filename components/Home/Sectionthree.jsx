@@ -74,10 +74,10 @@ function Sectionthree() {
                   key={index}
                   className="w-full md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-10px] md:mx-[-7px] md:h-[329px] h-auto"
                 >
-                  <Link href={`/details/${frame.slug || frame._id}`}>
+                  <Link href={`/details/${frame.slug || frame._id || frame.productId}`}>
                     <div className="bg-[#ffffff] md:p-4 p-2 rounded-[8px] shadow-sm">
                       <Image
-                        src={frame.thumbnailImage || (frame.images && frame.images[0]) || "/placeholder.png"}
+                        src={frame.image || frame.thumbnailImage || (frame.images && frame.images[0]) || "/placeholder.png"}
                         alt={frame.productName || frame.name || "Product image"}
                         width={100}
                         height={400}

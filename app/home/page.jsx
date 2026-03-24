@@ -41,7 +41,7 @@ export default function Home() {
       <Slider images={images} />
       {/* Top row: first two banners */}
       <div className="bg-[#F5F5F7] md:pt-32 pt-10">
-        <div className="flex flex-col-reverse md:flex-row justify-center gap-10">
+        <div className="flex flex-col-reverse md:flex-row justify-center gap-10 rounded-md px-10">
           {HomeBannerData.slice(0, 2).map((item, index) => (
             <Banner key={index} {...item} />
           ))}

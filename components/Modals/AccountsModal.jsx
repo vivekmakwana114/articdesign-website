@@ -45,7 +45,7 @@ const AccountsModal = ({
         onClick={onClose}
       ></div>
       <div
-        className="bg-white mx-3 p-4 rounded-xl shadow-lg z-10 space-y-4 h-auto relative border border-primary"
+        className="bg-white rounded-xl shadow-lg z-10 md:w-[600px] md:h-[500px] w-[90%] relative border border-primary"
         style={{ maxHeight: "90vh", overflowY: "auto" }}
       >
         <div className=" flex flex-row justify-between items-center">
