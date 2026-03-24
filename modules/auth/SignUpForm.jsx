@@ -55,7 +55,7 @@ const Step1 = ({ formData, setFormData, onSwitchToSignIn }) => {
   };
 
   return (
-    <div className="space-y-5 w-full max-w-[384px] pt-6 md:pt-10">
+    <div className="space-y-5 w-full max-w-[384px] md:pt-10">
       <div className="topsection">
         <h1 className="text-[#6B7280] text-sm font-bold">Step 1 of 2</h1>
         <h1 className="text-[#111827] text-[28px] font-bold">
@@ -216,7 +216,7 @@ const Step2 = ({ formData, setFormData }) => {
   };
 
   return (
-    <div className="space-y-5 w-full max-w-[384px] pt-6 md:pt-10">
+    <div className="space-y-5 w-full max-w-[384px] md:pt-10">
       <div className="topsection">
         <h1 className="text-[#6B7280] text-sm font-bold">Step 2 of 2</h1>
         <h1 className="text-[#111827] text-[28px] font-bold">

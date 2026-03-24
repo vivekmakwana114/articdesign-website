@@ -215,7 +215,7 @@ const AuthPageContent = () => {
   };
 
   return (
-    <section className="flex justify-center items-start h-screen p-5 mt-10 min-w-96">
+    <section className="flex justify-center items-start h-screen p-5 mt-20 min-w-96">
       {renderForm()}
     </section>
   );
