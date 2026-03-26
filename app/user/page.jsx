@@ -1449,12 +1449,12 @@ function UserContent() {
       </AccoutsModal>
       <AccoutsModal isOpen={modalPasswordIsOpen} onClose={closePassModal}>
         <div className="">
-          <div className=" flex flex-col gap-3 ">
+          <div className=" flex flex-col gap-3 p-2 md:w-[400px] w-[290px] mx-auto mt-4">
             <div>
               <h3 className="text-[#1D1D1F] md:text-[28px] text-[16px] font-medium text-center ">
                 Change password
               </h3>
-              <p className="text-[#86868B] md:text-sm text-xs font-normal text-center pt-3 md:w-[382px] w-72">
+              <p className="text-[#86868B] md:text-[26] text-sm font-normal text-center pt-3">
                 Choose a strong password and remember to use a new one for every
                 account you have.
               </p>
@@ -1498,7 +1498,7 @@ function UserContent() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="form__input"
               />
-              <p className="text-[#86868B]   md:text-sm text-xs font-normal md:w-[382px] w-[290px]">
+              <p className="text-[#86868B]   md:text-sm text-xs font-normal pt-2">
                 Use a least 8 characters. Don’t use something too obvious like
                 your pet’s name.
               </p>

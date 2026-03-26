@@ -67,7 +67,7 @@ function ContactForm() {
 
   return (
     <>
-      <section className="flex flex-col justify-center items-center md:px-80 md:py-1">
+      <section className="flex flex-col justify-center items-center mt-10 md:px-80">
         <div className=" flex justify-center items-center flex-col my-10">
           <h1 className=" text-[48px] text-[#1D1D1F] font-semibold">
             SayHello

@@ -192,8 +192,12 @@ function Footer() {
         </div>
 
         <div className="flex gap-5">
-          <span className="text-sm font-inter font-normal pt-3 text-[#6B7280]">Terms of Service</span>
-          <span className="text-sm font-inter font-normal pt-3 text-[#6B7280]">Privacy Policy </span>
+          <Link href="/termsandconditions">
+            <span className="text-sm font-inter font-normal pt-3 text-[#6B7280]">Terms of Service</span>
+          </Link>
+          <Link href="/privacypolicy">
+            <span className="text-sm font-inter font-normal pt-3 text-[#6B7280]">Privacy Policy </span>
+          </Link>
         </div>
       </section>
     </section>

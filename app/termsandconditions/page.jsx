@@ -14,7 +14,7 @@ function TermsandConditions() {
   };
   return (
     <>
-      <section className="flex flex-col justify-center items-center md:px-80 md:py-1 px-10">
+      <section className="flex flex-col justify-center items-center mt-10">
         <h1 className=" text-[#1D1D1F] font-semibold md:text-[48px] text-[24px] py-10">
           Terms & Conditions
         </h1>
