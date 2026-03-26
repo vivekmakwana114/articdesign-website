@@ -240,8 +240,7 @@ function DevicesContent() {
   return (
     <>
       <div className="flex items-center justify-center">
-        {/* The content you want to center */}
-        <div className="p-8 max-w-[550px] text-center">
+        <div className="p-8 max-w-[550px] text-center mt-20">
           <h1 className="font-bold md:text-4xl text-xl">
             Turn Heads with a Skin: Elevate Your Device Style{" "}
           </h1>

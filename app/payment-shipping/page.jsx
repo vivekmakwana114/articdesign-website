@@ -5,7 +5,7 @@ import React from "react";
 function PaymentShipping() {
   return (
     <>
-      <section className="flex flex-col justify-center items-center md:px-80 md:py-1 px-20 text-[#1D1D1F]">
+      <section className="flex flex-col justify-center items-center mt-10 md:mt-20 text-[#1D1D1F]">
         <h1 className=" font-semibold md:text-[48px] text-[24px] py-10">
           Payments & Shipping
         </h1>

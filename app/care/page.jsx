@@ -5,7 +5,7 @@ import React from "react";
 function Care() {
   return (
     <>
-      <section className="flex flex-col justify-center items-center md:px-80 md:py-1 px-20">
+      <section className="flex flex-col justify-center items-center mt-10">
         <h1 className=" text-[#1D1D1F] font-semibold md:text-[48px] text-[24px] py-10">
           Product Care
         </h1>
