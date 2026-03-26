@@ -239,14 +239,14 @@ const Navbar = () => {
                     : null;
                 return profileSrc ? (
                   <div
-                    className="w-8 h-8 rounded-full overflow-hidden hover:cursor-pointer border border-gray-500"
+                    className="w-6 h-6 rounded-full overflow-hidden hover:cursor-pointer border border-gray-500"
                     onClick={() => setShowProfileMenu(!showProfileMenu)}
                   >
                     <Image
                       src={profileSrc}
                       alt="Profile"
-                      width={32}
-                      height={32}
+                      width={24}
+                      height={24}
                       className="object-cover w-full h-full"
                     />
                   </div>
@@ -259,9 +259,9 @@ const Navbar = () => {
               })()}
             {showProfileMenu && (
               <>
-                <BiSolidUpArrow className="absolute left-0 top-5 text-white" />
+                <BiSolidUpArrow className="absolute left-0 top-7 text-white" />
                 {currentUser ? (
-                  <ul className="p-2 absolute right-[-75px] w-[176px] mt-3 bg-[#ffffff] rounded-sm shadow-md z-10 flex flex-col">
+                  <ul className="p-2 absolute right-[-75px] w-[176px] mt-5 bg-[#ffffff] rounded-sm shadow-md z-10 flex flex-col">
                     <li>
                       <Link
                         href="/user?dashboard=personalinformation"
@@ -305,7 +305,7 @@ const Navbar = () => {
                     </li>
                   </ul>
                 ) : (
-                  <ul className="absolute right-[-55px] mt-3 bg-[#ffffff] rounded-sm shadow-md z-10 flex">
+                  <ul className="absolute right-[-55px] mt-5 bg-[#ffffff] rounded-sm shadow-md z-10 flex">
                     <li>
                       <Link
                         href="/auth"

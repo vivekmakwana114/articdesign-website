@@ -69,7 +69,7 @@ const Slider = ({ images }) => {
             className="md:h-full h-full object-cover"
           />
           <div className="md:w-[956px] h-full bg-gradient-to-r from-[#000000c9] to-[#4D4D4D00] absolute md:left-0"></div>
-          <div className="md:ml-[-59px] ml-[20px] md:flex md:flex-col md:justify-start md:items-start carousel-caption text-white transform -translate-x-1/2 md:space-y-5 space-y-2">
+          <div className="md:ml-[-59px] ml-[20px] md:flex md:flex-col md:justify-start md:items-start carousel-caption text-white transform -translate-x-1/2">
             <h2 className="md:text-2xl text-[#86868B] md:font-bold text-base font-bold">
               {image.subcaption}
             </h2>
