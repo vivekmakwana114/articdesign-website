@@ -23,7 +23,7 @@ function Returns() {
           porttitor.
         </p>
         <br />
-        <p className="md:w-[608px] w-[348px]">
+        <p className="md:w-[608px] w-[348px] mb-6">
           Magna in dictumst metus vel ultrices sapien vel nisi. Diam vulputate
           aliquet urna aliquet sodales diam elit. Et volutpat est tristique et
           lacus id eu nunc. Aliquet pellentesque nulla diam ipsum sit. Bibendum

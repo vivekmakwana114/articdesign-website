@@ -9,7 +9,7 @@ function Care() {
         <h1 className=" text-[#1D1D1F] font-semibold md:text-[48px] text-[24px] py-10">
           Product Care
         </h1>
-        <p className="md:w-[608px] w-[348px]">
+        <p className="md:w-[608px] w-[348px] mb-6">
           Lorem ipsum dolor sit amet consectetur. Vitae blandit sit risus dolor
           mauris leo nam sed. Mattis arcu vestibulum eu id enim quisque facilisi
           vitae. Eget leo proin rutrum ultrices aliquam cras. Vitae ante dui et
@@ -23,7 +23,7 @@ function Care() {
           porttitor.
         </p>
         <br />
-        <p className="md:w-[608px] w-[348px]">
+        <p className="md:w-[608px] w-[348px] mb-6">
           Magna in dictumst metus vel ultrices sapien vel nisi. Diam vulputate
           aliquet urna aliquet sodales diam elit. Et volutpat est tristique et
           lacus id eu nunc. Aliquet pellentesque nulla diam ipsum sit. Bibendum

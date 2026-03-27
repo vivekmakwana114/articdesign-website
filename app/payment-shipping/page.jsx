@@ -10,7 +10,7 @@ function PaymentShipping() {
           Payments & Shipping
         </h1>
         
-        <div className="md:w-[608px] w-[348px]">
+        <div className="md:w-[608px] w-[348px] mb-6">
           <h2 className="text-2xl font-semibold mb-4 text-[#1D1D1F]">Payment Information</h2>
           <p>
             Lorem ipsum dolor sit amet consectetur. Vitae blandit sit risus dolor
@@ -28,7 +28,7 @@ function PaymentShipping() {
           </p>
         </div>
 
-        <div className="md:w-[608px] w-[348px] mt-10 mb-20">
+        <div className="md:w-[608px] w-[348px] mt-10 mb-6">
           <h2 className="text-2xl font-semibold mb-4 text-[#1D1D1F]">Shipping Information</h2>
           <p>
             Magna in dictumst metus vel ultrices sapien vel nisi. Diam vulputate
