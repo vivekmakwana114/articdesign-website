@@ -14,11 +14,11 @@ export const menus = [
     link: "iphone",
     params: true,
   },
-  {
-    name: "Accessories",
-    link: "/",
-    params: false,
-  },
+  // {
+  //   name: "Accessories",
+  //   link: "/",
+  //   params: false,
+  // },
   {
     name: "Company",
     link: "#",
