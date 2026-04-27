@@ -54,14 +54,14 @@ const Bought = () => {
                       <div className="bg-[#ffffff] md:p-4 p-2 rounded-[8px] shadow-sm">
                         <Image
                           src={
-                            frame?.images?.[0] ||
-                            frame?.thumbnailImage ||
-                            imageskin
+                            frame?.image
+                            // ||frame?.thumbnailImage
+                            || imageskin
                           }
                           alt={frame?.productName || "Product image"}
                           width={100}
                           height={400}
-                          className="md:w-[249px] w-full md:h-[232px] h-[130px]"
+                          className="md:w-[249px] w-full md:h-[232px] h-[130px] lg:w-[532px]" 
                         />
                         <p className="mt-2 text-center text-[#000000] md:text-base text-xs font-medium">
                           {frame?.productName || frame?.name}

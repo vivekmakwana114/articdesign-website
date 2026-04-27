@@ -274,7 +274,7 @@ function DevicesContent() {
               activeTab={activeTab}
               tabStyles={tabStyles}
               image={tapthreeimage}
-              label="Phone"
+              label="iPhone"
               onClick={handleTabClick}
               imageClass="w-[50px] h-[40px] object-contain"
             />
