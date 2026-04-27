@@ -77,11 +77,11 @@ function Sectionthree() {
                   <Link href={`/details/${frame.slug || frame._id || frame.productId}`}>
                     <div className="bg-[#ffffff] md:p-4 p-2 rounded-[8px] shadow-sm">
                       <Image
-                        src={frame.image || frame.thumbnailImage || (frame.images && frame.images[0]) || "/placeholder.png"}
-                        alt={frame.productName || frame.name || "Product image"}
+                        src={frame?.images[0] || "/placeholder.png"}
+                        alt={frame?.productName || frame?.name || "Product image"}
                         width={100}
                         height={400}
-                        className="md:w-[249px] w-full md:h-[232px] h-[130px] bg-contain"
+                        className="md:w-[249px] w-full md:h-[232px] h-[130px] lg:w-[532px] bg-contain"
                       />
                       <p className="mt-2 text-start text-[#000000] text-[12px] font-semibold">
                         {frame.productName || frame.name}

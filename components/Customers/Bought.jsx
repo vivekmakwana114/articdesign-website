@@ -54,9 +54,9 @@ const Bought = () => {
                       <div className="bg-[#ffffff] md:p-4 p-2 rounded-[8px] shadow-sm">
                         <Image
                           src={
-                            frame?.image
+                            frame?.images[0]
                             // ||frame?.thumbnailImage
-                            || imageskin
+                            || imageskin 
                           }
                           alt={frame?.productName || "Product image"}
                           width={100}
