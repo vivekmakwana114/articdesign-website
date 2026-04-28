@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { 
-  getProducts, 
-  getProductById, 
-  getPublicProducts, 
+import {
+  getProducts,
+  getProductById,
+  getPublicProducts,
   getPublicProductById,
-  getTopProducts
+  getTopProducts,
 } from "./productService";
 
 // Fetch products async thunk
@@ -16,16 +16,23 @@ export const fetchProducts = createAsyncThunk(
       const hasToken = !!auth?.tokens?.access?.token;
 
       const res = hasToken
-        ? await getProducts(params)
+        ? await getProducts(params).catch((err) => {
+            if (err.response && err.response.status === 403) {
+              return getPublicProducts(params);
+            }
+            throw err;
+          })
         : await getPublicProducts(params);
 
       return res.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data || { message: err.message || "Failed to fetch products" }
+        err.response?.data || {
+          message: err.message || "Failed to fetch products",
+        },
       );
     }
-  }
+  },
 );
 
 // Fetch single product async thunk
@@ -43,10 +50,12 @@ export const fetchProductDetails = createAsyncThunk(
       return res.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data || { message: err.message || "Failed to fetch product details" }
+        err.response?.data || {
+          message: err.message || "Failed to fetch product details",
+        },
       );
     }
-  }
+  },
 );
 
 // Fetch top products async thunk
@@ -58,16 +67,23 @@ export const fetchTopProducts = createAsyncThunk(
       const hasToken = !!auth?.tokens?.access?.token;
 
       const res = hasToken
-        ? await getTopProducts(limit)
+        ? await getTopProducts(limit).catch((err) => {
+            if (err.response && err.response.status === 403) {
+              return getPublicProducts({ limit });
+            }
+            throw err;
+          })
         : await getPublicProducts({ limit });
 
       return res.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data || { message: err.message || "Failed to fetch top products" }
+        err.response?.data || {
+          message: err.message || "Failed to fetch top products",
+        },
       );
     }
-  }
+  },
 );
 
 const initialState = {
@@ -109,7 +125,8 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.productsStatus = "failed";
-        state.productsError = action.payload?.message || "Failed to fetch products";
+        state.productsError =
+          action.payload?.message || "Failed to fetch products";
       })
 
       // Fetch Product Details
@@ -123,7 +140,8 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductDetails.rejected, (state, action) => {
         state.detailsStatus = "failed";
-        state.detailsError = action.payload?.message || "Failed to fetch product details";
+        state.detailsError =
+          action.payload?.message || "Failed to fetch product details";
       })
       // Fetch Top Products
       .addCase(fetchTopProducts.pending, (state) => {

@@ -76,36 +76,44 @@ function DevicesContent() {
             </section>
           ) : (
             <div className="md:flex md:flex-wrap md:ml-16 px-3 grid grid-cols-2">
-              {devices?.map((frame, index) => (
-                <div
-                  key={index}
-                  className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px]"
-                >
-                  <Link href={`/skinlaptop?skin=${frame._id}`}>
-                    <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[215px] md:h-[300px] flex flex-col">
-                      <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden">
-                        <Image
-                          src={frame.image || laptop}
-                          alt={frame.name || "laptop image"}
-                          width={100}
-                          height={300}
-                          className="w-full h-full md:h-full object-contain p-2"
-                        />
-                      </div>
-                      <div className="mt-2 text-center">
-                        <p className="text-[#000000] md:text-base text-sm font-medium">
-                          {frame.name}
-                        </p>
-                        {frame.chipSet && (
-                          <p className="text-[#86868B] md:text-sm text-xs font-medium mt-1">
-                            {frame.chipSet}
+              {devices && devices.length > 0 ? (
+                devices.map((frame, index) => (
+                  <div
+                    key={index}
+                    className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px]"
+                  >
+                    <Link href={`/skinlaptop?skin=${frame._id}`}>
+                      <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[215px] md:h-[300px] flex flex-col">
+                        <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden">
+                          <Image
+                            src={frame.image || laptop}
+                            alt={frame.name || "laptop image"}
+                            width={100}
+                            height={300}
+                            className="w-full h-full md:h-full object-contain p-2"
+                          />
+                        </div>
+                        <div className="mt-2 text-center">
+                          <p className="text-[#000000] md:text-base text-sm font-medium">
+                            {frame.name}
                           </p>
-                        )}
+                          {frame.chipSet && (
+                            <p className="text-[#86868B] md:text-sm text-xs font-medium mt-1">
+                              {frame.chipSet}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <div className="w-full flex justify-center items-center py-20">
+                  <p className="text-gray-500 text-lg font-medium">
+                    No Products found for MacBook devices.
+                  </p>
                 </div>
-              ))}
+              )}
             </div>
           )}
         </>
@@ -130,36 +138,44 @@ function DevicesContent() {
             </section>
           ) : (
             <div className="md:flex md:flex-wrap md:ml-16 grid grid-cols-2">
-              {devices?.map((frame, index) => (
-                <div
-                  key={index}
-                  className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px] "
-                >
-                  <Link href={`/skinipad?skin=${frame._id}`}>
-                    <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[215px] md:h-[300px] flex flex-col">
-                      <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden">
-                        <Image
-                          src={frame.image || ipad}
-                          alt={frame.name || "ipad image"}
-                          width={100}
-                          height={300}
-                          className="w-full h-full object-contain p-2"
-                        />
-                      </div>
-                      <div className="mt-2 text-center">
-                        <p className="text-[#000000] md:text-base text-sm font-medium">
-                          {frame.name}
-                        </p>
-                        {frame.chipSet && (
-                          <p className="text-[#86868B] md:text-sm text-xs font-medium mt-1">
-                            {frame.chipSet}
+              {devices && devices.length > 0 ? (
+                devices.map((frame, index) => (
+                  <div
+                    key={index}
+                    className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px] "
+                  >
+                    <Link href={`/skinipad?skin=${frame._id}`}>
+                      <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[215px] md:h-[300px] flex flex-col">
+                        <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden">
+                          <Image
+                            src={frame.image || ipad}
+                            alt={frame.name || "ipad image"}
+                            width={100}
+                            height={300}
+                            className="w-full h-full object-contain p-2"
+                          />
+                        </div>
+                        <div className="mt-2 text-center">
+                          <p className="text-[#000000] md:text-base text-sm font-medium">
+                            {frame.name}
                           </p>
-                        )}
+                          {frame.chipSet && (
+                            <p className="text-[#86868B] md:text-sm text-xs font-medium mt-1">
+                              {frame.chipSet}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <div className="w-full flex justify-center items-center py-20">
+                  <p className="text-gray-500 text-lg font-medium">
+                    No Products found for iPad devices.
+                  </p>
                 </div>
-              ))}
+              )}
             </div>
           )}
         </>
@@ -184,36 +200,44 @@ function DevicesContent() {
             </section>
           ) : (
             <div className="md:flex md:flex-wrap md:ml-16 grid grid-cols-2">
-              {devices?.map((frame, index) => (
-                <div
-                  key={index}
-                  className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px] "
-                >
-                  <Link href={`/skinphone?skin=${frame._id}`}>
-                    <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[215px] md:h-[300px] flex flex-col">
-                      <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden">
-                        <Image
-                          src={frame.image || smartphogeometry}
-                          alt={frame.name || "phone image"}
-                          width={100}
-                          height={300}
-                          className="w-full h-full object-contain p-2"
-                        />
-                      </div>
-                      <div className="mt-2 text-center">
-                        <p className="text-[#000000] md:text-base text-sm font-medium">
-                          {frame.name}
-                        </p>
-                        {frame.chipSet && (
-                          <p className="text-[#86868B] md:text-sm text-xs font-medium mt-1">
-                            {frame.chipSet}
+              {devices && devices.length > 0 ? (
+                devices.map((frame, index) => (
+                  <div
+                    key={index}
+                    className="w-full  md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-2px] md:mx-[-7px] "
+                  >
+                    <Link href={`/skinphone?skin=${frame._id}`}>
+                      <div className="bg-[#F5F5F7] p-4 rounded-[8px] shadow-sm h-[215px] md:h-[300px] flex flex-col">
+                        <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden">
+                          <Image
+                            src={frame.image || smartphogeometry}
+                            alt={frame.name || "phone image"}
+                            width={100}
+                            height={300}
+                            className="w-full h-full object-contain p-2"
+                          />
+                        </div>
+                        <div className="mt-2 text-center">
+                          <p className="text-[#000000] md:text-base text-sm font-medium">
+                            {frame.name}
                           </p>
-                        )}
+                          {frame.chipSet && (
+                            <p className="text-[#86868B] md:text-sm text-xs font-medium mt-1">
+                              {frame.chipSet}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <div className="w-full flex justify-center items-center py-20">
+                  <p className="text-gray-500 text-lg font-medium">
+                    No Products found for iPhone devices.
+                  </p>
                 </div>
-              ))}
+              )}
             </div>
           )}
         </>

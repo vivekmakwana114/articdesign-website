@@ -9,7 +9,7 @@ export const getProducts = (params) => {
 export const getProductById = (id) => {
   return api.get(`/v1/product/${id}`);
 };
-  
+
 // Get public products
 export const getPublicProducts = (params) => {
   return api.get("/v1/product/public", { params });

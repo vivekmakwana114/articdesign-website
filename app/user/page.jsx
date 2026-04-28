@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, Suspense, useRef } from "react";
-import { AiOutlineInfoCircle } from "react-icons/ai";
+import { AiOutlineInfoCircle, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { progressbar, skinselectlaptop7, profile2 } from "../../assets";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -41,13 +41,14 @@ function UserContent() {
     if (typeof src === "object") return src.Location || src.profile || null;
     if (
       typeof src === "string" &&
-      (src.startsWith("http") || src.startsWith("/"))
+      (src.startsWith("http") || src.startsWith("/") || src.startsWith("data:"))
     )
       return src;
     return null;
   };
 
   const currentUser = useSelector((state) => state?.auth?.user);
+  const provider = useSelector((state) => state?.auth?.provider);
   const {
     updateStatus,
     passwordStatus,
@@ -99,6 +100,9 @@ function UserContent() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // ── Order tracking state ──
   const [currentOrder, setCurrentOrder] = useState("");
@@ -107,6 +111,12 @@ function UserContent() {
   // ── Support ticket form state ──
   const [ticketSubject, setTicketSubject] = useState("");
   const [ticketDescription, setTicketDescription] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const pageSize = 3;
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
@@ -473,14 +483,21 @@ function UserContent() {
                   className="form__input w-[520px]"
                 />
 
-                <h3
-                  className="font-normal cursor-pointer"
-                  onClick={openPassModal}
-                >
-                  <span className=" text-[#0071E3] text-base underline underline-offset-2">
-                    Change Password
-                  </span>
-                </h3>
+                {!provider ? (
+                  <h3
+                    className="font-normal cursor-pointer"
+                    onClick={openPassModal}
+                  >
+                    <span className=" text-[#0071E3] text-base underline underline-offset-2">
+                      Change Password
+                    </span>
+                  </h3>
+                ) : (
+                  <p className="text-sm text-[#86868B] pt-3">
+                    Logged in via {provider}. Password changes are managed by
+                    your provider.
+                  </p>
+                )}
               </div>
             </div>
             <div className="">
@@ -809,7 +826,7 @@ function UserContent() {
     return null;
   };
 
-  if (!currentUser) {
+  if (!mounted || !currentUser) {
     return null;
   }
 
@@ -985,11 +1002,18 @@ function UserContent() {
                       className="form__input"
                     />
 
-                    <h3 className="font-normal" onClick={openPassModal}>
-                      <span className=" text-[#0071E3] text-base underline underline-offset-2">
-                        Change Password
-                      </span>
-                    </h3>
+                    {!provider ? (
+                      <h3 className="font-normal" onClick={openPassModal}>
+                        <span className=" text-[#0071E3] text-base underline underline-offset-2">
+                          Change Password
+                        </span>
+                      </h3>
+                    ) : (
+                      <p className="text-xs text-[#86868B] mt-2 italic">
+                        Logged in via {provider}. Password changes are managed
+                        by your provider.
+                      </p>
+                    )}
                   </div>
                 </div>
                 <button
@@ -1464,41 +1488,81 @@ function UserContent() {
             </div>
             <div className="flex flex-col">
               <label htmlFor="o_password" className="form__label">
-                Old password
+                Current Password
               </label>
-              <input
-                id="o_password"
-                type="password"
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="Old Password"
-                className="form__input"
-              />
+              <div className="relative">
+                <input
+                  id="o_password"
+                  type={showCurrentPassword ? "text" : "password"}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Current Password"
+                  className="form__input w-full pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                >
+                  {showCurrentPassword ? (
+                    <AiOutlineEyeInvisible size={20} />
+                  ) : (
+                    <AiOutlineEye size={20} />
+                  )}
+                </button>
+              </div>
             </div>
 
             <div className="flex flex-col">
               <label htmlFor="new_password" className="form__label">
-                New password
+                New Password
               </label>
-              <input
-                id="new_password"
-                type="text"
-                placeholder="New Password"
-                className="form__input"
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
+              <div className="relative">
+                <input
+                  id="new_password"
+                  type={showNewPassword ? "text" : "password"}
+                  placeholder="New Password"
+                  className="form__input w-full pr-10"
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                >
+                  {showNewPassword ? (
+                    <AiOutlineEyeInvisible size={20} />
+                  ) : (
+                    <AiOutlineEye size={20} />
+                  )}
+                </button>
+              </div>
             </div>
+
             <div className="flex flex-col">
               <label htmlFor="c_password" className="form__label">
-                Confirm password
+                Confirm Password
               </label>
-              <input
-                id="c_password"
-                type="password"
-                placeholder="Confirm Password"
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="form__input"
-              />
-              <p className="text-[#86868B]   md:text-sm text-xs font-normal pt-2">
+              <div className="relative">
+                <input
+                  id="c_password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="form__input w-full pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                >
+                  {showConfirmPassword ? (
+                    <AiOutlineEyeInvisible size={20} />
+                  ) : (
+                    <AiOutlineEye size={20} />
+                  )}
+                </button>
+              </div>
+              <p className="text-[#86868B] md:text-sm text-xs font-normal pt-2">
                 Use a least 8 characters. Don’t use something too obvious like
                 your pet’s name.
               </p>

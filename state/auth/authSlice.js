@@ -91,6 +91,7 @@ const getInitialState = () => {
             status: "idle",
             error: null,
             forgotPasswordMessage: null,
+            provider: null,
           },
           ...parsed,
         };
@@ -102,6 +103,7 @@ const getInitialState = () => {
     tokens: null,
     role: null,
     redirect: null,
+    provider: null,
     status: "idle",
     error: null,
     forgotPasswordMessage: null,
@@ -121,6 +123,7 @@ const authSlice = createSlice({
       state.user = null;
       state.tokens = null;
       state.role = null;
+      state.provider = null;
       state.status = "idle";
       state.error = null;
       if (typeof window !== "undefined") {
@@ -138,6 +141,7 @@ const authSlice = createSlice({
             const authData = JSON.stringify({
               user: state.user,
               tokens: state.tokens,
+              provider: state.provider,
             });
             if (localStorage.getItem("auth")) {
               localStorage.setItem("auth", authData);
@@ -149,15 +153,16 @@ const authSlice = createSlice({
       }
     },
     loginSuccess: (state, action) => {
-      const { user, tokens, rememberMe = true } = action.payload;
+      const { user, tokens, provider, rememberMe = true } = action.payload;
       state.user = user;
       state.tokens = tokens;
+      state.provider = provider;
       state.status = "succeeded";
       state.error = null;
 
       if (typeof window !== "undefined") {
         try {
-          const authData = JSON.stringify({ user, tokens });
+          const authData = JSON.stringify({ user, tokens, provider });
           if (rememberMe) {
             localStorage.setItem("auth", authData);
             sessionStorage.removeItem("auth");
@@ -183,6 +188,7 @@ const authSlice = createSlice({
 
         state.user = responseData.user;
         state.tokens = responseData.token;
+        state.provider = responseData.provider;
         // state.redirect = data.redirect;
 
         if (typeof window !== "undefined") {
@@ -190,6 +196,7 @@ const authSlice = createSlice({
             const authData = JSON.stringify({
               user: state.user,
               tokens: state.tokens,
+              provider: state.provider,
             });
 
             if (rememberMe) {

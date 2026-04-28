@@ -49,6 +49,7 @@ export default function OAuth() {
       dispatch(loginSuccess({
         user: data.user,
         tokens,
+        provider: data.provider,
         rememberMe: true
       }));
       

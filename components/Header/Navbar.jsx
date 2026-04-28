@@ -463,7 +463,7 @@ const Navbar = () => {
             </li>
           ))}
 
-          {currentUser && (
+          {mounted && currentUser && (
             <li className="flex items-center mt-5">
               <p onClick={handleSignOut} className="px-3 inline-block">
                 <span className="flex justify-start items-center gap-2 text-base font-semibold cursor-pointer text-[#C01F1F]">
