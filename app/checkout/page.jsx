@@ -166,13 +166,14 @@ const CheckOut = () => {
       return;
     }
 
+    setCheckingOut(true);
     const res = await loadRazorpayScript();
     if (!res) {
+      setCheckingOut(false);
       toast.error("Razorpay SDK failed to load. Are you online?");
       return;
     }
 
-    setCheckingOut(true);
     try {
       const orderPayload = {
         orderType: "online",
@@ -199,21 +200,30 @@ const CheckOut = () => {
               razorpay_signature: razorpayResponse.razorpay_signature,
             });
 
-            // Remove all cart items from the backend cart
-            if (cartItems && cartItems.length > 0) {
-              await Promise.all(
-                cartItems.map((item) =>
-                  dispatch(removeItem(item.id || item._id)),
-                ),
-              );
-            }
-
+            // Clear cart locally and redirect immediately for a smooth experience
             dispatch(clearCart());
             toast.success("Payment Successful!");
             router.push("/user?dashboard=orders");
+
+            // Remove all cart items from the backend cart in background
+            if (cartItems && cartItems.length > 0) {
+              Promise.all(
+                cartItems.map((item) =>
+                  dispatch(removeItem(item.id || item._id)),
+                ),
+              ).catch((err) =>
+                console.error("Error clearing cart items:", err),
+              );
+            }
           } catch (err) {
+            setCheckingOut(false);
             toast.error("Payment verification failed");
           }
+        },
+        modal: {
+          ondismiss: function () {
+            setCheckingOut(false);
+          },
         },
         prefill: {
           name: `${firstName} ${lastName}`,
@@ -228,9 +238,8 @@ const CheckOut = () => {
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to create order");
-    } finally {
       setCheckingOut(false);
+      toast.error(err.response?.data?.message || "Failed to create order");
     }
   };
 
@@ -251,7 +260,18 @@ const CheckOut = () => {
   return (
     <>
       <section className="md:pl-20 md:pr-10 ">
-        {cartItems.length > 0 ? (
+        {checkingOut ? (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] py-20">
+            <SaveLoader />
+            <h2 className="md:text-[32px] text-[24px] text-[#1D1D1F] font-semibold mt-8 text-center">
+              Processing your order...
+            </h2>
+            <p className="text-[#86868B] text-[16px] mt-4 text-center max-w-md">
+              Please do not refresh the page or click the back button while we
+              finalize your payment.
+            </p>
+          </div>
+        ) : cartItems.length > 0 ? (
           <>
             <h1 className="md:text-[48px] text-[27.13px] text-[#1D1D1F] font-semibold md:p-10 py-16 text-center">
               Cart total is{" "}

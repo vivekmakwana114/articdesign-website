@@ -5,6 +5,7 @@ import {
   getPublicProducts,
   getPublicProductById,
   getTopProducts,
+  getPublicTopProducts,
 } from "./productService";
 
 // Fetch products async thunk
@@ -69,11 +70,11 @@ export const fetchTopProducts = createAsyncThunk(
       const res = hasToken
         ? await getTopProducts(limit).catch((err) => {
             if (err.response && err.response.status === 403) {
-              return getPublicProducts({ limit });
+              return getPublicTopProducts(limit);
             }
             throw err;
           })
-        : await getPublicProducts({ limit });
+        : await getPublicTopProducts(limit);
 
       return res.data;
     } catch (err) {

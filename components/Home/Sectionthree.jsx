@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-import { fetchTopProducts } from "@/state/product/productSlice";
+import { fetchProducts } from "@/state/product/productSlice";
 
 function Sectionthree() {
   const dispatch = useDispatch();
@@ -11,14 +11,14 @@ function Sectionthree() {
   const [isMounted, setIsMounted] = useState(false);
 
   // Redux state
-  const { topProducts, topProductsStatus } = useSelector(
+  const { productsData, productsStatus } = useSelector(
     (state) => state.product,
   );
-  const loading = topProductsStatus === "loading";
+  const loading = productsStatus === "loading";
 
   useEffect(() => {
     setIsMounted(true);
-    dispatch(fetchTopProducts(limit));
+    dispatch(fetchProducts({ limit }));
   }, [dispatch, limit]);
 
   return (
@@ -56,9 +56,9 @@ function Sectionthree() {
               ))}
             </div>
           </section>
-        ) : topProducts && topProducts.length > 0 ? (
+        ) : productsData && productsData.length > 0 ? (
           <div className="md:flex md:flex-wrap md:ml-16 grid grid-cols-2">
-            {topProducts.map((frame, index) => (
+            {productsData.map((frame, index) => (
               <div
                 key={index}
                 className="w-full md:w-1/2 lg:w-1/4 md:p-4 p-2 md:my-[-10px] md:mx-[-7px] md:h-[329px] h-auto"
@@ -91,7 +91,7 @@ function Sectionthree() {
         ) : (
           <div className="flex justify-center items-center py-20">
             <p className="text-gray-500 text-lg font-medium">
-              No Top Products has been found.
+              No Products has been found.
             </p>
           </div>
         )}

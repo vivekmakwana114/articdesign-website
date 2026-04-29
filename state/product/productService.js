@@ -21,6 +21,11 @@ export const getPublicProductById = (id) => {
 };
 
 // Get top products
-export const getTopProducts = () => {
-  return api.get(`/v1/cart/top/products`);
+export const getTopProducts = (limit) => {
+  return api.get(`/v1/cart/top/products`, { params: { limit } });
+};
+
+// Get public top products
+export const getPublicTopProducts = (limit) => {
+  return api.get("/v1/product/top/public", { params: { limit } });
 };

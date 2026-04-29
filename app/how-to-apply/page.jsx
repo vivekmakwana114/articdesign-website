@@ -153,7 +153,7 @@ const HowToApply = () => {
             <AiOutlineSearch className="absolute left-4 text-black text-xl" />
             <input
               type="text"
-              placeholder="Enter your device name"
+              placeholder="Search here..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 bg-[#F5F5F7] rounded-lg border-none focus:ring-2 focus:ring-[#0071E3] transition-all text-gray-800"
