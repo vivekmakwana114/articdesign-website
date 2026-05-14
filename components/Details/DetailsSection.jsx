@@ -197,13 +197,13 @@ const DetailsSection = ({ product, loading }) => {
                             <Image
                               src={img}
                               alt={product?.productName || "skin option"}
-                              width={300}
-                              height={500}
+                              width={800}
+                              height={800}
                               unoptimized={
                                 typeof img === "string" &&
                                 img.startsWith("http")
                               }
-                              className="md:w-[500px] md:h-[400px] w-[299.4px] h-[226.2px] bg-cover"
+                              className="md:w-[500px] md:h-[400px] w-[299.4px] h-[226.2px] object-contain"
                             />
                           </div>
                         ))}

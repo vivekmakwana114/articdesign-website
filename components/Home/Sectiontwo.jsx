@@ -35,7 +35,9 @@ function Sectiontwo() {
         <Image
           src={imageSrc}
           alt="image"
-          className="md:h-[560px] md:w-[510px] h-[309px] w-[309px] bg-contain"
+          width={600}
+          height={600}
+          className="md:h-[560px] md:w-[510px] h-[309px] w-[309px] object-contain"
           priority={true}
         />
         <div className="space-y-3 md:flex  md:flex-col md:justify-center mt-[84px]">

@@ -29,8 +29,8 @@ function Banner({
         <Image
           src={image || imageskin}
           alt={typeof title === "string" ? title : "banner image"}
-          width={400}
-          height={500}
+          width={800}
+          height={600}
           className={
             styles.imageClass ||
             "md:h-[530px] md:w-[757.77px] w-[407px] md:rounded-[16px]"

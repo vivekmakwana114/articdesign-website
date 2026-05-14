@@ -66,7 +66,8 @@ const Slider = ({ images }) => {
           <Image
             src={image.image}
             alt={`Slide ${index}`}
-            className="md:h-full h-full object-cover"
+            fill
+            className="object-cover"
           />
           <div className="md:w-[956px] h-full bg-gradient-to-r from-[#000000c9] to-[#4D4D4D00] absolute md:left-0"></div>
           <div className="md:ml-[-59px] ml-[20px] md:flex md:flex-col md:justify-start md:items-start carousel-caption text-white transform -translate-x-1/2">

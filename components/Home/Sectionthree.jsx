@@ -76,9 +76,9 @@ function Sectionthree() {
                           : "/placeholder.png"
                       }
                       alt={frame?.productName || frame?.name || "Product image"}
-                      width={100}
+                      width={400}
                       height={400}
-                      className="md:w-[249px] w-full md:h-[232px] h-[130px] lg:w-[532px] bg-contain"
+                      className="md:w-[249px] w-full md:h-[232px] h-[130px] lg:w-[532px] object-contain"
                     />
                     <p className="mt-2 text-start text-[#000000] text-[12px] font-semibold">
                       {frame.productName || frame.name || "Unnamed Product"}

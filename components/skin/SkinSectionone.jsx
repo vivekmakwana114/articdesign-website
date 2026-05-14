@@ -74,7 +74,7 @@ function SkinSectionone({
                         imageskin
                       }
                       alt={frame.name || frame.productName || "skin image"}
-                      width={100}
+                      width={400}
                       height={400}
                       className="w-full h-auto object-contain flex-grow"
                       style={{ maxHeight: "200px" }}

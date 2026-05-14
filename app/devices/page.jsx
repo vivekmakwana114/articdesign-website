@@ -88,8 +88,8 @@ function DevicesContent() {
                           <Image
                             src={frame.image || laptop}
                             alt={frame.name || "laptop image"}
-                            width={100}
-                            height={300}
+                            width={400}
+                            height={400}
                             className="w-full h-full md:h-full object-contain p-2"
                           />
                         </div>
@@ -150,8 +150,8 @@ function DevicesContent() {
                           <Image
                             src={frame.image || ipad}
                             alt={frame.name || "ipad image"}
-                            width={100}
-                            height={300}
+                            width={400}
+                            height={400}
                             className="w-full h-full object-contain p-2"
                           />
                         </div>
@@ -212,8 +212,8 @@ function DevicesContent() {
                           <Image
                             src={frame.image || smartphogeometry}
                             alt={frame.name || "phone image"}
-                            width={100}
-                            height={300}
+                            width={400}
+                            height={400}
                             className="w-full h-full object-contain p-2"
                           />
                         </div>
